@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, DeleteDateColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { ProductImageEntity } from "./product-image.entity";
 
-
+@Entity({ name: 'products' })
 export class ProductEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
@@ -32,4 +33,10 @@ export class ProductEntity {
     @DeleteDateColumn({ name: 'deleted_at' })
     deletedAt: string
 
+    @OneToOne(
+        () => ProductImageEntity,
+        (productImageEntity) => productImageEntity.product,
+        { cascade: true, eager: true }
+    )
+    image: ProductImageEntity;
 }
