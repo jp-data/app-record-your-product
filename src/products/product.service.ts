@@ -50,4 +50,14 @@ export class ProductService {
 
         await this.productRepository.save(productToUpdate)
     }
+
+    async delete(id: string) {
+        const productToDelete = await this.findOne(id)
+
+        if(!productToDelete) {
+            throw new Error('Product not found!')
+        }
+
+        await this.productRepository.delete(id)
+    }
 }

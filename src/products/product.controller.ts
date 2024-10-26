@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, ValidationPipe } from "@nestjs/common";
 import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductService } from "./product.service";
 import { ProductEntity } from "./entities/product.entity";
@@ -45,6 +45,11 @@ export class ProductController {
             message: 'Produto alterado com sucesso!',
             newProduct: productUpdated 
         }
+    }
+
+    @Delete()
+    async deleteProduct(@Param('id') id: string) {
+        await this.productService.delete(id)
     }
 }
 
