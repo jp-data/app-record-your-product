@@ -2,6 +2,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "./entities/product.entity";
 import { Repository } from "typeorm";
 import { CreateProductDto } from "./dtos/create-product-dto";
+import { ProductListDto } from "./dtos/product-list-dto";
 
 export class ProductService {
     constructor(
@@ -12,5 +13,22 @@ export class ProductService {
     async create(createProductDto: CreateProductDto) {
         const newProduct = this.productRepository.create(createProductDto)
         return this.productRepository.save(newProduct)
+    }
+
+    async listAll() {
+        const productsToList = await this.productRepository.find({
+            // relations: {
+            //     image: true
+            // }
+        })
+        const productsList = productsToList.map(
+            (product) => 
+                new ProductListDto(
+                    product.id,
+                    product.name,
+                    product.image
+                )
+        )
+        return productsList
     }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Post, ValidationPipe } from "@nestjs/common";
 import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductService } from "./product.service";
 import { ProductEntity } from "./entities/product.entity";
@@ -23,6 +23,11 @@ export class ProductController {
         
         const newProduct = this.productService.create(dataProduct)
         return newProduct
+    }
+
+    @Get()
+    async listProducts() {
+        return this.productService.listAll()
     }
 }
 
