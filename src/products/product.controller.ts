@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, ValidationPipe } from "@nestjs/common";
 import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductService } from "./product.service";
 import { ProductEntity } from "./entities/product.entity";
 import { randomUUID } from "crypto";
+import { UpdateProductDto } from "./dtos/update.product-dto";
 
 
 @Controller('/products')
@@ -28,6 +29,22 @@ export class ProductController {
     @Get()
     async listProducts() {
         return this.productService.listAll()
+    }
+
+    @Put('/:id')
+    async updateProduct(
+        @Param('id') id: string,
+        @Body() updateProductDto: UpdateProductDto,
+    ) {
+        const productUpdated = await this.productService.update(
+            id,
+            updateProductDto
+        )
+
+        return {
+            message: 'Produto alterado com sucesso!',
+            newProduct: productUpdated 
+        }
     }
 }
 
