@@ -4,7 +4,9 @@ import { Repository } from "typeorm";
 import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductListDto } from "./dtos/product-list-dto";
 import { UpdateProductDto } from "./dtos/update.product-dto";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class ProductService {
     constructor(
         @InjectRepository(ProductEntity)
@@ -51,12 +53,14 @@ export class ProductService {
     }
 
     async delete(id: string) {
-        const productToDelete = await this.findOne(id)
+        const productToDelete = await this.productRepository.findOne({
+            where: { id }
+        })
 
         if (!productToDelete) {
             throw new Error('Product not found!')
         }
 
-        await this.productRepository.delete(id)
+        return this.productRepository.remove(productToDelete)
     }
 }
