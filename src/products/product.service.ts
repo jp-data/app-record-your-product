@@ -29,11 +29,10 @@ export class ProductService {
             // }
         })
         const productsList = productsToList.map(
-            (product) => 
+            (product) =>
                 new ProductListDto(
                     product.id,
                     product.name,
-                    product.image
                 )
         )
         return productsList
@@ -42,7 +41,7 @@ export class ProductService {
     async update(id: string, updateProductDto: UpdateProductDto) {
         const productToUpdate = await this.findOne(id)
 
-        if(!productToUpdate) {
+        if (!productToUpdate) {
             throw new Error('Product not found!')
         }
 
@@ -54,7 +53,7 @@ export class ProductService {
     async delete(id: string) {
         const productToDelete = await this.findOne(id)
 
-        if(!productToDelete) {
+        if (!productToDelete) {
             throw new Error('Product not found!')
         }
 

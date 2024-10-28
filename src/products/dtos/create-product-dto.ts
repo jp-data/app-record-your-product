@@ -3,7 +3,7 @@ import { Type } from 'class-transformer'
 import { ProductEntity } from "../entities/product.entity"
 
 export class ProductImageDto {
-   id : string
+   id: string
 
    @IsUrl()
    url: string
@@ -41,5 +41,5 @@ export class CreateProductDto {
    @ValidateNested()
    @IsArray()
    @Type(() => ProductImageDto)
-   image: ProductImageDto
+   image: ProductImageDto[]
 }

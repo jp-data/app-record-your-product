@@ -11,7 +11,9 @@ export class ProductController {
     constructor(private readonly productService: ProductService) { }
 
     @Post()
-    async createProduct(@Body(ValidationPipe) createProductDto: CreateProductDto) {
+    async createProduct(
+        @Body(ValidationPipe) createProductDto: CreateProductDto
+    ) {
         const dataProduct = new ProductEntity()
 
         dataProduct.id = randomUUID()
@@ -21,7 +23,8 @@ export class ProductController {
         dataProduct.category = createProductDto.category
         dataProduct.quantity = createProductDto.quantity
         dataProduct.price = createProductDto.price
-        
+        dataProduct.image = createProductDto.image
+
         const newProduct = this.productService.create(dataProduct)
         return newProduct
     }
@@ -43,7 +46,7 @@ export class ProductController {
 
         return {
             message: 'Produto alterado com sucesso!',
-            newProduct: productUpdated 
+            newProduct: productUpdated
         }
     }
 
