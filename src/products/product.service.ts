@@ -47,9 +47,7 @@ export class ProductService {
             throw new Error('Product not found!')
         }
 
-        Object.assign(productToUpdate, updateProductDto);
-
-        await this.productRepository.save(productToUpdate)
+        return this.productRepository.update(id, updateProductDto)
     }
 
     async delete(id: string) {

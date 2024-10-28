@@ -34,6 +34,11 @@ export class ProductController {
         return this.productService.listAll()
     }
 
+    @Get('/:id')
+    async findProduct(id: string) {
+        return this.productService.findOne(id)
+    }
+
     @Put('/:id')
     async updateProduct(
         @Param('id') id: string,

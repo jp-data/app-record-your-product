@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsNumber, IsString, IsUrl, IsUUID, ValidateNested } from "class-validator"
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, IsUUID, ValidateNested } from "class-validator"
 import { Type } from 'class-transformer'
 import { ProductEntity } from "../entities/product.entity"
 
@@ -41,5 +41,6 @@ export class CreateProductDto {
    @ValidateNested()
    @IsArray()
    @Type(() => ProductImageDto)
+   @IsOptional()
    image: ProductImageDto[]
 }

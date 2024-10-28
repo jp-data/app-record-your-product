@@ -13,7 +13,8 @@ export class ProductImageEntity {
     description: string
 
     @ManyToOne(() => ProductEntity, (product) => product.image, {
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
     })
     product: ProductEntity
 }
