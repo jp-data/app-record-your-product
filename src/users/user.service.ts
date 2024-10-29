@@ -1,3 +1,4 @@
+import { UpdateUserDto } from './dtos/update-user-dto';
 import { Injectable, Param } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./entities/user.entity";
@@ -30,7 +31,25 @@ export class UserService {
         return usersList
     }
 
-    async updateUser() { }
+    async updateUser(id: string, updateUserDto: UpdateUserDto) {
+        const userToUpdate = await this.userRepository.findOne({
+            where: { id }
+        })
 
-    async deleteUser() { }
+        if (!userToUpdate) {
+            throw new Error('User not found!')
+        }
+        return this.userRepository.update(id, updateUserDto)
+    }
+
+    async deleteUser(id: string) {
+        const userToDelete = await this.userRepository.findOne({
+            where: { id }
+        })
+
+        if (!userToDelete) {
+            throw new Error('User not found!')
+        }
+        return this.userRepository.remove(userToDelete)
+    }
 }
