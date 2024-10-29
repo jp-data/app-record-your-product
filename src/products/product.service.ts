@@ -61,4 +61,6 @@ export class ProductService {
 
         return this.productRepository.remove(productToDelete)
     }
+
+
 }
