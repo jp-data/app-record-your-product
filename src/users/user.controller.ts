@@ -24,7 +24,9 @@ export class UserController {
     }
 
     @Get()
-    async getUsers() { }
+    async getUsers() {
+        return this.userService.listUsers()
+    }
 
     @Put()
     async updateUser() { }
