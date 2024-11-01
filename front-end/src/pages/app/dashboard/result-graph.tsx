@@ -26,7 +26,7 @@ export function ResultGraph() {
 
                     <YAxis
                         stroke="#888"
-                        axisLine={false}
+                        axisLine={true}
                         tickLine={false}
                         width={80}
                         tickFormatter={(value: number) =>
