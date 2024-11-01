@@ -2,7 +2,7 @@ import { CirclePlus } from "lucide-react";
 import { FormNewProduct } from "./form-new-product";
 import { Dialog, DialogTrigger } from "../../../components/ui/dialog";
 
-export function NewTaskButton() {
+export function NewProductButton() {
     return (
         <Dialog>
             <DialogTrigger asChild>

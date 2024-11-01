@@ -2,7 +2,7 @@ import { DialogContent, DialogFooter, DialogHeader } from "../../../components/u
 import { DialogTitle, DialogDescription } from "@radix-ui/react-dialog";
 
 export function FormNewProduct() {
-    return <DialogContent>
+    return <DialogContent size="small">
         <DialogHeader>
             <DialogTitle className="text-2xl font-semibold">Novo produto</DialogTitle>
             <DialogDescription>Descrição</DialogDescription>
