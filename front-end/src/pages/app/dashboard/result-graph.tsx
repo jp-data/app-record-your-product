@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, LabelList } from 'recharts';
+import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, LabelList, CartesianGrid } from 'recharts';
 import colors from 'tailwindcss/colors';
 
 const data = [
@@ -15,34 +15,38 @@ const data = [
 export function ResultGraph() {
     return (
         <Card title="Faturamento - evolução" className="col-span-6">
-            <ResponsiveContainer width="100%" height={360}>
-                <BarChart data={data} style={{ fontSize: 12 }}>
+            <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={data} style={{ fontSize: 12 }} margin={{ top: 10, right: 20, bottom: 5, left: 20 }}>
                     <XAxis
                         dataKey="date"
                         axisLine={false}
                         tickLine={false}
                         dy={16}
                     />
+
                     <YAxis
                         stroke="#888"
                         axisLine={false}
                         tickLine={false}
                         width={80}
+                        tickFormatter={(value: number) =>
+                            value.toLocaleString('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL'
+                            })
+                        }
                         domain={[0, 4000]}
-                        ticks={[0, 1000, 2000, 3000]}
+                        ticks={[0, 2000, 4000]}
                     />
-                    <Bar
-                        stroke={colors.violet['500']}
-                        strokeWidth={2}
-                        dataKey="revenue"
-                    >
+                    <Line type="linear" stroke={colors.violet['500']} strokeWidth={2} dataKey="revenue">
                         <LabelList
                             dataKey="revenue"
                             position="top"
                             style={{ fill: colors.violet['500'], fontSize: 12 }}
                         />
-                    </Bar>
-                </BarChart>
+                    </Line>
+                    <CartesianGrid vertical={false} className="stroke-muted" />
+                </LineChart>
             </ResponsiveContainer>
         </Card>
     );
