@@ -1,3 +1,4 @@
+import { DataSelector } from "./data-selector";
 import { PopularCategoriesGraph } from "./popular-categories";
 import { ResultGraph } from "./result-graph";
 import { RevenueCard } from "./revenue-card";
@@ -7,9 +8,10 @@ export function Dashboard() {
     return (
         <div className="flex flex-col gap-4 p-8 items-start">
             <h1 className="text-3xl font-bold tracking-tight">Estatísticas</h1>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4 w-1/2">
                 <RevenueCard />
                 <SalesCountCard />
+                <DataSelector />
             </div>
             <div className="grid grid-cols-9 gap-4 w-full">
                 <ResultGraph />

@@ -1,6 +1,9 @@
+import { useQuery } from '@tanstack/react-query';
 import { Space, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { Trash2 } from 'lucide-react';
+import { getProducts } from '../../../api-requisitions/get-products';
+
 
 interface DataType {
     key: string;
@@ -12,12 +15,27 @@ interface DataType {
 }
 
 export function TableProducts() {
+    const { data: result } = useQuery({
+        queryKey: ['products'],
+        queryFn: () => getProducts()
+    })
+
+    console.log(result)
+
     const columns: TableProps<DataType>['columns'] = [
+        {
+            title: '',
+            key: 'actionEdit',
+            render: (_, record) => (
+                <Space size="middle">
+                    <a>Editar </a>
+                </Space>
+            ),
+        },
         {
             title: 'Nome',
             dataIndex: 'name',
             key: 'name',
-            render: (text) => <a>{text}</a>,
         },
         {
             title: 'Descrição',
@@ -41,37 +59,26 @@ export function TableProducts() {
         },
         {
             title: '',
-            key: 'action',
+            key: 'actionDelete',
             render: (_, record) => (
                 <Space size="middle">
-                    <a>Editar </a>
                     <a><Trash2 size={18} /></a>
                 </Space>
             ),
         },
     ];
 
-    const data: DataType[] = [
-        {
-            key: '1',
-            name: 'Teste 23',
-            description: 'Teste 23 descricao',
-            category: 'Teste23 category',
-            quantity: 100,
-            price: 60
-        },
-        {
-            key: '2',
-            name: 'Teste 25',
-            description: 'Teste 25 descricao',
-            category: 'Teste25 category',
-            quantity: 150,
-            price: 75
-        },
-    ];
+    const data: DataType[] = result?.map((item, index) => ({
+        key: item.id || index.toString(),
+        name: item.name,
+        description: item.description,
+        category: item.category,
+        quantity: item.quantity,
+        price: item.price,
+    })) || [];
 
 
     return (
-        <Table<DataType> columns={columns} dataSource={data} />
+        <Table<DataType> columns={columns} className='mt-10 mr-20 mb-5 ml-20' dataSource={data} />
     )
 }
