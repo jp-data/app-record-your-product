@@ -1,9 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
 import { Space, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { Trash2 } from 'lucide-react';
-import { getProducts } from '../../../api-requisitions/get-products';
-
 
 interface DataType {
     key: string;
@@ -14,13 +11,8 @@ interface DataType {
     price: number;
 }
 
-export function TableProducts() {
-    const { data: result } = useQuery({
-        queryKey: ['products'],
-        queryFn: () => getProducts()
-    })
+export function TableProducts({ data }) {
 
-    console.log(result)
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -68,17 +60,11 @@ export function TableProducts() {
         },
     ];
 
-    const data: DataType[] = result?.map((item, index) => ({
-        key: item.id || index.toString(),
-        name: item.name,
-        description: item.description,
-        category: item.category,
-        quantity: item.quantity,
-        price: item.price,
-    })) || [];
-
-
     return (
-        <Table<DataType> columns={columns} className='mt-10 mr-20 mb-5 ml-20' dataSource={data} />
+        <Table<DataType>
+            columns={columns}
+            className='mt-10 mr-20 mb-5 ml-20'
+            dataSource={data}
+        />
     )
 }
