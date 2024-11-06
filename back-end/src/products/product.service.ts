@@ -35,6 +35,10 @@ export class ProductService {
                 new ProductListDto(
                     product.id,
                     product.name,
+                    product.description,
+                    product.category,
+                    product.quantity,
+                    product.price
                 )
         )
         return productsList
