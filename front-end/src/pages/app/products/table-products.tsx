@@ -2,7 +2,8 @@ import { Space, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { Trash2 } from 'lucide-react';
 
-interface DataType {
+export interface DataType {
+    id: string
     key: string;
     name: string;
     description: string;
@@ -11,7 +12,11 @@ interface DataType {
     price: number;
 }
 
-export function TableProducts({ data }) {
+interface dataProps {
+    data: DataType[]
+}
+
+export function TableProducts({ data }: dataProps) {
 
 
     const columns: TableProps<DataType>['columns'] = [
@@ -64,7 +69,7 @@ export function TableProducts({ data }) {
         <Table<DataType>
             columns={columns}
             className='mt-10 mr-20 mb-5 ml-20'
-            dataSource={data}
+            dataSource={data?.map(item => ({ ...item, key: item.id }))}
         />
     )
 }
