@@ -18,7 +18,6 @@ export class ProductController {
 
         dataProduct.id = randomUUID()
         dataProduct.name = createProductDto.name
-        dataProduct.userID = createProductDto.userID
         dataProduct.description = createProductDto.description
         dataProduct.category = createProductDto.category
         dataProduct.quantity = createProductDto.quantity

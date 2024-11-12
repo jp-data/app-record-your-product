@@ -15,8 +15,6 @@ export class ProductImageDto {
 }
 
 export class CreateProductDto {
-   @IsUUID()
-   userID: string
 
    @IsString()
    @IsNotEmpty()
