@@ -1,10 +1,11 @@
 import { Space, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { EditProduct } from './edit-product';
 
 export interface DataType {
     id: string
-    key: string;
     name: string;
     description: string;
     category: string;
@@ -17,15 +18,21 @@ interface dataProps {
 }
 
 export function TableProducts({ data }: dataProps) {
+    const [editProduct, setEditProduct] = useState<DataType | null>(null)
 
+    const handleEdit = (product: DataType) => {
+        setEditProduct(product)
+    }
 
     const columns: TableProps<DataType>['columns'] = [
         {
             title: '',
             key: 'actionEdit',
-            render: (_, record) => (
+            render: (_, row: DataType) => (
                 <Space size="middle">
-                    <a>Editar </a>
+                    <button onClick={() => handleEdit(row)}>
+                        Editar
+                    </button>
                 </Space>
             ),
         },
@@ -66,10 +73,17 @@ export function TableProducts({ data }: dataProps) {
     ];
 
     return (
-        <Table<DataType>
-            columns={columns}
-            className='mt-10 mr-20 mb-5 ml-20'
-            dataSource={data?.map(item => ({ ...item, key: item.id }))}
-        />
+        <>
+            <Table<DataType>
+                columns={columns}
+                className='mt-10 mr-20 mb-5 ml-20'
+                dataSource={data?.map(item => ({ ...item, key: item.id }))}
+            />
+            <EditProduct
+                product={editProduct}
+                setEditProduct={setEditProduct}
+            />
+        </>
+
     )
 }
