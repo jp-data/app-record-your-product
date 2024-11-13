@@ -46,6 +46,7 @@ export function EditProduct({ product, setEditProduct }: EditProductsProps) {
         if (product) {
             try {
                 await editProduct({ id: product.id, ...data, price: parseFloat(priceInput.replace(/\D/g, "")) / 100 });
+                setEditProduct(null)
             } catch (error) {
                 console.error("Erro ao editar produto:", error);
             }
