@@ -1,7 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import { Table, TableProps } from "antd";
+import { getProducts } from "../../../api-requisitions/get-products";
+import { useEffect, useState } from "react";
 
 interface DataType {
-    key: string;
+    id: string;
     item: string;
     category: string;
     value: number
@@ -9,12 +12,24 @@ interface DataType {
 
 
 export function TableProductsForSale() {
+    const [products, setProducts] = useState<DataType[]>([])
+
+    const { data: result } = useQuery({
+        queryKey: ['products'],
+        queryFn: () => getProducts()
+    })
+
+    useEffect(() => {
+        if (result) {
+            setProducts(result)
+        }
+    }, [result])
 
     const columns: TableProps<DataType>['columns'] = [
         {
             title: 'Item',
-            dataIndex: 'item',
-            key: 'item',
+            dataIndex: 'name',
+            key: 'name',
         },
         {
             title: 'Categoria',
@@ -23,40 +38,16 @@ export function TableProductsForSale() {
         },
         {
             title: 'Preço',
-            dataIndex: 'value',
-            key: 'value',
+            dataIndex: 'price',
+            key: 'price',
         },
 
     ];
 
-    const data: DataType[] = [
-        {
-            key: '2',
-            item: 'Bola society',
-            category: 'bolas',
-            value: 121.9
-        },
-        {
-            key: '1',
-            item: 'Meião Nike',
-            category: 'vestuário',
-            value: 85.89
-        },
-        {
-            key: '1',
-            item: 'Meião Nike',
-            category: 'vestuário',
-            value: 85.89
-        },
-        {
-            key: '1',
-            item: 'Meião Nike',
-            category: 'vestuário',
-            value: 85.89
-        },
-
-    ];
     return (
-        <Table<DataType> columns={columns} dataSource={data} />
+        <Table<DataType>
+            columns={columns}
+            dataSource={products?.map(item => ({ ...item, key: item.id }))}
+        />
     )
 }
