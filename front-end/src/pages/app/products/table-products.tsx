@@ -1,8 +1,11 @@
 import { Space, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EditProduct } from './edit-product';
+import { useMutation } from '@tanstack/react-query';
+import { deleteProduct } from '../../../api-requisitions/delete-product';
+import { queryClient } from '../../../lib/react-query';
 
 export interface DataType {
     id: string
@@ -15,10 +18,37 @@ export interface DataType {
 
 interface dataProps {
     data: DataType[]
+    result: DataType[] | undefined
 }
 
-export function TableProducts({ data }: dataProps) {
+export function TableProducts({ data, result }: dataProps) {
     const [editProduct, setEditProduct] = useState<DataType | null>(null)
+    const [products, setProducts] = useState<DataType[]>(data);
+
+    const { mutateAsync: removeProduct } = useMutation({
+        mutationFn: deleteProduct,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['products'])
+        }
+    })
+
+    async function handleDelete(id: string) {
+        const confirm = window.confirm('Esta ação irá excluir este produto')
+        if (confirm) {
+            try {
+                await removeProduct(id)
+            }
+            catch (error) {
+                console.error('Erro ao excluir: ', error)
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (result) {
+            setProducts(result)
+        }
+    }, [result])
 
     const handleEdit = (product: DataType) => {
         setEditProduct(product)
@@ -29,7 +59,7 @@ export function TableProducts({ data }: dataProps) {
             title: '',
             key: 'actionEdit',
             render: (_, row: DataType) => (
-                <Space size="middle">
+                <Space size="middle" className="flex items-center justify-center">
                     <button onClick={() => handleEdit(row)}>
                         Editar
                     </button>
@@ -64,9 +94,9 @@ export function TableProducts({ data }: dataProps) {
         {
             title: '',
             key: 'actionDelete',
-            render: (_, record) => (
-                <Space size="middle">
-                    <a><Trash2 size={18} /></a>
+            render: (_, row) => (
+                <Space size="middle" className="flex items-center justify-center">
+                    <a onClick={() => handleDelete(row.id)}><Trash2 size={18} /></a>
                 </Space>
             ),
         },

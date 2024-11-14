@@ -39,7 +39,7 @@ export function Products() {
                 <SearchProduct onSearch={handleSearch} />
             </div>
             <div className="w-full">
-                <TableProducts data={searchProducts} />
+                <TableProducts result={result} data={searchProducts} />
             </div>
         </div>
 
