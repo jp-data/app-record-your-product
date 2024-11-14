@@ -40,6 +40,8 @@ export function TableProductsForSale() {
             title: 'Preço',
             dataIndex: 'price',
             key: 'price',
+            render: (value: number) =>
+                new Intl.NumberFormat("pt-BR", { style: 'currency', currency: 'BRL' }).format(value),
         },
 
     ];
@@ -47,7 +49,10 @@ export function TableProductsForSale() {
     return (
         <Table<DataType>
             columns={columns}
-            dataSource={products?.map(item => ({ ...item, key: item.id }))}
+            dataSource={products?.map(item => ({
+                ...item,
+                key: item.id,
+            }))}
         />
     )
 }
