@@ -2,17 +2,23 @@ import { useQuery } from "@tanstack/react-query";
 import { Table, TableProps } from "antd";
 import { getProducts } from "../../../api-requisitions/get-products";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 interface DataType {
     id: string;
-    item: string;
+    name: string;
     category: string;
-    value: number
+    price: number
+}
+
+interface addToCartFunction {
+    onAddToCart: (product: DataType) => void
 }
 
 
-export function TableProductsForSale() {
+export function TableProductsForSale({ onAddToCart }: addToCartFunction) {
     const [products, setProducts] = useState<DataType[]>([])
+
 
     const { data: result } = useQuery({
         queryKey: ['products'],
@@ -43,6 +49,17 @@ export function TableProductsForSale() {
             render: (value: number) =>
                 new Intl.NumberFormat("pt-BR", { style: 'currency', currency: 'BRL' }).format(value),
         },
+        {
+            title: '',
+            key: 'actionAdd',
+            render: (_, row) => (
+                <button
+                    onClick={() => onAddToCart(row)}
+                    className="underline text-blue-500 hover:text-blue-700">
+                    Adicionar
+                </button>
+            )
+        }
 
     ];
 
@@ -51,7 +68,7 @@ export function TableProductsForSale() {
             columns={columns}
             dataSource={products?.map(item => ({
                 ...item,
-                key: item.id,
+                key: uuidv4(),
             }))}
         />
     )

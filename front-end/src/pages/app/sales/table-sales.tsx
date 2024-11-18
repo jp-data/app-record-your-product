@@ -64,7 +64,7 @@ export function TableSales() {
             payment: 'Dinheiro'
         },
         {
-            key: '1',
+            key: '2',
             code: 54879 - 4,
             item: ' 1 Bola society 1 meião',
             data: '23/10/2024',
