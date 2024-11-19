@@ -3,7 +3,23 @@ import { ShoppingCart, Trash2 } from "lucide-react";
 import { DialogFooter } from "../../../components/ui/dialog";
 import { v4 as uuidv4 } from 'uuid';
 import { Flex, Radio } from 'antd';
+import { useMutation } from "@tanstack/react-query";
+import { createOrders } from "../../../api-requisitions/create-order";
+import { queryClient } from "../../../lib/react-query";
+import * as zod from 'zod'
 
+
+const itensOrderSchema = zod.object({
+    product_id: zod.number(),
+    quantity: zod.number()
+})
+
+const newOrderSchema = zod.object({
+    payment: zod.string(),
+    items: zod.array(itensOrderSchema)
+})
+
+export type RegisterOrderForm = zod.infer<typeof newOrderSchema>
 
 interface CartProduct {
     id: string;
@@ -25,6 +41,30 @@ export function CartNewSale({ cartProducts, setCartProducts }: CartNewSaleProps)
         { label: 'Crédito', value: 'Crédito' },
         { label: 'Pix', value: 'Pix' },
     ];
+
+    const { mutateAsync: registerOrder } = useMutation({
+        mutationFn: createOrders,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['orders'])
+        }
+    })
+
+    async function handleCreateOrder() {
+        try {
+            const orderData = {
+                payment: 'Pix',
+                items: cartProducts.map((product) => ({
+                    product_id: product.id,
+                    quantity: product.quantity
+                }))
+            }
+            const validatedOrder = newOrderSchema.parse(orderData)
+            await registerOrder(validatedOrder)
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
 
     function handleIncrement(productID: string) {
         setCartProducts((prevCart) =>
@@ -108,7 +148,11 @@ export function CartNewSale({ cartProducts, setCartProducts }: CartNewSaleProps)
                                 buttonStyle="solid"
                             />
                         </Flex>
-                        <button className="border rounded-full h-9 bg-cyan-500 w-3/4 self-end  text-white font-semibold" type="submit">
+                        <button
+                            className="border rounded-full h-9 bg-cyan-500 w-3/4 self-end  text-white font-semibold"
+                            type="submit"
+                            onClick={handleCreateOrder}
+                        >
                             REGISTRAR VENDA {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
                                 total
                             )}
