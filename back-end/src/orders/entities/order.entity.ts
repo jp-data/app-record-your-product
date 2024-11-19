@@ -12,6 +12,9 @@ export class OrderEntity {
     @Column({ name: 'total', nullable: false })
     total: number
 
+    @Column({ name: 'payment', nullable: false })
+    payment: string
+
     @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.order)
     items: OrderItemEntity[];
 }
