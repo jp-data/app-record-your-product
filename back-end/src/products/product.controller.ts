@@ -16,7 +16,7 @@ export class ProductController {
     ) {
         const dataProduct = new ProductEntity()
 
-        dataProduct.id = randomUUID()
+
         dataProduct.name = createProductDto.name
         dataProduct.description = createProductDto.description
         dataProduct.category = createProductDto.category
@@ -34,13 +34,13 @@ export class ProductController {
     }
 
     @Get('/:id')
-    async findProduct(id: string) {
+    async findProduct(id: number) {
         return this.productService.findOne(id)
     }
 
     @Put('/:id')
     async updateProduct(
-        @Param('id') id: string,
+        @Param('id') id: number,
         @Body() updateProductDto: UpdateProductDto,
     ) {
         const productUpdated = await this.productService.update(
@@ -55,7 +55,7 @@ export class ProductController {
     }
 
     @Delete('/:id')
-    async deleteProduct(@Param('id') id: string) {
+    async deleteProduct(@Param('id') id: number) {
         await this.productService.delete(id)
     }
 }

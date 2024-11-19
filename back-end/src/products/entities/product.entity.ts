@@ -3,8 +3,8 @@ import { ProductImageEntity } from "./product-image.entity";
 
 @Entity({ name: 'products' })
 export class ProductEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+    @PrimaryGeneratedColumn('increment')
+    id: number
 
     @Column({ name: 'name', nullable: false, length: 100 })
     name: string

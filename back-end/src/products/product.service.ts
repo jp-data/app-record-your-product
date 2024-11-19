@@ -13,7 +13,7 @@ export class ProductService {
         private readonly productRepository: Repository<ProductEntity>
     ) { }
 
-    async findOne(id: string) {
+    async findOne(id: number) {
         return await this.productRepository.findOne({
             where: { id }
         })
@@ -44,7 +44,7 @@ export class ProductService {
         return productsList
     }
 
-    async update(id: string, updateProductDto: UpdateProductDto) {
+    async update(id: number, updateProductDto: UpdateProductDto) {
         const productToUpdate = await this.findOne(id)
 
         if (!productToUpdate) {
@@ -54,7 +54,7 @@ export class ProductService {
         return this.productRepository.update(id, updateProductDto)
     }
 
-    async delete(id: string) {
+    async delete(id: number) {
         const productToDelete = await this.productRepository.findOne({
             where: { id }
         })
