@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createOrders } from "../../../api-requisitions/create-order";
 import { queryClient } from "../../../lib/react-query";
 import * as zod from 'zod'
+import { useState } from "react";
 
 
 const itensOrderSchema = zod.object({
@@ -35,6 +36,7 @@ interface CartNewSaleProps {
 
 export function CartNewSale({ cartProducts, setCartProducts }: CartNewSaleProps) {
     const total = cartProducts.reduce((sum, product) => sum + product.price * product.quantity, 0)
+    const [paymentChosen, setPaymentChosen] = useState('')
 
     const options = [
         { label: 'Débito', value: 'Débito' },
@@ -52,7 +54,7 @@ export function CartNewSale({ cartProducts, setCartProducts }: CartNewSaleProps)
     async function handleCreateOrder() {
         try {
             const orderData = {
-                payment: 'Pix',
+                payment: paymentChosen,
                 items: cartProducts.map((product) => ({
                     product_id: product.id,
                     quantity: product.quantity
@@ -91,6 +93,11 @@ export function CartNewSale({ cartProducts, setCartProducts }: CartNewSaleProps)
                     : product
             )
         );
+    }
+
+    function handlePaymentInputChange(e) {
+        const { value } = e.target
+        setPaymentChosen(value)
     }
 
     return (
@@ -146,6 +153,7 @@ export function CartNewSale({ cartProducts, setCartProducts }: CartNewSaleProps)
                                 defaultValue="Débito"
                                 optionType="button"
                                 buttonStyle="solid"
+                                onChange={handlePaymentInputChange}
                             />
                         </Flex>
                         <button
