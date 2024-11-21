@@ -5,8 +5,9 @@ import { TableProductsForSale } from "./table-products-for-sale";
 import { DataType } from "../products/table-products";
 
 
-export function FormNewSale() {
+export function FormNewSale({ onClose }: { onClose: () => void }) {
     const [cartProducts, setCartProducts] = useState<DataType[]>([])
+
 
     function handleAddProductToCart(product: DataType) {
         setCartProducts((prevCart) => {
@@ -32,7 +33,11 @@ export function FormNewSale() {
                 <TableProductsForSale onAddToCart={handleAddProductToCart} />
             </div>
             <div className="w-1/3 ml-auto">
-                <CartNewSale cartProducts={cartProducts} setCartProducts={setCartProducts} />
+                <CartNewSale
+                    cartProducts={cartProducts}
+                    setCartProducts={setCartProducts}
+                    onClose={onClose}
+                />
             </div>
         </div>
     </DialogContent>

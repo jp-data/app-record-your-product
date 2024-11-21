@@ -32,9 +32,10 @@ interface CartProduct {
 interface CartNewSaleProps {
     cartProducts: CartProduct[];
     setCartProducts: React.Dispatch<React.SetStateAction<CartProduct[]>>;
+    onClose: () => void;
 }
 
-export function CartNewSale({ cartProducts, setCartProducts }: CartNewSaleProps) {
+export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewSaleProps) {
     const total = cartProducts.reduce((sum, product) => sum + product.price * product.quantity, 0)
     const [paymentChosen, setPaymentChosen] = useState('')
 
@@ -62,10 +63,14 @@ export function CartNewSale({ cartProducts, setCartProducts }: CartNewSaleProps)
             }
             const validatedOrder = newOrderSchema.parse(orderData)
             await registerOrder(validatedOrder)
+            setCartProducts([])
+            setPaymentChosen('')
+            onClose()
         }
         catch (error) {
             console.log(error)
         }
+
     }
 
     function handleIncrement(productID: string) {
