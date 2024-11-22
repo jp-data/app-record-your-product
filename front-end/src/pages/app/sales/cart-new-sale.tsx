@@ -119,7 +119,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                 <div className="h-full mt-6 ml-4 mr-4 max-h-98 overflow-y-auto scrollbar-hide">
                     {cartProducts.map((product) => (
                         <div key={uuidv4()} className="mb-8">
-                            <div className="w-full grid grid-cols-6">
+                            <div className="w-full grid grid-cols-6 font-semibold">
 
                                 <div className="flex col-span-4">
                                     <p className="mr-3">{product.name}</p>
@@ -160,6 +160,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                                 optionType="button"
                                 buttonStyle="solid"
                                 onChange={handlePaymentInputChange}
+                                className="font-semibold"
                             />
                         </Flex>
 
@@ -175,7 +176,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                             </div>
                         ) : (
                             <button
-                                className="h-8 text-lg w-1/2 font-semibold disabled:text-gray-500 disabled:cursor-not-allowed"
+                                className="h-8 text-lg w-3/4 bg-slate-200 rounded-lg font-semibold disabled:text-gray-500 disabled:cursor-not-allowed"
                                 onClick={() => setIsDialogOpen(true)}
                                 disabled={cartProducts.length === 0}
                             >

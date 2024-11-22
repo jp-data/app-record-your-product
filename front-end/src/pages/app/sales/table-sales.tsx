@@ -57,6 +57,10 @@ export function TableSales({ result }: DataProps) {
 
 
     return (
-        <Table<DataType> columns={columns} dataSource={result?.map(item => ({ ...item, key: item.id }))} />
+        <Table<DataType>
+            columns={columns}
+            dataSource={result?.map(item => ({ ...item, key: item.id }))}
+            className="font-semibold"
+        />
     )
 }

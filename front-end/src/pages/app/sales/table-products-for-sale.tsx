@@ -72,6 +72,7 @@ export function TableProductsForSale({ onAddToCart }: addToCartFunction) {
             }))}
             pagination={false}
             scroll={{ y: 500 }}
+            className="font-semibold"
         />
     )
 }
