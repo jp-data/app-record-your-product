@@ -9,6 +9,12 @@ export class OrderEntity {
     @CreateDateColumn({ name: 'created_at' })
     createdAt: string
 
+    @Column({ name: 'subtotal' })
+    subtotal: number
+
+    @Column({ name: 'discount' })
+    discount: number
+
     @Column({ name: 'total', nullable: false })
     total: number
 

@@ -34,9 +34,9 @@ export function TableSales({ result }: DataProps) {
             key: 'products',
         },
         {
-            title: 'Valor total',
-            dataIndex: 'total',
-            key: 'total',
+            title: 'Subtotal',
+            dataIndex: 'subtotal',
+            key: 'subtotal',
         },
         {
             title: 'Desconto',
@@ -44,9 +44,9 @@ export function TableSales({ result }: DataProps) {
             key: 'discount',
         },
         {
-            title: 'Subtotal',
-            dataIndex: 'subtotal',
-            key: 'subtotal',
+            title: 'Valor total',
+            dataIndex: 'total',
+            key: 'total',
         },
         {
             title: 'Pagamento',

@@ -1,6 +1,6 @@
 import { Card } from "antd";
 import { ShoppingCart, Trash2 } from "lucide-react";
-import { DialogFooter } from "../../../components/ui/dialog";
+import { Dialog, DialogFooter, DialogTrigger } from "../../../components/ui/dialog";
 import { v4 as uuidv4 } from 'uuid';
 import { Flex, Radio } from 'antd';
 import { useMutation } from "@tanstack/react-query";
@@ -8,6 +8,7 @@ import { createOrders } from "../../../api-requisitions/create-order";
 import { queryClient } from "../../../lib/react-query";
 import * as zod from 'zod'
 import { useState } from "react";
+import { FormDiscount } from "./form-discount";
 
 
 const itensOrderSchema = zod.object({
@@ -17,6 +18,7 @@ const itensOrderSchema = zod.object({
 
 const newOrderSchema = zod.object({
     payment: zod.string(),
+    discount: zod.number().default(0),
     items: zod.array(itensOrderSchema)
 })
 
@@ -36,8 +38,11 @@ interface CartNewSaleProps {
 }
 
 export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewSaleProps) {
-    const total = cartProducts.reduce((sum, product) => sum + product.price * product.quantity, 0)
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [paymentChosen, setPaymentChosen] = useState('')
+    const [discount, setDiscount] = useState(0)
+    const total = cartProducts.reduce((sum, product) => sum + product.price * product.quantity, 0)
+    const subtotal = total - discount;
 
     const options = [
         { label: 'Débito', value: 'Débito' },
@@ -56,6 +61,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
         try {
             const orderData = {
                 payment: paymentChosen,
+                discount: discount || 0,
                 items: cartProducts.map((product) => ({
                     product_id: product.id,
                     quantity: product.quantity
@@ -65,6 +71,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
             await registerOrder(validatedOrder)
             setCartProducts([])
             setPaymentChosen('')
+            setDiscount(0)
             onClose()
         }
         catch (error) {
@@ -147,7 +154,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                     <hr />
                 </div>
             ))}
-            <div>
+            <div className="mt-4">
                 <DialogFooter className="flex-shrink-0">
                     <div className="flex flex-col gap-4 w-full">
                         <Flex vertical gap="middle">
@@ -161,13 +168,27 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                                 onChange={handlePaymentInputChange}
                             />
                         </Flex>
+                        <Dialog>
+                            <DialogTrigger className="flex w-2/4 self-end">
+                                <button className="h-8 text-lg w-full font-semibold" onClick={() => setIsDialogOpen(true)}>
+                                    Aplicar desconto
+                                </button>
+                            </DialogTrigger>
+                            <FormDiscount
+                                isDialogOpen={isDialogOpen}
+                                setIsDialogOpen={setIsDialogOpen}
+                                total={total}
+                                setDiscount={setDiscount}
+                            />
+                        </Dialog>
+
                         <button
-                            className="border rounded-full h-9 bg-cyan-500 w-3/4 self-end  text-white font-semibold"
+                            className="border rounded-full h-9 text-lg bg-cyan-500 w-3/4 self-end  text-white font-semibold"
                             type="submit"
                             onClick={handleCreateOrder}
                         >
-                            REGISTRAR VENDA {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-                                total
+                            Registrar venda {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
+                                subtotal
                             )}
                         </button>
                     </div>

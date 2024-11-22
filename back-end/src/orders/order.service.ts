@@ -15,7 +15,8 @@ export class OrdersService {
     ) { }
 
     async create(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
-        let totalPrice = 0;
+        let subtotalPrice = 0
+        const discount = createOrderDto.discount || 0
 
         const orderedItems = await Promise.all(
             createOrderDto.items.map(async (itemDto) => {
@@ -25,7 +26,7 @@ export class OrdersService {
                 if (!product) {
                     throw new NotFoundException(`Product with ID ${itemDto.product_id} not found`)
                 }
-                totalPrice += product.price * itemDto.quantity
+                subtotalPrice += product.price * itemDto.quantity
 
                 const allProducts = this.itemRepository.create({
                     product,
@@ -34,9 +35,12 @@ export class OrdersService {
                 return this.itemRepository.save(allProducts)
             })
         )
+        const totalPrice = subtotalPrice - discount
 
         const orderWithItems = this.orderRepository.create({
+            subtotal: subtotalPrice,
             total: totalPrice,
+            discount,
             payment: createOrderDto.payment,
             items: orderedItems
         })
@@ -48,6 +52,8 @@ export class OrdersService {
             `SELECT 
                 ord.created_at AS date,
                 GROUP_CONCAT(prd.name, ' - ') AS products,
+                ord.subtotal,
+                ord.discount,
                 ord.total,
                 ord.payment,
                 ord.id 
