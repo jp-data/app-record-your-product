@@ -70,6 +70,8 @@ export function TableProductsForSale({ onAddToCart }: addToCartFunction) {
                 ...item,
                 key: uuidv4(),
             }))}
+            pagination={false}
+            scroll={{ y: 500 }}
         />
     )
 }

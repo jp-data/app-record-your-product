@@ -1,6 +1,4 @@
-import { Card } from "antd";
 import { ShoppingCart, Trash2 } from "lucide-react";
-import { Dialog, DialogFooter, DialogTrigger } from "../../../components/ui/dialog";
 import { v4 as uuidv4 } from 'uuid';
 import { Flex, Radio } from 'antd';
 import { useMutation } from "@tanstack/react-query";
@@ -118,9 +116,9 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                 <div className="h-min row-span-1 ml-2 mt-2">
                     <ShoppingCart />
                 </div>
-                <div className="h-2/3 mt-8 ml-4 mr-4">
+                <div className="h-full mt-6 ml-4 mr-4 max-h-98 overflow-y-auto scrollbar-hide">
                     {cartProducts.map((product) => (
-                        <div key={uuidv4()} className="mb-9">
+                        <div key={uuidv4()} className="mb-8">
                             <div className="w-full grid grid-cols-6">
 
                                 <div className="flex col-span-4">
