@@ -39,18 +39,36 @@ export function FormDiscount({ isDialogOpen, setIsDialogOpen, total, setDiscount
                         value={priceInput}
                         onChange={handlePriceChange}
                         placeholder="R$0,00"
-                        className="h-10 border-2 rounded px-2 border-gray-500"
+                        className="h-10 border-2 rounded w-full px-2 border-gray-500"
                     />
                 </div>
-                <div className="space-y-4 py-4 flex justify-around w-1/2">
-                    <p>Subtotal</p>
-                    {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-                        total - parsePriceInput()
-                    )}
+                <div className="space-y-4 py-4 flex flex-col items-end w-1/2">
+                    <div className="flex w-3/5 justify-between">
+                        <p>Subtotal</p>
+                        {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
+                            total
+                        )}
+                    </div>
+
+                    <div className="flex w-3/5 justify-between text-red-600 font-semibold">
+                        <p>Desconto</p>
+                        {'-' + priceInput}
+                    </div>
+
+                    <div className="flex w-2/4 justify-between font-semibold">
+                        <p>Total</p>
+                        {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
+                            total - parsePriceInput()
+                        )}
+                    </div>
+
+                    <div className="">
+                        <button type='button' className="h-9 text-lg self-end" onClick={handleApplyDiscount}>
+                            Aplicar
+                        </button>
+                    </div>
+
                 </div>
-                <button type='button' className="h-9 w-1/2 text-lg self-end" onClick={handleApplyDiscount}>
-                    Aplicar
-                </button>
             </form>
         </DialogContent>
     </Dialog>
