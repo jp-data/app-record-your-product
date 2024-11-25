@@ -16,7 +16,7 @@ export function NewSaleButton() {
                 <button
                     type="button"
                     title="Nova Venda"
-                    className="border rounded-full w-32 h-12 text-white bg-cyan-500 font-semibold"
+                    className="border rounded-full w-32 h-12 hover:bg-cyan-600 focus:outline-none text-white bg-cyan-500 font-semibold"
 
                 >
                     Nova Venda

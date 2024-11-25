@@ -9,7 +9,7 @@ export function NewProductButton() {
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-                <button type="button" title="Cadastrar produto" onClick={() => setIsDialogOpen(true)}>
+                <button type="button" title="Cadastrar produto" className="rounded-full hover:bg-cyan-600 focus:outline-none text-white bg-cyan-500" onClick={() => setIsDialogOpen(true)}>
                     <CirclePlus size={32} />
                 </button>
             </DialogTrigger>

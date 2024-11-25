@@ -10,13 +10,13 @@ export function SearchProduct({ onSearch }: SearchProductsProps) {
         onSearch(value)
     }
     return (
-        <div className="relative w-full left-4">
+        <div className="relative w-1/2 left-4">
             <Search
                 className="absolute left-3 top-3 h-4 w-4 text-gray-500"
             />
             <input
                 type="text"
-                placeholder="Search products"
+                placeholder="Buscar produto"
                 className="pl-10 border rounded-md w-full py-1.5"
                 onChange={handleChange}
             />
