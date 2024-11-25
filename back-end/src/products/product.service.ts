@@ -24,25 +24,25 @@ export class ProductService {
         return this.productRepository.save(newProduct)
     }
 
-    async listAll() {
-        const productsToList = await this.productRepository.find({
-            // relations: {
-            //     image: true
-            // }
-        })
-        const productsList = productsToList.map(
-            (product) =>
-                new ProductListDto(
-                    product.id,
-                    product.name,
-                    product.description,
-                    product.category,
-                    product.quantity,
-                    product.price
-                )
-        )
-        return productsList
-    }
+    // async listAll() {
+    //     const productsToList = await this.productRepository.find({
+    //         // relations: {
+    //         //     image: true
+    //         // }
+    //     })
+    //     const productsList = productsToList.map(
+    //         (product) =>
+    //             new ProductListDto(
+    //                 product.id,
+    //                 product.name,
+    //                 product.description,
+    //                 product.category,
+    //                 product.quantity,
+    //                 product.price
+    //             )
+    //     )
+    //     return productsList
+    // }
 
     async update(id: number, updateProductDto: UpdateProductDto) {
         const productToUpdate = await this.findOne(id)
@@ -66,5 +66,22 @@ export class ProductService {
         return this.productRepository.remove(productToDelete)
     }
 
+    async getSortByProducts(orderBy: string, direction: string) {
+        const allowedColumns = ['price', 'quantity']
+        if (!allowedColumns.includes(orderBy)) {
+            throw new Error('Invalid column for ordering');
+        }
 
+        const allowedDirections = ['ASC', 'DESC'];
+        if (!allowedDirections.includes(direction)) {
+            throw new Error('Invalid direction');
+        }
+
+        const products = await this.productRepository.query(`
+        SELECT * FROM products
+        ORDER BY ${orderBy} ${direction}
+
+    `)
+        return products
+    }
 }

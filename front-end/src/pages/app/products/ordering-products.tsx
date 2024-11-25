@@ -20,9 +20,7 @@ export function OrderingProducts() {
                     <option value="quant_desc">Quantidade (Maior p/ menor)</option>
                     <option value="price_asc">Preço (Menor p/ maior)</option>
                     <option value="price_desc">Preço (Maior p/ menor)</option>
-
                 </select>
-
             </div >
         </>
 

@@ -106,9 +106,9 @@ export function TableProducts({ data, result }: dataProps) {
         <>
             <Table<DataType>
                 columns={columns}
-                className='mt-10 mr-20 mb-5 ml-20'
+                className='mt-10 mr-20 mb-5 ml-20 font-semibold'
                 dataSource={data?.map(item => ({ ...item, key: item.id }))}
-                className="font-semibold"
+
             />
             <EditProduct
                 product={editProduct}

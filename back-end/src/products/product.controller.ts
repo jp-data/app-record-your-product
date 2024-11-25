@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, ValidationPipe } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, ValidationPipe } from "@nestjs/common";
 import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductService } from "./product.service";
 import { ProductEntity } from "./entities/product.entity";
@@ -6,7 +6,7 @@ import { randomUUID } from "crypto";
 import { UpdateProductDto } from "./dtos/update.product-dto";
 
 
-@Controller('/products')
+@Controller('products')
 export class ProductController {
     constructor(private readonly productService: ProductService) { }
 
@@ -28,10 +28,10 @@ export class ProductController {
         return newProduct
     }
 
-    @Get()
-    async listProducts() {
-        return this.productService.listAll()
-    }
+    // @Get()
+    // async listProducts() {
+    //     return this.productService.listAll()
+    // }
 
     @Get('/:id')
     async findProduct(id: number) {
@@ -57,6 +57,14 @@ export class ProductController {
     @Delete('/:id')
     async deleteProduct(@Param('id') id: number) {
         await this.productService.delete(id)
+    }
+
+    @Get('sort')
+    async getSortedProducts(
+        @Query('orderBy') orderBy: string,
+        @Query('direction') direction: string
+    ) {
+        return await this.productService.getSortByProducts(orderBy, direction);
     }
 }
 
