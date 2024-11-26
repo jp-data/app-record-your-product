@@ -65,6 +65,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                     quantity: product.quantity
                 }))
             }
+
             const validatedOrder = newOrderSchema.parse(orderData)
             await registerOrder(validatedOrder)
             setCartProducts([])
@@ -73,7 +74,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
             onClose()
         }
         catch (error) {
-            console.log(error)
+            console.error('Erro inesperado: ', error)
         }
 
     }
@@ -162,7 +163,9 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                                 className="font-semibold"
                             />
                         </Flex>
-
+                        {!paymentChosen && (
+                            <p className="text-blue-600 text-sm ml-1 font-semibold">Selecione um método de pagamento(obrigatório)</p>
+                        )}
                     </div>
                 </div>
 
@@ -195,7 +198,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                             className="border disabled:bg-cyan-400 disabled:cursor-not-allowed rounded-full h-9 text-xl bg-cyan-500 w-full self-end  text-white font-semibold"
                             type="submit"
                             onClick={handleCreateOrder}
-                            disabled={cartProducts.length === 0}
+                            disabled={cartProducts.length === 0 || !paymentChosen}
                         >
                             Registrar venda {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
                                 subtotal
