@@ -10,6 +10,24 @@ import { UpdateProductDto } from "./dtos/update.product-dto";
 export class ProductController {
     constructor(private readonly productService: ProductService) { }
 
+    @Get('/sort')
+    async getSortedProducts(
+        @Query('orderBy') orderBy: string,
+        @Query('direction') direction: string
+    ) {
+        return await this.productService.getSortByProducts(orderBy, direction);
+    }
+
+    @Get('/:id')
+    async findProduct(@Param('id') id: string) {
+        return this.productService.findOne(Number(id))
+    }
+
+    @Get()
+    async listProducts() {
+        return this.productService.listAll()
+    }
+
     @Post()
     async createProduct(
         @Body(ValidationPipe) createProductDto: CreateProductDto
@@ -26,16 +44,6 @@ export class ProductController {
 
         const newProduct = this.productService.create(dataProduct)
         return newProduct
-    }
-
-    // @Get()
-    // async listProducts() {
-    //     return this.productService.listAll()
-    // }
-
-    @Get('/:id')
-    async findProduct(id: number) {
-        return this.productService.findOne(id)
     }
 
     @Put('/:id')
@@ -59,12 +67,5 @@ export class ProductController {
         await this.productService.delete(id)
     }
 
-    @Get('sort')
-    async getSortedProducts(
-        @Query('orderBy') orderBy: string,
-        @Query('direction') direction: string
-    ) {
-        return await this.productService.getSortByProducts(orderBy, direction);
-    }
 }
 
