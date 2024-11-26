@@ -75,9 +75,7 @@ export class ProductService {
     }
 
     async delete(id: number) {
-        const productToDelete = await this.productRepository.findOne({
-            where: { id }
-        })
+        const productToDelete = await this.findOne(id)
 
         if (!productToDelete) {
             throw new Error('Product not found!')

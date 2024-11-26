@@ -7,7 +7,7 @@ export class OrderItemEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @ManyToOne(() => ProductEntity, (product) => product.id)
+    @ManyToOne(() => ProductEntity, (product) => product.id, { onDelete: 'CASCADE', eager: true })
     @JoinColumn({ name: 'product_id' })
     product: ProductEntity;
 

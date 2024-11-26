@@ -32,8 +32,7 @@ export class ProductEntity {
 
     @OneToMany(
         () => ProductImageEntity,
-        (productImageEntity) => productImageEntity.product,
-        { cascade: true, eager: true }
+        (productImageEntity) => productImageEntity.product
     )
     image: ProductImageEntity[];
 }

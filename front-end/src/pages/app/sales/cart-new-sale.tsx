@@ -156,7 +156,6 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                                 disabled={cartProducts.length === 0}
                                 block
                                 options={options}
-                                defaultValue="Débito"
                                 optionType="button"
                                 buttonStyle="solid"
                                 onChange={handlePaymentInputChange}
@@ -176,7 +175,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                             </div>
                         ) : (
                             <button
-                                className="h-8 text-lg w-1/2 bg-slate-200 rounded-md font-semibold disabled:text-gray-500 disabled:cursor-not-allowed"
+                                className="h-8 text-lg w-1/2 bg-slate-200 rounded-full font-semibold disabled:text-gray-500 disabled:cursor-not-allowed"
                                 onClick={() => setIsDialogOpen(true)}
                                 disabled={cartProducts.length === 0}
                             >
