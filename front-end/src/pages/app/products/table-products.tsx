@@ -50,6 +50,7 @@ export function TableProducts({ data, result }: dataProps) {
         }
     }, [result])
 
+
     const handleEdit = (product: DataType) => {
         setEditProduct(product)
     }

@@ -5,15 +5,25 @@ import { DataType, TableProducts } from "./table-products"
 import { getProducts } from "../../../api-requisitions/get-products";
 import { useQuery } from "@tanstack/react-query";
 import { OrderingProducts } from "./ordering-products";
+import { getSortProducts } from "../../../api-requisitions/get-sortby-products";
 
 
 export function Products() {
     const [searchValue, setSearchValue] = useState('')
     const [products, setProducts] = useState<DataType[]>([])
+    const [sortBy, setSortBy] = useState('')
+    const [direction, setDirection] = useState('')
+
+
 
     const { data: result } = useQuery({
-        queryKey: ['products'],
-        queryFn: () => getProducts()
+        queryKey: ['products', { orderBy: sortBy, direction: direction }],
+        queryFn: () => {
+            if (!sortBy || !direction) {
+                return getProducts()
+            }
+            return getSortProducts({ orderBy: sortBy, direction })
+        }
     })
 
     useEffect(() => {
@@ -38,7 +48,7 @@ export function Products() {
             <div className="flex items-center justify-between w-full max-w-3xl">
                 <NewProductButton />
                 <SearchProduct onSearch={handleSearch} />
-                <OrderingProducts />
+                <OrderingProducts setSortBy={setSortBy} setDirection={setDirection} sortBy={sortBy} direction={direction} />
             </div>
             <div className="w-full">
                 <TableProducts result={result} data={searchProducts} />
