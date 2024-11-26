@@ -20,7 +20,7 @@ export function OrderingProducts({ setSortBy, setDirection, sortBy, direction })
         if (sortBy === 'quantity' && direction === 'ASC') return 'quant_asc'
         if (sortBy === 'quantity' && direction === 'DESC') return 'quant_desc'
         if (sortBy === 'price' && direction === 'ASC') return 'price_asc'
-        if (sortBy === 'price' && direction === 'DESC') return 'price_asc'
+        if (sortBy === 'price' && direction === 'DESC') return 'price_desc'
         if (sortBy === '' && direction === '') return 'selecione'
     }
 

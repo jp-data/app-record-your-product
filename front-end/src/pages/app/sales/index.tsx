@@ -4,6 +4,8 @@ import { TableSales } from "./table-sales";
 import { useQuery } from "@tanstack/react-query";
 import { getTotalSales } from "../../../api-requisitions/get-total-sales";
 import { DataType } from "../products/table-products";
+import { SalesFilter } from "./sales-filter";
+import { DatePicker } from "./date-picker";
 
 
 export function Sales() {
@@ -22,9 +24,14 @@ export function Sales() {
 
     return (
         <div className="flex flex-col gap-4 p-8">
-            <h1 className="text-3xl font-bold tracking-tight">Vendas</h1>
-            <div className="flex items-center w-full max-w-lg h-3/4">
+            <h1 className="text-3xl ml-1 font-bold tracking-tight">Vendas</h1>
+            <div className="flex flex-col w-full max-w-lg h-3/4">
                 <NewSaleButton />
+                <div className="flex w-3/5 items-center justify-between mt-6 ml-3">
+                    <h1 className="text-2xl font-bold">Histórico</h1>
+                    <SalesFilter />
+                    <DatePicker />
+                </div>
                 {/* Filtros */}
                 {/* {Selecionar período} */}
             </div>

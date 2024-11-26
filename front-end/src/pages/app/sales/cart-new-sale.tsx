@@ -178,7 +178,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                             </div>
                         ) : (
                             <button
-                                className="h-8 text-lg w-1/2 bg-slate-200 rounded-full font-semibold disabled:text-gray-500 disabled:cursor-not-allowed"
+                                className="h-8 text-lg w-1/2 bg-slate-200 hover:bg-slate-400 rounded-full font-semibold disabled:text-gray-500 disabled:cursor-not-allowed"
                                 onClick={() => setIsDialogOpen(true)}
                                 disabled={cartProducts.length === 0}
                             >
@@ -195,7 +195,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                     </div>
                     <div className="h-1/3 w-2/3 mt-5">
                         <button
-                            className="border disabled:bg-cyan-400 disabled:cursor-not-allowed rounded-full h-9 text-xl bg-cyan-500 w-full self-end  text-white font-semibold"
+                            className="border disabled:bg-cyan-300 hover:bg-cyan-600 disabled:cursor-not-allowed focus:outline-none rounded-full h-9 text-xl bg-cyan-500 w-full self-end  text-white font-semibold"
                             type="submit"
                             onClick={handleCreateOrder}
                             disabled={cartProducts.length === 0 || !paymentChosen}
