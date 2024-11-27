@@ -37,7 +37,7 @@ export function Sales() {
                 <NewSaleButton />
                 <div className="w-4/5 grid grid-cols-7 items-center justify-between mt-6 ml-3">
                     <h1 className="text-2xl col-span-2 font-bold">Histórico</h1>
-                    <SalesFilter setPaymentChosen={setPaymentChosen} setHasDiscount={setHasDiscount} />
+                    <SalesFilter paymentChosen={paymentChosen} hasDiscount={hasDiscount} setPaymentChosen={setPaymentChosen} setHasDiscount={setHasDiscount} />
                     <DatePicker />
                 </div>
                 {/* Filtros */}

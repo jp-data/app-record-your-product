@@ -4,16 +4,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSepar
 import { Dialog } from "../../../components/ui/dialog";
 import { Flex, Radio } from "@radix-ui/themes";
 
-export function SalesFilter({ setPaymentChosen, setHasDiscount }) {
+export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setHasDiscount }) {
     async function handleChosenFilterPayment(e) {
         const value = e.target.value
-        console.log(value)
+
         setPaymentChosen(value)
     }
 
     async function handleChosenFilterDiscount(e) {
         const value = e.target.value
-        console.log(value)
+
         setHasDiscount(value)
     }
     return (
@@ -35,25 +35,25 @@ export function SalesFilter({ setPaymentChosen, setHasDiscount }) {
                         <Flex align="start" direction="column" onChange={handleChosenFilterPayment} gap="1" className="flex flex-col">
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="payment" value="Todos" className="mr-1" />
+                                    <Radio name="payment" value="Todos" checked={paymentChosen === "Todos"} className="mr-1" />
                                     Todos
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="payment" value="Débito" className="mr-1" />
+                                    <Radio name="payment" value="Débito" checked={paymentChosen === "Débito"} className="mr-1" />
                                     Débito
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="payment" value="Crédito" className="mr-1" />
+                                    <Radio name="payment" value="Crédito" checked={paymentChosen === "Crédito"} className="mr-1" />
                                     Crédito
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="payment" value="Pix" className="mr-1" />
+                                    <Radio name="payment" value="Pix" checked={paymentChosen === "Pix"} className="mr-1" />
                                     Pix
                                 </span>
                             </Flex>
@@ -65,19 +65,19 @@ export function SalesFilter({ setPaymentChosen, setHasDiscount }) {
                         <Flex align="start" direction="column" onChange={handleChosenFilterDiscount} gap="1" className="flex flex-col">
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="discount" value="Todos" className="mr-1" />
+                                    <Radio name="discount" value="Todos" checked={hasDiscount === "Todos"} className="mr-1" />
                                     Todos
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="discount" value="true" className="mr-1" />
+                                    <Radio name="discount" value="true" checked={hasDiscount === "true"} className="mr-1" />
                                     Com desconto
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="discount" value="false" className="mr-1" />
+                                    <Radio name="discount" value="false" checked={hasDiscount === "false"} className="mr-1" />
                                     Sem desconto
                                 </span>
                             </Flex>
