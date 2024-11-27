@@ -67,8 +67,8 @@ export class OrdersService {
         return totalSales
     }
 
-    async getSalesForPayment(paymentChosen: string) {
-        const totalSales = await this.orderRepository.query(
+    async getSalesForPaymentOrDiscount(paymentChosen: string, hasDiscount: boolean) {
+        let query =
             `
             SELECT 
                 ord.created_at AS date,
@@ -83,11 +83,22 @@ export class OrdersService {
                 ON ord.id = orders_itens.id_order
             INNER JOIN products AS prd
                 ON prd.id = orders_itens.product_id
-            WHERE ord.payment = ?
+            WHERE 1=1
+            `
+        const queryParams: any[] = []
+
+        if (paymentChosen) {
+            query += ` AND ord.payment = ?`
+            queryParams.push(paymentChosen)
+        }
+
+        if (hasDiscount !== undefined) {
+            query += ` AND ord.discount ${hasDiscount ? '>' : '='} 0`
+        }
+
+        query += `
             GROUP BY ord.id, ord.created_at, ord.subtotal, ord.discount, ord.total, ord.payment
-            `,
-            [paymentChosen]
-        )
-        return totalSales
+        `
+        return await this.orderRepository.query(query, queryParams)
     }
 }

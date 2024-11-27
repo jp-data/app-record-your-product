@@ -18,8 +18,10 @@ export class OrdersController {
 
     @Get('/filter')
     async getSalesForPayment(
-        @Query('paymentChosen') paymentChosen: string
+        @Query('paymentChosen') paymentChosen?: string,
+        @Query('hasDiscount') hasDiscount?: string
     ) {
-        return await this.ordersService.getSalesForPayment(paymentChosen)
+        const hasDiscountBoolean = hasDiscount === 'true' ? true : hasDiscount === 'false' ? false : undefined
+        return await this.ordersService.getSalesForPaymentOrDiscount(paymentChosen, hasDiscountBoolean)
     }
 }
