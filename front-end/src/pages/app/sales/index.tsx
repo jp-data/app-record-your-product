@@ -6,20 +6,21 @@ import { getTotalSales } from "../../../api-requisitions/get-total-sales";
 import { DataType } from "../products/table-products";
 import { SalesFilter } from "./sales-filter";
 import { DatePicker } from "./date-picker";
-import { getSalesByPaymentChosen } from "../../../api-requisitions/get-sales-by-payment";
+import { getSalesByPaymentChosenOrDiscount } from "../../../api-requisitions/get-sales-by-payment";
 
 
 export function Sales() {
     const [orders, setOrders] = useState<DataType[]>([])
     const [paymentChosen, setPaymentChosen] = useState('')
+    const [hasDiscount, setHasDiscount] = useState('')
 
     const { data: result } = useQuery({
-        queryKey: ['orders', { paymentChosen: paymentChosen }],
+        queryKey: ['orders', { paymentChosen: paymentChosen, hasDiscount: hasDiscount }],
         queryFn: () => {
-            if (!paymentChosen || paymentChosen == 'Todos') {
+            if (!paymentChosen && !hasDiscount) {
                 return getTotalSales()
             }
-            return getSalesByPaymentChosen({ paymentChosen })
+            return getSalesByPaymentChosenOrDiscount({ paymentChosen, hasDiscount })
         }
     })
 
@@ -36,7 +37,7 @@ export function Sales() {
                 <NewSaleButton />
                 <div className="w-4/5 grid grid-cols-7 items-center justify-between mt-6 ml-3">
                     <h1 className="text-2xl col-span-2 font-bold">Histórico</h1>
-                    <SalesFilter setPaymentChosen={setPaymentChosen} />
+                    <SalesFilter setPaymentChosen={setPaymentChosen} setHasDiscount={setHasDiscount} />
                     <DatePicker />
                 </div>
                 {/* Filtros */}

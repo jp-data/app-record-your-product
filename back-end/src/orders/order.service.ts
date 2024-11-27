@@ -87,7 +87,7 @@ export class OrdersService {
             `
         const queryParams: any[] = []
 
-        if (paymentChosen) {
+        if (paymentChosen && paymentChosen !== 'Todos') {
             query += ` AND ord.payment = ?`
             queryParams.push(paymentChosen)
         }

@@ -4,10 +4,17 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSepar
 import { Dialog } from "../../../components/ui/dialog";
 import { Flex, Radio } from "@radix-ui/themes";
 
-export function SalesFilter({ setPaymentChosen }) {
-    async function handleChosenFilter(e) {
+export function SalesFilter({ setPaymentChosen, setHasDiscount }) {
+    async function handleChosenFilterPayment(e) {
         const value = e.target.value
+        console.log(value)
         setPaymentChosen(value)
+    }
+
+    async function handleChosenFilterDiscount(e) {
+        const value = e.target.value
+        console.log(value)
+        setHasDiscount(value)
     }
     return (
         <div className="flex col-span-2">
@@ -25,7 +32,7 @@ export function SalesFilter({ setPaymentChosen }) {
                         <DropdownMenuLabel>
                             <span>Pagamento</span>
                         </DropdownMenuLabel>
-                        <Flex align="start" direction="column" onChange={handleChosenFilter} gap="1" className="flex flex-col">
+                        <Flex align="start" direction="column" onChange={handleChosenFilterPayment} gap="1" className="flex flex-col">
                             <Flex asChild gap="2">
                                 <span>
                                     <Radio name="payment" value="Todos" className="mr-1" />
@@ -55,22 +62,22 @@ export function SalesFilter({ setPaymentChosen }) {
                         <DropdownMenuLabel>
                             <span>Desconto</span>
                         </DropdownMenuLabel>
-                        <Flex align="start" direction="column" gap="1" className="flex flex-col">
+                        <Flex align="start" direction="column" onChange={handleChosenFilterDiscount} gap="1" className="flex flex-col">
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="discount" value="1" defaultChecked className="mr-1" />
+                                    <Radio name="discount" value="Todos" className="mr-1" />
                                     Todos
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="discount" value="1" className="mr-1" />
+                                    <Radio name="discount" value="true" className="mr-1" />
                                     Com desconto
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="discount" value="1" className="mr-1" />
+                                    <Radio name="discount" value="false" className="mr-1" />
                                     Sem desconto
                                 </span>
                             </Flex>
