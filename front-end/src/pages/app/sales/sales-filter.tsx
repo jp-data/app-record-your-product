@@ -4,7 +4,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSepar
 import { Dialog } from "../../../components/ui/dialog";
 import { Flex, Radio } from "@radix-ui/themes";
 
-export function SalesFilter() {
+export function SalesFilter({ setPaymentChosen }) {
+    async function handleChosenFilter(e) {
+        const value = e.target.value
+        setPaymentChosen(value)
+    }
     return (
         <div className="flex col-span-2">
             <Dialog>
@@ -21,28 +25,28 @@ export function SalesFilter() {
                         <DropdownMenuLabel>
                             <span>Pagamento</span>
                         </DropdownMenuLabel>
-                        <Flex align="start" direction="column" gap="1" className="flex flex-col">
+                        <Flex align="start" direction="column" onChange={handleChosenFilter} gap="1" className="flex flex-col">
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="payment" value="1" defaultChecked className="mr-1" />
+                                    <Radio name="payment" value="Todos" className="mr-1" />
                                     Todos
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="payment" value="1" className="mr-1" />
+                                    <Radio name="payment" value="Débito" className="mr-1" />
                                     Débito
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="payment" value="1" className="mr-1" />
+                                    <Radio name="payment" value="Crédito" className="mr-1" />
                                     Crédito
                                 </span>
                             </Flex>
                             <Flex asChild gap="2">
                                 <span>
-                                    <Radio name="payment" value="1" className="mr-1" />
+                                    <Radio name="payment" value="Pix" className="mr-1" />
                                     Pix
                                 </span>
                             </Flex>

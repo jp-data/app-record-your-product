@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, ValidationPipe } from "@nestjs/common";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { OrdersService } from "./order.service";
 
@@ -14,5 +14,12 @@ export class OrdersController {
     @Get('/totalSales')
     getSales() {
         return this.ordersService.getSales()
+    }
+
+    @Get('/filter')
+    async getSalesForPayment(
+        @Query('paymentChosen') paymentChosen: string
+    ) {
+        return await this.ordersService.getSalesForPayment(paymentChosen)
     }
 }

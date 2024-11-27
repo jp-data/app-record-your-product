@@ -66,4 +66,28 @@ export class OrdersService {
         )
         return totalSales
     }
+
+    async getSalesForPayment(paymentChosen: string) {
+        const totalSales = await this.orderRepository.query(
+            `
+            SELECT 
+                ord.created_at AS date,
+                GROUP_CONCAT(prd.name, ', ') AS products,
+                ord.subtotal,
+                ord.discount,
+                ord.total,
+                ord.payment,
+                ord.id
+            FROM orders AS ord
+            INNER JOIN orders_itens 
+                ON ord.id = orders_itens.id_order
+            INNER JOIN products AS prd
+                ON prd.id = orders_itens.product_id
+            WHERE ord.payment = ?
+            GROUP BY ord.id, ord.created_at, ord.subtotal, ord.discount, ord.total, ord.payment
+            `,
+            [paymentChosen]
+        )
+        return totalSales
+    }
 }

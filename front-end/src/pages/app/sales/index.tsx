@@ -6,14 +6,21 @@ import { getTotalSales } from "../../../api-requisitions/get-total-sales";
 import { DataType } from "../products/table-products";
 import { SalesFilter } from "./sales-filter";
 import { DatePicker } from "./date-picker";
+import { getSalesByPaymentChosen } from "../../../api-requisitions/get-sales-by-payment";
 
 
 export function Sales() {
     const [orders, setOrders] = useState<DataType[]>([])
+    const [paymentChosen, setPaymentChosen] = useState('')
 
     const { data: result } = useQuery({
-        queryKey: ['orders'],
-        queryFn: () => getTotalSales()
+        queryKey: ['orders', { paymentChosen: paymentChosen }],
+        queryFn: () => {
+            if (!paymentChosen || paymentChosen == 'Todos') {
+                return getTotalSales()
+            }
+            return getSalesByPaymentChosen({ paymentChosen })
+        }
     })
 
     useEffect(() => {
@@ -29,7 +36,7 @@ export function Sales() {
                 <NewSaleButton />
                 <div className="w-4/5 grid grid-cols-7 items-center justify-between mt-6 ml-3">
                     <h1 className="text-2xl col-span-2 font-bold">Histórico</h1>
-                    <SalesFilter />
+                    <SalesFilter setPaymentChosen={setPaymentChosen} />
                     <DatePicker />
                 </div>
                 {/* Filtros */}
