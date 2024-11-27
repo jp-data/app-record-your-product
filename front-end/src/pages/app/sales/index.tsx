@@ -27,8 +27,8 @@ export function Sales() {
             <h1 className="text-3xl ml-1 font-bold tracking-tight">Vendas</h1>
             <div className="flex flex-col w-full max-w-lg h-3/4">
                 <NewSaleButton />
-                <div className="flex w-3/5 items-center justify-between mt-6 ml-3">
-                    <h1 className="text-2xl font-bold">Histórico</h1>
+                <div className="w-4/5 grid grid-cols-7 items-center justify-between mt-6 ml-3">
+                    <h1 className="text-2xl col-span-2 font-bold">Histórico</h1>
                     <SalesFilter />
                     <DatePicker />
                 </div>

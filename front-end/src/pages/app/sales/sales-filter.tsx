@@ -6,7 +6,7 @@ import { Flex, Radio } from "@radix-ui/themes";
 
 export function SalesFilter() {
     return (
-        <div className="flex">
+        <div className="flex col-span-2">
             <Dialog>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
