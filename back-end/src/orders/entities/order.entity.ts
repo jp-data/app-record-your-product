@@ -6,12 +6,8 @@ export class OrderEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @CreateDateColumn({
-        type: 'datetime',
-        default: () => 'CURRENT_TIMESTAMP',
-        name: 'created_at'
-    })
-    createdAt: string
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date
 
     @Column({ name: 'subtotal' })
     subtotal: number

@@ -42,9 +42,12 @@ export class OrdersService {
             total: totalPrice,
             discount,
             payment: createOrderDto.payment,
-            items: orderedItems
+            items: orderedItems,
         })
-        return this.orderRepository.save(orderWithItems)
+
+        return await this.orderRepository.save(orderWithItems)
+
+
     }
 
     async getSales() {
@@ -67,7 +70,7 @@ export class OrdersService {
         return totalSales
     }
 
-    async getSalesForPaymentOrDiscount(paymentChosen: string, hasDiscount: boolean) {
+    async getSalesForPaymentOrDiscount(paymentChosen: string, hasDiscount: boolean, day: string) {
         let query =
             `
             SELECT 
@@ -94,6 +97,15 @@ export class OrdersService {
 
         if (hasDiscount !== undefined) {
             query += ` AND ord.discount ${hasDiscount ? '>' : '='} 0`
+        }
+
+        if (day) {
+            query += ` AND ord.created_at >= DATE('now', '-${day} days')`
+        }
+
+        if (day === '1') {
+            query += ` AND ord.created_at >= DATE('now', '-${day} days') 
+                        AND ord.created_at < DATE('now') `
         }
 
         query += `

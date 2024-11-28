@@ -13,14 +13,15 @@ export function Sales() {
     const [orders, setOrders] = useState<DataType[]>([])
     const [paymentChosen, setPaymentChosen] = useState('')
     const [hasDiscount, setHasDiscount] = useState('')
+    const [day, setDay] = useState('0')
 
     const { data: result } = useQuery({
-        queryKey: ['orders', { paymentChosen: paymentChosen, hasDiscount: hasDiscount }],
+        queryKey: ['orders', { paymentChosen: paymentChosen, hasDiscount: hasDiscount, day: day }],
         queryFn: () => {
-            if (!paymentChosen && !hasDiscount) {
+            if (!paymentChosen && !hasDiscount && !day) {
                 return getTotalSales()
             }
-            return getSalesByPaymentChosenOrDiscount({ paymentChosen, hasDiscount })
+            return getSalesByPaymentChosenOrDiscount({ paymentChosen, hasDiscount, day })
         }
     })
 
@@ -38,7 +39,7 @@ export function Sales() {
                 <div className="w-4/5 grid grid-cols-7 items-center justify-between mt-6 ml-3">
                     <h1 className="text-2xl col-span-2 font-bold">Histórico</h1>
                     <SalesFilter paymentChosen={paymentChosen} hasDiscount={hasDiscount} setPaymentChosen={setPaymentChosen} setHasDiscount={setHasDiscount} />
-                    <DatePicker />
+                    <DatePicker day={day} setDay={setDay} />
                 </div>
                 {/* Filtros */}
                 {/* {Selecionar período} */}

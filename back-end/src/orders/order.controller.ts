@@ -19,9 +19,10 @@ export class OrdersController {
     @Get('/filter')
     async getSalesForPayment(
         @Query('paymentChosen') paymentChosen?: string,
-        @Query('hasDiscount') hasDiscount?: string
+        @Query('hasDiscount') hasDiscount?: string,
+        @Query('day') day?: string
     ) {
         const hasDiscountBoolean = hasDiscount === 'true' ? true : hasDiscount === 'false' ? false : undefined
-        return await this.ordersService.getSalesForPaymentOrDiscount(paymentChosen, hasDiscountBoolean)
+        return await this.ordersService.getSalesForPaymentOrDiscount(paymentChosen, hasDiscountBoolean, day)
     }
 }
