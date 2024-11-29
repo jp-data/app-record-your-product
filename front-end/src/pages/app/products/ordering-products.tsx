@@ -32,9 +32,19 @@ export function OrderingProducts({ setSortBy, setDirection, sortBy, direction, s
 
     return (
         <>
-            <div className="bg-gray-100 border rounded-md pl-2 pr-2 py-1.5">
-                <label htmlFor="select">Ordenar por: </label>
-                <select className="border rounded-md" id="select" value={sortInputCurrentValue} onChange={handleChangeSortBy}>
+            <div className={`border rounded-md pl-2 pr-2 py-1.5 transition-all 
+                ${sortBy === '' ? 'bg-gray-100'
+                    : 'bg-cyan-100 font-semibold'}
+                `}>
+                <label htmlFor="select" className="font-medium">Ordenar por: </label>
+                <select className={`border rounded-md transition-all
+                    ${sortBy === '' ? 'bg-gray-50' : 'bg-white'}
+                `}
+
+                    id="select"
+                    value={sortInputCurrentValue}
+                    onChange={handleChangeSortBy}
+                >
                     <option value="selecione" disabled={sortInputCurrentValue === "selecione"}>
                         Selecione
                     </option>

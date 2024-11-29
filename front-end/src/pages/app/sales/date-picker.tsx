@@ -5,7 +5,7 @@ export function DatePicker({ day, setDay }) {
     }
 
     return (
-        <div className="col-span-3">
+        <div className="col-span-3 font-medium">
             <select defaultValue="Hoje" onChange={handleChosenFilterDay} className="bg-gray-100 border w-4/5 text-base rounded-md mt-2">
                 <option value="0">
                     Hoje

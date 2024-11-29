@@ -15,8 +15,6 @@ export function Products() {
     const [direction, setDirection] = useState('')
     const [isLoadingFilteredProducts, setisLoadingFilteredProducts] = useState(false)
 
-
-
     const { data: result } = useQuery({
         queryKey: ['products', { orderBy: sortBy, direction: direction }],
         queryFn: () => {

@@ -7,7 +7,6 @@ import { Flex, Radio } from "@radix-ui/themes";
 export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setHasDiscount }) {
     async function handleChosenFilterPayment(e) {
         const value = e.target.value
-
         setPaymentChosen(value)
     }
 
@@ -21,8 +20,13 @@ export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setH
             <Dialog>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <div className="w-full">
-                            <button className="flex w-full mt-1">
+                        <div className="w-2/3 font-medium">
+                            <button className={`flex w-full mt-1 text-center rounded-lg
+                                ${paymentChosen != '' ? 'bg-cyan-100'
+                                    : ''
+                                }    
+                                `}
+                            >
                                 Filtros
                                 <ChevronDown />
                             </button>
