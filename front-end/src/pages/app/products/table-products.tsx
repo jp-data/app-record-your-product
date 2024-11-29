@@ -6,6 +6,8 @@ import { EditProduct } from './edit-product';
 import { useMutation } from '@tanstack/react-query';
 import { deleteProduct } from '../../../api-requisitions/delete-product';
 import { queryClient } from '../../../lib/react-query';
+import { Flex } from '@radix-ui/themes';
+import { Spin } from 'antd'
 
 export interface DataType {
     id: string
@@ -19,9 +21,10 @@ export interface DataType {
 interface dataProps {
     data: DataType[]
     result: DataType[] | undefined
+    isLoadingFilteredProducts: boolean
 }
 
-export function TableProducts({ data, result }: dataProps) {
+export function TableProducts({ data, result, isLoadingFilteredProducts }: dataProps) {
     const [editProduct, setEditProduct] = useState<DataType | null>(null)
     const [products, setProducts] = useState<DataType[]>(data);
 
@@ -102,20 +105,29 @@ export function TableProducts({ data, result }: dataProps) {
             ),
         },
     ];
-
     return (
         <>
-            <Table<DataType>
-                columns={columns}
-                className='mt-10 mr-20 mb-5 ml-20 font-semibold'
-                dataSource={data?.map(item => ({ ...item, key: item.id }))}
-
-            />
-            <EditProduct
-                product={editProduct}
-                setEditProduct={setEditProduct}
-            />
+            {isLoadingFilteredProducts ? (
+                <div className='flex items-center justify-center h-[400px]'>
+                    <Flex align="center" gap="4">
+                        <Spin size="large" />
+                    </Flex>
+                </div>
+            )
+                : (
+                    <>
+                        <Table<DataType>
+                            columns={columns}
+                            className="mt-10 mr-20 mb-5 ml-20 font-semibold"
+                            dataSource={data?.map(item => ({ ...item, key: item.id }))}
+                        />
+                        <EditProduct
+                            product={editProduct}
+                            setEditProduct={setEditProduct}
+                        />
+                    </>
+                )
+            }
         </>
-
-    )
+    );
 }

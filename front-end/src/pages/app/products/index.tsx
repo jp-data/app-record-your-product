@@ -13,6 +13,7 @@ export function Products() {
     const [products, setProducts] = useState<DataType[]>([])
     const [sortBy, setSortBy] = useState('')
     const [direction, setDirection] = useState('')
+    const [isLoadingFilteredProducts, setisLoadingFilteredProducts] = useState(false)
 
 
 
@@ -48,10 +49,16 @@ export function Products() {
             <div className="flex items-center justify-between w-full max-w-3xl">
                 <NewProductButton />
                 <SearchProduct onSearch={handleSearch} />
-                <OrderingProducts setSortBy={setSortBy} setDirection={setDirection} sortBy={sortBy} direction={direction} />
+                <OrderingProducts
+                    setSortBy={setSortBy}
+                    setDirection={setDirection}
+                    sortBy={sortBy}
+                    direction={direction}
+                    setisLoadingFilteredProducts={setisLoadingFilteredProducts}
+                />
             </div>
             <div className="w-full">
-                <TableProducts result={result} data={searchProducts} />
+                <TableProducts result={result} data={searchProducts} isLoadingFilteredProducts={isLoadingFilteredProducts} />
             </div>
         </div>
 

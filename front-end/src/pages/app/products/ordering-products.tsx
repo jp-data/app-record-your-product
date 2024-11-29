@@ -1,4 +1,4 @@
-export function OrderingProducts({ setSortBy, setDirection, sortBy, direction }) {
+export function OrderingProducts({ setSortBy, setDirection, sortBy, direction, setisLoadingFilteredProducts }) {
     async function handleChangeSortBy(e) {
         const value = e.target.value
         const sortOptions = {
@@ -11,8 +11,12 @@ export function OrderingProducts({ setSortBy, setDirection, sortBy, direction })
 
         const selectedOption = sortOptions[value]
         if (selectedOption) {
-            setSortBy(selectedOption.sortBy);
-            setDirection(selectedOption.direction);
+            setisLoadingFilteredProducts(true)
+            setTimeout(() => {
+                setSortBy(selectedOption.sortBy);
+                setDirection(selectedOption.direction);
+                setisLoadingFilteredProducts(false)
+            }, 700)
         }
     }
 
