@@ -113,4 +113,18 @@ export class OrdersService {
         `
         return await this.orderRepository.query(query, queryParams)
     }
+
+    async getSalesQuantity(period: string) {
+        let query = `
+            SELECT COUNT(ord.id) AS vendas,
+            SUM(ord.total) AS faturamento
+            FROM orders AS ord
+            WHERE 1=1
+        `
+        if (period) {
+            query += ` AND ord.created_at >= DATE('now', '-${period} days')`
+        }
+
+        return await this.orderRepository.query(query)
+    }
 }

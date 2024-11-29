@@ -25,4 +25,11 @@ export class OrdersController {
         const hasDiscountBoolean = hasDiscount === 'true' ? true : hasDiscount === 'false' ? false : undefined
         return await this.ordersService.getSalesForPaymentOrDiscount(paymentChosen, hasDiscountBoolean, day)
     }
+
+    @Get('/salesQuantity')
+    async getSalesQuantity(
+        @Query('period') period?: string
+    ) {
+        return await this.ordersService.getSalesQuantity(period)
+    }
 }

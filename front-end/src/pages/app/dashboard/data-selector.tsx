@@ -1,31 +1,32 @@
-import { Select } from "antd";
-import { useState } from "react";
+export function DataSelector({ setPeriod }) {
+    async function handleChosenFilterDay(e) {
+        const value = e.target.value
+        setPeriod(value)
+    }
 
-export function DataSelector() {
-    const [selectedValue, setSelectedValue] = useState(null);
-
-    const handleChange = (value) => {
-        const selectedOption = options.find(option => option.value === value);
-        setSelectedValue(selectedOption);
-    };
-
-    const options = [
-        { value: '1', label: 'Últimos 7 dias' },
-        { value: '2', label: 'Últimos 3 dias' },
-        { value: '3', label: 'Últimos 30 dias' },
-    ];
 
     return (
-        <Select
-            showSearch
-            placeholder="Período:"
-            optionFilterProp="label"
-            filterSort={(optionA, optionB) =>
-                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-            }
-            options={options}
-            value={selectedValue ? `Período: ${selectedValue.label}` : undefined}
-            onChange={handleChange}
-        />
+        <div className="font-medium">
+            <select defaultValue="últimos 3 dias" onChange={handleChosenFilterDay} className="bg-gray-100 border w-4/5 text-base rounded-md mt-2">
+                <option value="3">
+                    Últimos 3 dias
+                </option>
+                <option value="5">
+                    Últimos 5 dias
+                </option>
+                <option value="7">
+                    Últimos 7 dias
+                </option>
+                <option value="15">
+                    Últimos 15 dias
+                </option>
+                <option value="30">
+                    Últimos 30 dias
+                </option>
+                <option value="90">
+                    Últimos 3 meses
+                </option>
+            </select>
+        </div>
     );
 }
