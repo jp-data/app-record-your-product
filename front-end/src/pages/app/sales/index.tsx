@@ -14,6 +14,7 @@ export function Sales() {
     const [paymentChosen, setPaymentChosen] = useState('')
     const [hasDiscount, setHasDiscount] = useState('')
     const [day, setDay] = useState('0')
+    const [isLoadingFilteredSales, setIsLoadingFilteredSales] = useState(false)
 
     const { data: result } = useQuery({
         queryKey: ['orders', { paymentChosen: paymentChosen, hasDiscount: hasDiscount, day: day }],
@@ -38,14 +39,27 @@ export function Sales() {
                 <NewSaleButton />
                 <div className="w-4/5 grid grid-cols-7 items-center justify-between mt-6 ml-3">
                     <h1 className="text-2xl col-span-2 font-bold">Histórico</h1>
-                    <SalesFilter paymentChosen={paymentChosen} hasDiscount={hasDiscount} setPaymentChosen={setPaymentChosen} setHasDiscount={setHasDiscount} />
-                    <DatePicker day={day} setDay={setDay} />
+                    <SalesFilter
+                        paymentChosen={paymentChosen}
+                        hasDiscount={hasDiscount}
+                        setPaymentChosen={setPaymentChosen}
+                        setHasDiscount={setHasDiscount}
+                        setIsLoadingFilteredSales={setIsLoadingFilteredSales}
+                    />
+                    <DatePicker
+                        day={day}
+                        setDay={setDay}
+                        setIsLoadingFilteredSales={setIsLoadingFilteredSales}
+                    />
                 </div>
                 {/* Filtros */}
                 {/* {Selecionar período} */}
             </div>
             <div className="w-full">
-                <TableSales result={result} />
+                <TableSales
+                    result={result}
+                    isLoadingFilteredSales={isLoadingFilteredSales}
+                />
             </div>
 
         </div>

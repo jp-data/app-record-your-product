@@ -1,7 +1,14 @@
-export function DatePicker({ day, setDay }) {
+export function DatePicker({ day, setDay, setIsLoadingFilteredSales }) {
     async function handleChosenFilterDay(e) {
         const value = e.target.value
-        setDay(value)
+        if (value) {
+            setIsLoadingFilteredSales(true)
+            setDay(value)
+            setTimeout(() => {
+                setIsLoadingFilteredSales(false)
+            }, 500)
+        }
+
     }
 
     return (

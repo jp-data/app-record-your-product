@@ -4,16 +4,29 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSepar
 import { Dialog } from "../../../components/ui/dialog";
 import { Flex, Radio } from "@radix-ui/themes";
 
-export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setHasDiscount }) {
+export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setHasDiscount, setIsLoadingFilteredSales }) {
     async function handleChosenFilterPayment(e) {
         const value = e.target.value
-        setPaymentChosen(value)
+        if (value) {
+            setIsLoadingFilteredSales(true)
+            setPaymentChosen(value)
+            setTimeout(() => {
+                setIsLoadingFilteredSales(false)
+            }, 500)
+        }
+
     }
 
     async function handleChosenFilterDiscount(e) {
         const value = e.target.value
+        if (value) {
+            setIsLoadingFilteredSales(true)
+            setHasDiscount(value)
+            setTimeout(() => {
+                setIsLoadingFilteredSales(false)
+            }, 500)
+        }
 
-        setHasDiscount(value)
     }
     return (
         <div className="flex col-span-2">
@@ -21,13 +34,13 @@ export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setH
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <div className="w-2/3 font-medium">
-                            <button className={`flex w-full mt-1 text-center rounded-lg
-                                ${paymentChosen != '' ? 'bg-cyan-100'
+                            <button className={`flex w-full text-right mt-1 rounded-lg
+                                ${paymentChosen != '' || hasDiscount != '' ? 'bg-cyan-100'
                                     : ''
                                 }    
                                 `}
                             >
-                                Filtros
+                                <p className="ml-2">Filtros</p>
                                 <ChevronDown />
                             </button>
                         </div>
