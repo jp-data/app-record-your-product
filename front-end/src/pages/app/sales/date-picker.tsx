@@ -20,6 +20,9 @@ export function DatePicker({ day, setDay, setIsLoadingFilteredSales }) {
                 <option value="1">
                     Ontem
                 </option>
+                <option value="3">
+                    Últimos 3 dias
+                </option>
                 <option value="7">
                     Últimos 7 dias
                 </option>
