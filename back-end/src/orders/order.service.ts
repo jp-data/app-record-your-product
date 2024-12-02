@@ -127,4 +127,33 @@ export class OrdersService {
 
         return await this.orderRepository.query(query)
     }
+
+
+    async getBestSellingProducts(period: string) {
+        let query = `
+           SELECT 
+                prd.name AS Produto, 
+                SUM(ord_itens.quantity) AS soma, 
+                ord.created_at AS DATA
+            FROM 
+                products AS prd
+            INNER JOIN 
+                orders_itens AS ord_itens
+            ON 
+                prd.id = ord_itens.product_id 
+            INNER JOIN 
+                orders AS ord
+            ON 
+                ord_itens.id_order = ord.id 
+            WHERE 
+                1=1
+            `
+        if (period) {
+            query += ` AND ord.created_at >= DATE('now', '-${period} days')`
+        }
+
+        query += ` GROUP BY prd.id ORDER BY soma DESC`
+
+        return await this.orderRepository.query(query)
+    }
 }

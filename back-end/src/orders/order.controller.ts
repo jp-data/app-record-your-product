@@ -32,4 +32,11 @@ export class OrdersController {
     ) {
         return await this.ordersService.getSalesQuantity(period)
     }
+
+    @Get('/bestProducts')
+    async getBestSellingProducts(
+        @Query('period') period?: string
+    ) {
+        return await this.ordersService.getBestSellingProducts(period)
+    }
 }

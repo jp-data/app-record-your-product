@@ -2,20 +2,20 @@ import { Card } from "antd";
 import { Bar, BarChart, LabelList, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import colors from "tailwindcss/colors";
 
-const data = [
-    { category: 'Chuteiras', sales: 97 },
-    { category: 'Bolas', sales: 64 },
-    { category: 'Tenis', sales: 48 },
-    { category: 'Vestuário', sales: 35 },
-];
+export function PopularCategoriesGraph({ result }) {
+    const formattedData = result?.map((item) => ({
+        products: item.Produto,
+        result: item.soma,
+        date: item.DATA
+    })) || []
 
-export function PopularCategoriesGraph() {
+
     return (
-        <Card title="Categorias / + vendidos" className="col-span-3">
+        <Card title="Produtos / + vendidos" className="col-span-3 w-full">
             <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={data.sort((a, b) => a.sales - b.sales)} style={{ fontSize: 12 }} margin={{ top: 10, right: 20, bottom: 5, left: 20 }}>
+                <BarChart data={formattedData}>
                     <XAxis
-                        dataKey="category"
+                        dataKey="products"
                         axisLine={false}
                         tickLine={false}
                         dy={16}
@@ -26,10 +26,15 @@ export function PopularCategoriesGraph() {
                         axisLine={true}
                         tickLine={false}
                         width={80}
+                        label={{
+                            value: 'Qtd',
+                            position: 'insideTop',
+                            style: { dx: -10 }
+                        }}
                     />
-                    <Bar stroke={colors.violet['500']} strokeWidth={2} dataKey="sales" >
+                    <Bar stroke={colors.violet['500']} strokeWidth={2} dataKey="result" >
                         <LabelList
-                            dataKey="sales"
+                            dataKey="result"
                             position="top"
                             style={{ fill: colors.violet['500'], fontSize: 12 }}
                         />
