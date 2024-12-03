@@ -39,4 +39,11 @@ export class OrdersController {
     ) {
         return await this.ordersService.getBestSellingProducts(period)
     }
+
+    @Get('/invoicingEvolution')
+    async getInvoicingEvolution(
+        @Query('period') period?: string
+    ) {
+        return await this.ordersService.getInvoicingEvolution(period)
+    }
 }

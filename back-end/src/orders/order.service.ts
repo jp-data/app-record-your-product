@@ -152,7 +152,23 @@ export class OrdersService {
             query += ` AND ord.created_at >= DATE('now', '-${period} days')`
         }
 
-        query += ` GROUP BY prd.id ORDER BY soma DESC`
+        query += ` GROUP BY prd.id ORDER BY soma DESC LIMIT 5`
+
+        return await this.orderRepository.query(query)
+    }
+
+    async getInvoicingEvolution(period: string) {
+        let query = `
+            SELECT 
+                DATE(ord.created_at) AS dia,
+                SUM(ord.total) AS faturamento
+                FROM orders AS ord
+                WHERE 1=1
+        `
+        if (period) {
+            query += ` AND ord.created_at >= DATE('now', '-${period} days')`
+        }
+        query += `GROUP BY dia ORDER BY dia`
 
         return await this.orderRepository.query(query)
     }

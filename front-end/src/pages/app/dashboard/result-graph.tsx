@@ -2,46 +2,52 @@ import { Card } from "antd";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, LabelList, CartesianGrid } from 'recharts';
 import colors from 'tailwindcss/colors';
 
-const data = [
-    { date: '10/10', revenue: 1080 },
-    { date: '11/10', revenue: 1100 },
-    { date: '12/10', revenue: 1400 },
-    { date: '13/10', revenue: 1250 },
-    { date: '14/10', revenue: 1545 },
-    { date: '15/10', revenue: 2550 },
-    { date: '16/10', revenue: 2145 },
-];
+export function ResultGraph({ result }) {
+    const formattedData = result?.map((item) => ({
+        invoicing: item.faturamento,
+        date: item.dia
+    })) || []
 
-export function ResultGraph() {
     return (
         <Card title="Faturamento - evolução" className="col-span-6">
             <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={data} style={{ fontSize: 12 }} margin={{ top: 10, right: 20, bottom: 5, left: 20 }}>
+                <LineChart data={formattedData} style={{ fontSize: 12 }} margin={{ top: 15, right: 20, bottom: 5, left: 20 }}>
                     <XAxis
                         dataKey="date"
                         axisLine={false}
                         tickLine={false}
                         dy={16}
+                        tickFormatter={(date) => {
+                            const [year, month, day] = date.split("-")
+                            return `${day}/${month}`
+                        }}
+                        padding={{ left: 20, right: 10 }}
                     />
 
                     <YAxis
                         stroke="#888"
                         axisLine={true}
                         tickLine={false}
-                        width={80}
+                        width={70}
                         tickFormatter={(value: number) =>
                             value.toLocaleString('pt-BR', {
                                 style: 'currency',
                                 currency: 'BRL'
                             })
                         }
-                        domain={[0, 4000]}
-                        ticks={[0, 2000, 4000]}
+                        dx={-10}
+                        domain={[0, (dataMax) => dataMax * 1.1]}
                     />
-                    <Line type="linear" stroke={colors.violet['500']} strokeWidth={2} dataKey="revenue">
+                    <Line
+                        type="linear"
+                        stroke={colors.violet['500']}
+                        strokeWidth={2}
+                        dataKey="invoicing"
+                    >
                         <LabelList
-                            dataKey="revenue"
+                            dataKey="invoicing"
                             position="top"
+                            offset={10}
                             style={{ fill: colors.violet['500'], fontSize: 12 }}
                         />
                     </Line>

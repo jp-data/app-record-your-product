@@ -8,6 +8,8 @@ import { useQueries, useQuery } from "@tanstack/react-query";
 import { getSalesData } from "../../../api-requisitions/get-sales-data";
 import { getBestProductsSelling } from "../../../api-requisitions/get-best-selling-products";
 import { Spin } from "antd";
+import { Flex } from "@radix-ui/themes";
+import { getInvoicingEvolution } from "../../../api-requisitions/get-invoicing-evolution";
 
 
 
@@ -25,11 +27,15 @@ export function Dashboard() {
             {
                 queryKey: ['best-selling-products', { period }],
                 queryFn: () => getBestProductsSelling({ period }),
+            },
+            {
+                queryKey: ['invoicing-evolution', { period }],
+                queryFn: () => getInvoicingEvolution({ period }),
             }
         ]
     });
 
-    const [salesResult, bestSellingResult] = results;
+    const [salesResult, bestSellingResult, invoicingEvolutionResult] = results;
 
     useEffect(() => {
         if (salesResult.data) {
@@ -37,7 +43,7 @@ export function Dashboard() {
             setTimeout(() => {
                 setTotalSales(salesResult.data)
                 setIsLoadingData(false)
-            }, 1000)
+            }, 1500)
 
         }
 
@@ -47,7 +53,11 @@ export function Dashboard() {
         <div className="flex flex-col gap-4 p-8 items-start">
             <h1 className="text-3xl font-bold tracking-tight">Estatísticas</h1>
             {isLoadingData ? (
-                <Spin size="large" className="ml-6" />
+                <div className='flex w-full items-center justify-center h-[400px]'>
+                    <Flex align="center" gap="4">
+                        <Spin size="large" />
+                    </Flex>
+                </div>
             ) : (
                 <>
                     <div className="grid grid-cols-3 gap-4 w-1/2">
@@ -60,7 +70,7 @@ export function Dashboard() {
                         <DataSelector setPeriod={setPeriod} period={period} />
                     </div>
                     <div className="grid grid-cols-9 gap-4 w-full">
-                        <ResultGraph />
+                        <ResultGraph result={invoicingEvolutionResult.data} />
                         <PopularCategoriesGraph result={bestSellingResult.data} />
                     </div>
                 </>
