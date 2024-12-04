@@ -25,11 +25,12 @@ export function PopularCategoriesGraph({ result }) {
                         stroke="#888"
                         axisLine={true}
                         tickLine={false}
+                        tick={false}
                         width={80}
                         label={{
-                            value: 'Qtd',
+                            value: 'Nº Itens',
                             position: 'insideTop',
-                            style: { dx: -10 }
+                            style: { dx: 10 }
                         }}
                     />
                     <Bar stroke={colors.violet['500']} strokeWidth={2} dataKey="result" >

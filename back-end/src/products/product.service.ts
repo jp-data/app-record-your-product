@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductListDto } from "./dtos/product-list-dto";
 import { UpdateProductDto } from "./dtos/update.product-dto";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
 @Injectable()
 export class ProductService {
@@ -19,9 +19,13 @@ export class ProductService {
     }
 
     async findOne(id: number) {
-        return await this.productRepository.findOne({
+        const product = await this.productRepository.findOne({
             where: { id }
         })
+        if (!product) {
+            throw new NotFoundException('Product not found!')
+        }
+        return product
     }
 
     async listAll() {
@@ -68,7 +72,7 @@ export class ProductService {
         const productToUpdate = await this.findOne(id)
 
         if (!productToUpdate) {
-            throw new Error('Product not found!')
+            throw new NotFoundException('Product not found!')
         }
 
         return this.productRepository.update(id, updateProductDto)
@@ -78,7 +82,7 @@ export class ProductService {
         const productToDelete = await this.findOne(id)
 
         if (!productToDelete) {
-            throw new Error('Product not found!')
+            throw new NotFoundException('Product not found!')
         }
 
         return this.productRepository.remove(productToDelete)
