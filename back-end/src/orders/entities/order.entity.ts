@@ -21,6 +21,6 @@ export class OrderEntity {
     @Column({ name: 'payment', nullable: false })
     payment: string
 
-    @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.order)
+    @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.order, { cascade: true, onDelete: 'CASCADE' })
     items: OrderItemEntity[];
 }

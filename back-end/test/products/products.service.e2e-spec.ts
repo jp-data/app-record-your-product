@@ -27,6 +27,8 @@ describe('AppController (e2e)', () => {
         await app.init();
 
         productRepository = moduleFixture.get('ProductEntityRepository')
+
+
     });
 
     it('should be able to list all registered products ordered by price descending', async () => {

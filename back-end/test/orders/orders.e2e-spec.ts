@@ -30,6 +30,8 @@ describe('AppController (e2e)', () => {
 
         orderRepository = moduleFixture.get('OrderEntityRepository')
         productRepository = moduleFixture.get('ProductEntityRepository')
+
+        await orderRepository.clear();
     })
 
     it('should be able to create an order', async () => {
@@ -87,6 +89,98 @@ describe('AppController (e2e)', () => {
     })
 
     it('should be able to list all registered orders', async () => {
+        await productRepository.save([
+            {
+                id: 1,
+                name: 'Produto teste 1',
+                description: 'teste 1 desc',
+                category: 'teste 1 categ',
+                price: 100,
+                quantity: 100
+            },
+            {
+                id: 2,
+                name: 'Produto teste 2',
+                description: 'teste 2 desc',
+                category: 'teste 2 categ',
+                price: 100,
+                quantity: 100
+            }
+        ])
 
+        const createOrderDto = {
+            payment: 'pix',
+            discount: 0,
+            items: [
+                { product_id: 1, quantity: 4 },
+                { product_id: 2, quantity: 5 }
+            ]
+        }
+
+        const createOrderDto2 = {
+            payment: 'debito',
+            discount: 0,
+            items: [
+                { product_id: 1, quantity: 4 },
+                { product_id: 2, quantity: 5 }
+            ]
+        }
+
+        await request(app.getHttpServer())
+            .post('/orders')
+            .send(createOrderDto)
+            .expect(201)
+
+        await request(app.getHttpServer())
+            .post('/orders')
+            .send(createOrderDto2)
+            .expect(201)
+
+        const response = await request(app.getHttpServer())
+            .get('/orders/totalSales')
+            .expect(200)
+
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 2 - Produto teste 1',
+                    subtotal: 900,
+                    discount: 0,
+                    total: 900,
+                    payment: 'pix',
+                    id: expect.any(Number)
+                }),
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 2 - Produto teste 1',
+                    subtotal: 900,
+                    discount: 0,
+                    total: 900,
+                    payment: 'debito',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
+
+    it("should be able to refuse an sale order requisition if product doesn't exists", async () => {
+        const createOrderDto = {
+            payment: 'pix',
+            discount: 0,
+            items: [
+                { product_id: 12545687545131, quantity: 10 }
+            ]
+        }
+        const response = await request(app.getHttpServer())
+            .post('/orders')
+            .send(createOrderDto)
+            .expect(404)
+
+        expect(response.body).toEqual({
+            statusCode: 404,
+            message: 'Product with ID 12545687545131 not found',
+            error: 'Not Found'
+        })
     })
 })
