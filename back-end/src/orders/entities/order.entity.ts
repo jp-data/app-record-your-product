@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { OrderItemEntity } from "./order-item.entity";
+import { EnumPayment } from "../dto/enums/enum-payment";
 
 @Entity('orders')
 export class OrderEntity {
@@ -18,8 +19,8 @@ export class OrderEntity {
     @Column({ name: 'total', nullable: false })
     total: number
 
-    @Column({ name: 'payment', nullable: false })
-    payment: string
+    @Column({ name: 'payment', nullable: false, type: 'text' })
+    payment: EnumPayment
 
     @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.order, { cascade: true, onDelete: 'CASCADE' })
     items: OrderItemEntity[];

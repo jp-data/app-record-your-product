@@ -46,8 +46,6 @@ export class OrdersService {
         })
 
         return await this.orderRepository.save(orderWithItems)
-
-
     }
 
     async getSales() {

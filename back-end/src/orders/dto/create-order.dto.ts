@@ -1,5 +1,6 @@
-import { Type } from "class-transformer";
-import { IsArray, IsInt, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsArray, IsEnum, IsInt, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator";
+import { EnumPayment } from "./enums/enum-payment";
 
 export class OrderItemDto {
     @IsNotEmpty()
@@ -12,9 +13,10 @@ export class OrderItemDto {
 }
 
 export class CreateOrderDto {
+    @Transform(({ value }) => value.toUpperCase())
     @IsNotEmpty()
-    @IsString()
-    payment: string
+    @IsEnum(EnumPayment, { message: 'Pagamentos autorizados: PIX, DÉBITO ou CRÉDITO' })
+    payment: EnumPayment
 
     @IsNumber()
     discount: number
