@@ -89,25 +89,6 @@ describe('AppController (e2e)', () => {
     })
 
     it('should be able to list all registered orders', async () => {
-        await productRepository.save([
-            {
-                id: 1,
-                name: 'Produto teste 1',
-                description: 'teste 1 desc',
-                category: 'teste 1 categ',
-                price: 100,
-                quantity: 100
-            },
-            {
-                id: 2,
-                name: 'Produto teste 2',
-                description: 'teste 2 desc',
-                category: 'teste 2 categ',
-                price: 100,
-                quantity: 100
-            }
-        ])
-
         const createOrderDto = {
             payment: 'pix',
             discount: 0,
@@ -118,7 +99,7 @@ describe('AppController (e2e)', () => {
         }
 
         const createOrderDto2 = {
-            payment: 'debito',
+            payment: 'débito',
             discount: 0,
             items: [
                 { product_id: 1, quantity: 4 },
@@ -157,7 +138,7 @@ describe('AppController (e2e)', () => {
                     subtotal: 900,
                     discount: 0,
                     total: 900,
-                    payment: 'debito',
+                    payment: 'débito',
                     id: expect.any(Number)
                 })
             ])
