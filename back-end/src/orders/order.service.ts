@@ -52,7 +52,7 @@ export class OrdersService {
         const totalSales = await this.orderRepository.query(
             `SELECT 
                 ord.created_at AS date,
-                GROUP_CONCAT(prd.name, ' - ') AS products,
+                STRING_AGG(prd.name, ' - ') AS products,
                 ord.subtotal,
                 ord.discount,
                 ord.total,
@@ -63,7 +63,7 @@ export class OrdersService {
             ON ord.id = orders_itens.id_order
             INNER JOIN products AS prd
             ON prd.id = orders_itens.product_id
-            GROUP BY ord.id;`
+            GROUP BY ord.id, date;`
         )
         return totalSales
     }
@@ -73,7 +73,7 @@ export class OrdersService {
             `
             SELECT 
                 ord.created_at AS date,
-                GROUP_CONCAT(prd.name, ', ') AS products,
+                STRING_AGG(prd.name, ', ') AS products,
                 ord.subtotal,
                 ord.discount,
                 ord.total,
@@ -89,7 +89,7 @@ export class OrdersService {
         const queryParams: any[] = []
 
         if (paymentChosen && paymentChosen !== 'Todos') {
-            query += ` AND ord.payment = ?`
+            query += ` AND ord.payment = $1`
             queryParams.push(paymentChosen)
         }
 
@@ -98,16 +98,16 @@ export class OrdersService {
         }
 
         if (day) {
-            query += ` AND ord.created_at >= DATE('now', '-${day} days')`
+            query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${day} days'`
         }
 
         if (day === '1') {
-            query += ` AND ord.created_at >= DATE('now', '-${day} days') 
-                        AND ord.created_at < DATE('now') `
+            query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${day} days'
+                        AND ord.created_at < CURRENT_DATE - INTERVAL 'now'`
         }
 
         query += `
-            GROUP BY ord.id, ord.created_at, ord.subtotal, ord.discount, ord.total, ord.payment
+            GROUP BY ord.id, ord.subtotal, ord.discount, ord.total, ord.payment
         `
         return await this.orderRepository.query(query, queryParams)
     }
@@ -120,7 +120,7 @@ export class OrdersService {
             WHERE 1=1
         `
         if (period) {
-            query += ` AND ord.created_at >= DATE('now', '-${period} days')`
+            query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${period} days'`
         }
 
         return await this.orderRepository.query(query)
@@ -147,10 +147,10 @@ export class OrdersService {
                 1=1
             `
         if (period) {
-            query += ` AND ord.created_at >= DATE('now', '-${period} days')`
+            query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${period} days'`
         }
 
-        query += ` GROUP BY prd.id ORDER BY soma DESC LIMIT 5`
+        query += ` GROUP BY prd.name, ord.created_at ORDER BY soma DESC LIMIT 5`
 
         return await this.orderRepository.query(query)
     }
@@ -164,7 +164,7 @@ export class OrdersService {
                 WHERE 1=1
         `
         if (period) {
-            query += ` AND ord.created_at >= DATE('now', '-${period} days')`
+            query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${period} days'`
         }
         query += `GROUP BY dia ORDER BY dia`
 
