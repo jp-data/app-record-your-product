@@ -4,21 +4,22 @@ import colors from "tailwindcss/colors";
 
 export function PopularCategoriesGraph({ result }) {
     const formattedData = result?.map((item) => ({
-        products: item.Produto,
+        products: item.produto,
         result: item.soma,
         date: item.DATA
     })) || []
 
+    const maxResult = Math.max(...formattedData.map((item) => item.result), 0)
 
     return (
         <Card title="Produtos / + vendidos" className="col-span-3 w-full">
             <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={formattedData}>
+                <BarChart data={formattedData} margin={{ top: 20, bottom: 5 }}>
                     <XAxis
                         dataKey="products"
                         axisLine={false}
                         tickLine={false}
-                        dy={16}
+                        dy={15}
                     />
 
                     <YAxis
@@ -32,6 +33,7 @@ export function PopularCategoriesGraph({ result }) {
                             position: 'insideTop',
                             style: { dx: 10 }
                         }}
+                        domain={[0, maxResult * 1.2]}
                     />
                     <Bar stroke={colors.violet['500']} strokeWidth={2} dataKey="result" >
                         <LabelList

@@ -18,7 +18,9 @@ export function ResultGraph({ result }) {
                         tickLine={false}
                         dy={16}
                         tickFormatter={(date) => {
-                            const [year, month, day] = date.split("-")
+                            const parsedDate = new Date(date)
+                            const day = parsedDate.getDate().toString().padStart(2, '0')
+                            const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
                             return `${day}/${month}`
                         }}
                         padding={{ left: 20, right: 10 }}

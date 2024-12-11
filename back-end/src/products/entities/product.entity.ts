@@ -18,7 +18,7 @@ export class ProductEntity {
     @Column({ name: 'quantity', nullable: false })
     quantity: number
 
-    @Column({ name: 'price', nullable: false })
+    @Column({ name: 'price', nullable: false, type: 'float' })
     price: number
 
     @CreateDateColumn({ name: 'created_at' })

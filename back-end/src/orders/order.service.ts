@@ -132,7 +132,7 @@ export class OrdersService {
            SELECT 
                 prd.name AS Produto, 
                 SUM(ord_itens.quantity) AS soma, 
-                ord.created_at AS DATA
+                DATE_TRUNC('day', ord.created_at) AS DATA
             FROM 
                 products AS prd
             INNER JOIN 
@@ -150,7 +150,7 @@ export class OrdersService {
             query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${period} days'`
         }
 
-        query += ` GROUP BY prd.name, ord.created_at ORDER BY soma DESC LIMIT 5`
+        query += ` GROUP BY prd.name, DATA ORDER BY soma DESC LIMIT 5`
 
         return await this.orderRepository.query(query)
     }

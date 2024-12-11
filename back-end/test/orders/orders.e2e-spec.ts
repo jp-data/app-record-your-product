@@ -31,7 +31,6 @@ describe('AppController (e2e)', () => {
         orderRepository = moduleFixture.get('OrderEntityRepository')
         productRepository = moduleFixture.get('ProductEntityRepository')
 
-        await orderRepository.clear();
     })
 
     it('should be able to create an order', async () => {

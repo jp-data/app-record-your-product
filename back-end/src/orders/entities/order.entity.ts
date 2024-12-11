@@ -10,13 +10,13 @@ export class OrderEntity {
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date
 
-    @Column({ name: 'subtotal' })
+    @Column({ name: 'subtotal', type: 'float' })
     subtotal: number
 
-    @Column({ name: 'discount' })
+    @Column({ name: 'discount', type: 'float' })
     discount: number
 
-    @Column({ name: 'total', nullable: false })
+    @Column({ name: 'total', nullable: false, type: 'float' })
     total: number
 
     @Column({ name: 'payment', nullable: false, type: 'text' })
