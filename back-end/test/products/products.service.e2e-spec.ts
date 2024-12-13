@@ -5,31 +5,27 @@ import { AppModule } from '../../src/app.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductEntity } from '../../src/products/entities/product.entity';
+import { AppDataSource } from '../../src/database/ormconfig';
 
 describe('AppController (e2e)', () => {
     let app: INestApplication;
     let productRepository: Repository<ProductEntity>
 
-    beforeEach(async () => {
-        const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [
-                AppModule,
-                TypeOrmModule.forRoot({
-                    type: 'sqlite',
-                    database: ':memory:',
-                    entities: [__dirname + '/../**/*.entity.{js,ts}'],
-                    synchronize: true,
-                })
-            ],
-        }).compile();
+    beforeAll(async () => {
+        const moduleRef = await Test.createTestingModule({
+            imports: [AppModule],
+        }).compile()
 
-        app = moduleFixture.createNestApplication();
+        console.log("NODE_ENV:", process.env.NODE_ENV)
+        app = moduleRef.createNestApplication();
+        await app.listen(3001)
         await app.init();
 
-        productRepository = moduleFixture.get('ProductEntityRepository')
+        await AppDataSource.initialize();
+        await AppDataSource.synchronize(true)
 
-
-    });
+        productRepository = moduleRef.get('ProductEntityRepository')
+    })
 
     it('should be able to list all registered products ordered by price descending', async () => {
         await productRepository.save([
