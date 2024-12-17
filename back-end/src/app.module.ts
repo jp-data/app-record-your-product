@@ -6,6 +6,7 @@ import { UserModule } from './users/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { OrdersModule } from './orders/order.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 
 @Module({
@@ -18,9 +19,13 @@ import { CacheModule } from '@nestjs/cache-manager';
       envFilePath: `.${process.env.NODE_ENV || 'development'}.env`
     }),
     TypeOrmModule.forRoot(AppDataSource.options),
-    CacheModule.register({
+    CacheModule.registerAsync({
+      useFactory: async () => ({
+        store: await redisStore({
+          ttl: 3600 * 1000,
+        })
+      }),
       isGlobal: true,
-      ttl: 10
     })
   ],
   controllers: [],
