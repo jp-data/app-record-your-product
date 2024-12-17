@@ -5,6 +5,7 @@ import { AppDataSource } from './database/ormconfig';
 import { UserModule } from './users/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { OrdersModule } from './orders/order.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 
 @Module({
@@ -17,6 +18,10 @@ import { OrdersModule } from './orders/order.module';
       envFilePath: `.${process.env.NODE_ENV || 'development'}.env`
     }),
     TypeOrmModule.forRoot(AppDataSource.options),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 10
+    })
   ],
   controllers: [],
   providers: [],

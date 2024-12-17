@@ -1,9 +1,20 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, ValidationPipe } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Put,
+    Query,
+    UseInterceptors,
+    ValidationPipe
+} from "@nestjs/common";
 import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductService } from "./product.service";
 import { ProductEntity } from "./entities/product.entity";
-import { randomUUID } from "crypto";
 import { UpdateProductDto } from "./dtos/update.product-dto";
+import { CacheInterceptor } from "@nestjs/cache-manager";
 
 
 @Controller('products')
@@ -24,8 +35,11 @@ export class ProductController {
     }
 
     @Get()
+    @UseInterceptors(CacheInterceptor)
     async listProducts() {
-        return this.productService.listAll()
+        const products = await this.productService.listAll()
+        console.log('Buscando produtos no DB')
+        return products
     }
 
     @Post()
