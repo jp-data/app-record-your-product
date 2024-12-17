@@ -144,50 +144,50 @@ describe('AppController (e2e)', () => {
     )
   })
 
-  // it("should be able to refuse an update if product id doesn't exists", async () => {
-  //   const updatedData = {
-  //     name: 'Non-existent product',
-  //     price: 1,
-  //     quantity: 1
-  //   }
-  //   const response = await request(app.getHttpServer())
-  //     .put('/products/999')
-  //     .send(updatedData)
-  //     .expect(404)
+  it("should be able to refuse an update if product id doesn't exists", async () => {
+    const updatedData = {
+      name: 'Non-existent product',
+      price: 1,
+      quantity: 1
+    }
+    const response = await request(app.getHttpServer())
+      .put('/products/999')
+      .send(updatedData)
+      .expect(404)
 
-  //   expect(response.body).toEqual({
-  //     statusCode: 404,
-  //     message: 'Product not found!',
-  //     error: 'Not Found'
-  //   })
-  // })
+    expect(response.body).toEqual({
+      statusCode: 404,
+      message: 'Product not found!',
+      error: 'Not Found'
+    })
+  })
 
-  // it("should be able to delete an product", async () => {
-  //   const productToDelete = await productRepository.save({
-  //     name: 'Teste produto delecao',
-  //     description: 'Teste produto descricao',
-  //     category: 'Teste produto categoria',
-  //     quantity: 100,
-  //     price: 100
-  //   })
-  //   await request(app.getHttpServer())
-  //     .delete(`/products/${productToDelete.id}`)
-  //     .expect(200)
+  it("should be able to delete an product", async () => {
+    const productToDelete = await productRepository.save({
+      name: 'Teste produto delecao',
+      description: 'Teste produto descricao',
+      category: 'Teste produto categoria',
+      quantity: 100,
+      price: 100
+    })
+    await request(app.getHttpServer())
+      .delete(`/products/${productToDelete.id}`)
+      .expect(200)
 
-  //   const productDeleted = await productRepository.findOneBy({ id: productToDelete.id })
-  //   expect(productDeleted).toBeNull()
-  // })
+    const productDeleted = await productRepository.findOneBy({ id: productToDelete.id })
+    expect(productDeleted).toBeNull()
+  })
 
-  // it("should be able to refuse an deletion if product id doesn't exists", async () => {
-  //   const response = await request(app.getHttpServer())
-  //     .delete('/products/84654654')
-  //     .expect(404)
+  it("should be able to refuse an deletion if product id doesn't exists", async () => {
+    const response = await request(app.getHttpServer())
+      .delete('/products/84654654')
+      .expect(404)
 
-  //   expect(response.body).toEqual({
-  //     statusCode: 404,
-  //     message: "Product not found!",
-  //     error: "Not Found",
-  //   })
-  // })
+    expect(response.body).toEqual({
+      statusCode: 404,
+      message: "Product not found!",
+      error: "Not Found",
+    })
+  })
 
 })
