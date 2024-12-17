@@ -5,10 +5,14 @@ import { AppDataSource } from './database/ormconfig';
 import { UserModule } from './users/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { OrdersModule } from './orders/order.module';
-import { CacheModule } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
+import * as dotenv from 'dotenv'
 
+dotenv.config()
+const isTestEnv = process.env.NODE_ENV === 'test'
 @Module({
   imports: [
     ProductModule,
@@ -19,16 +23,22 @@ import { redisStore } from 'cache-manager-redis-yet';
       envFilePath: `.${process.env.NODE_ENV || 'development'}.env`
     }),
     TypeOrmModule.forRoot(AppDataSource.options),
-    CacheModule.registerAsync({
-      useFactory: async () => ({
-        store: await redisStore({
-          ttl: 3600 * 1000,
-        })
-      }),
-      isGlobal: true,
-    })
+    !isTestEnv ?
+      CacheModule.registerAsync({
+        useFactory: async () => ({
+          store: await redisStore({
+            ttl: 3600 * 1000,
+          })
+        }),
+        isGlobal: true,
+      }) : CacheModule.register()
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    }
+  ],
 })
 export class AppModule { }

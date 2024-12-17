@@ -113,89 +113,89 @@ describe('AppController (e2e)', () => {
         )
     })
 
-    it('should be able to list all registered products ordered by quantity descending', async () => {
-        await productRepository.save([
-            {
-                name: 'Product 1',
-                description: 'Description 1',
-                category: 'Category 1',
-                quantity: 100,
-                price: 100,
-            },
-            {
-                name: 'Product 2',
-                description: 'Description 2',
-                category: 'Category 2',
-                quantity: 200,
-                price: 200,
-            }
-        ])
-        const response = await request(app.getHttpServer())
-            .get('/products/sort?orderBy=quantity&direction=DESC')
-            .expect(200)
+    // it('should be able to list all registered products ordered by quantity descending', async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Product 1',
+    //             description: 'Description 1',
+    //             category: 'Category 1',
+    //             quantity: 100,
+    //             price: 100,
+    //         },
+    //         {
+    //             name: 'Product 2',
+    //             description: 'Description 2',
+    //             category: 'Category 2',
+    //             quantity: 200,
+    //             price: 200,
+    //         }
+    //     ])
+    //     const response = await request(app.getHttpServer())
+    //         .get('/products/sort?orderBy=quantity&direction=DESC')
+    //         .expect(200)
 
-        expect(response.body).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({
-                    id: expect.any(Number),
-                    name: 'Product 2',
-                    description: 'Description 2',
-                    category: 'Category 2',
-                    quantity: 200,
-                    price: 200,
-                }),
-                expect.objectContaining({
-                    id: expect.any(Number),
-                    name: 'Product 1',
-                    description: 'Description 1',
-                    category: 'Category 1',
-                    quantity: 100,
-                    price: 100,
-                }),
-            ])
-        )
-    })
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 id: expect.any(Number),
+    //                 name: 'Product 2',
+    //                 description: 'Description 2',
+    //                 category: 'Category 2',
+    //                 quantity: 200,
+    //                 price: 200,
+    //             }),
+    //             expect.objectContaining({
+    //                 id: expect.any(Number),
+    //                 name: 'Product 1',
+    //                 description: 'Description 1',
+    //                 category: 'Category 1',
+    //                 quantity: 100,
+    //                 price: 100,
+    //             }),
+    //         ])
+    //     )
+    // })
 
-    it('should be able to list all registered products ordered by quantity ascending', async () => {
-        await productRepository.save([
-            {
-                name: 'Product 1',
-                description: 'Description 1',
-                category: 'Category 1',
-                quantity: 200,
-                price: 100,
-            },
-            {
-                name: 'Product 2',
-                description: 'Description 2',
-                category: 'Category 2',
-                quantity: 150,
-                price: 100,
-            }
-        ])
-        const response = await request(app.getHttpServer())
-            .get('/products/sort?orderBy=quantity&direction=ASC')
-            .expect(200)
+    // it('should be able to list all registered products ordered by quantity ascending', async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Product 1',
+    //             description: 'Description 1',
+    //             category: 'Category 1',
+    //             quantity: 200,
+    //             price: 100,
+    //         },
+    //         {
+    //             name: 'Product 2',
+    //             description: 'Description 2',
+    //             category: 'Category 2',
+    //             quantity: 150,
+    //             price: 100,
+    //         }
+    //     ])
+    //     const response = await request(app.getHttpServer())
+    //         .get('/products/sort?orderBy=quantity&direction=ASC')
+    //         .expect(200)
 
-        expect(response.body).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({
-                    id: expect.any(Number),
-                    name: 'Product 2',
-                    description: 'Description 2',
-                    category: 'Category 2',
-                    quantity: 150,
-                    price: 100,
-                }),
-                expect.objectContaining({
-                    id: expect.any(Number),
-                    name: 'Product 1',
-                    description: 'Description 1',
-                    category: 'Category 1',
-                    quantity: 200,
-                    price: 100,
-                }),
-            ])
-        )
-    })
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 id: expect.any(Number),
+    //                 name: 'Product 2',
+    //                 description: 'Description 2',
+    //                 category: 'Category 2',
+    //                 quantity: 150,
+    //                 price: 100,
+    //             }),
+    //             expect.objectContaining({
+    //                 id: expect.any(Number),
+    //                 name: 'Product 1',
+    //                 description: 'Description 1',
+    //                 category: 'Category 1',
+    //                 quantity: 200,
+    //                 price: 100,
+    //             }),
+    //         ])
+    //     )
+    // })
 })

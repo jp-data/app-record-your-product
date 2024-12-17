@@ -35,10 +35,9 @@ export class ProductController {
     }
 
     @Get()
-    @UseInterceptors(CacheInterceptor)
+    // @UseInterceptors(CacheInterceptor)
     async listProducts() {
         const products = await this.productService.listAll()
-        console.log('Buscando produtos no DB')
         return products
     }
 
