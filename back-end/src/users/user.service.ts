@@ -17,6 +17,15 @@ export class UserService {
     ) { }
 
     async createUser(createUserDto: CreateUserDto) {
+        const email = createUserDto.email
+        const userExists = await this.userRepository.findOne({
+            where: { email }
+        })
+
+        if (userExists) {
+            throw new Error('This email already exists!')
+        }
+
         const hash = await hashPassword(createUserDto.password)
 
         const user = this.userRepository.create({
