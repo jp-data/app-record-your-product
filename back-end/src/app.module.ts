@@ -8,6 +8,7 @@ import { OrdersModule } from './orders/order.module';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { AuthModule } from './auth/auth.module';
 
 import * as dotenv from 'dotenv'
 
@@ -31,7 +32,8 @@ const isTestEnv = process.env.NODE_ENV === 'test'
           })
         }),
         isGlobal: true,
-      }) : CacheModule.register()
+      }) : CacheModule.register(),
+    AuthModule
   ],
   controllers: [],
   providers: [

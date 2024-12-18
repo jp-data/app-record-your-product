@@ -69,4 +69,12 @@ export class UserService {
         }
         return this.userRepository.remove(userToDelete)
     }
+
+    async findUser(email: string) {
+        const userExists = await this.userRepository.findOneBy({ email })
+        if (!userExists) {
+            throw new Error('User not found!')
+        }
+        return userExists
+    }
 }
