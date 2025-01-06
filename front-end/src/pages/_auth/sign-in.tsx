@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Link, useSearchParams } from "react-router-dom";
 
 export function SignIn() {
+    const [searchParams] = useSearchParams()
+    const { register } = useForm({
+        defaultValues: { email: searchParams.get('email') ?? '' }
+    })
     return (
         <>
             <div className="p-8">
@@ -19,7 +24,7 @@ export function SignIn() {
                     <form className="space-y-4">
                         <div className="flex flex-col">
                             <label htmlFor='email' className="text-sm font-semibold">Seu email</label>
-                            <input id='email' type='email' className="border rounded p-2" />
+                            <input id='email' type='email' className="border rounded p-2" {...register('email')} />
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor='email' className="text-sm font-semibold">Sua senha</label>
