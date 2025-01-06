@@ -7,6 +7,7 @@ import {
     Post,
     Put,
     Query,
+    UseGuards,
     UseInterceptors,
     ValidationPipe
 } from "@nestjs/common";
@@ -15,8 +16,9 @@ import { ProductService } from "./product.service";
 import { ProductEntity } from "./entities/product.entity";
 import { UpdateProductDto } from "./dtos/update.product-dto";
 import { CacheInterceptor } from "@nestjs/cache-manager";
+import { AuthGuard } from "src/auth/guard/guard";
 
-
+@UseGuards(AuthGuard)
 @Controller('products')
 export class ProductController {
     constructor(private readonly productService: ProductService) { }

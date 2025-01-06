@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Query, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, UseGuards, ValidationPipe } from "@nestjs/common";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { OrdersService } from "./order.service";
+import { AuthGuard } from "src/auth/guard/guard";
 
 @Controller('orders')
 export class OrdersController {
