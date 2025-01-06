@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, UseGuards, ValidationPipe } from "@
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { OrdersService } from "./order.service";
 import { AuthGuard } from "src/auth/guard/guard";
-
+@UseGuards(AuthGuard)
 @Controller('orders')
 export class OrdersController {
     constructor(private readonly ordersService: OrdersService) { }
