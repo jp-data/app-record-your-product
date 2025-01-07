@@ -1,11 +1,45 @@
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { z } from 'zod'
+import { loginUser } from "../../api-requisitions/login";
+import { useAuth } from "./context/auth-context";
+
+const signInForm = z.object({
+    email: z.string().email(),
+    password: z.string(),
+})
+
+type SignInForm = z.infer<typeof signInForm>
+
 
 export function SignIn() {
-    const [searchParams] = useSearchParams()
-    const { register } = useForm({
-        defaultValues: { email: searchParams.get('email') ?? '' }
+    const navigate = useNavigate()
+    const { mutateAsync: authenticatedUser } = useMutation<{ access_token: string }, unknown, SignInForm>({
+        mutationFn: loginUser
     })
+
+    const { login } = useAuth()
+
+
+    const [searchParams] = useSearchParams()
+    const { register, handleSubmit } = useForm({
+        defaultValues: { email: searchParams.get('email') ?? '', password: '' }
+    })
+
+    async function handleSignIn(data: SignInForm) {
+        try {
+            const response = await authenticatedUser({
+                email: data.email,
+                password: data.password,
+            })
+            login(response.access_token)
+            navigate('/products')
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <>
             <div className="p-8">
@@ -21,14 +55,14 @@ export function SignIn() {
                             Acompanhe suas vendas pelo painel do parceiro!
                         </p>
                     </div>
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleSubmit(handleSignIn)}>
                         <div className="flex flex-col">
                             <label htmlFor='email' className="text-sm font-semibold">Seu email</label>
                             <input id='email' type='email' className="border rounded p-2" {...register('email')} />
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor='email' className="text-sm font-semibold">Sua senha</label>
-                            <input id='password' type='password' className="border rounded p-2" />
+                            <input id='password' type='password' className="border rounded p-2" {...register('password')} />
                         </div>
                         <button className="w-full border text-white rounded p-2 bg-rose-600 " type="submit">
                             Acessar painel

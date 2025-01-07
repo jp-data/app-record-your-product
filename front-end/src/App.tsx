@@ -17,8 +17,6 @@ function App() {
           <RouterProvider router={router} />
         </QueryClientProvider>
       </AuthProvider>
-
-
     </main>
   )
 }
