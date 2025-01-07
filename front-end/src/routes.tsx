@@ -6,6 +6,7 @@ import { Sales } from './pages/app/sales'
 import { AuthLayout } from './pages/_layouts/auth'
 import { SignIn } from './pages/_auth/sign-in'
 import { SignUp } from './pages/_auth/sign-up'
+import { PrivateRoute } from './pages/_auth/context/private-route'
 
 
 export const router = createBrowserRouter([
@@ -13,9 +14,24 @@ export const router = createBrowserRouter([
         path: '/',
         element: <AppLayout />,
         children: [
-            { path: '/sales', element: <Sales /> },
-            { path: '/products', element: <Products /> },
-            { path: '/dashboard', element: <Dashboard /> },
+            {
+                path: '/sales',
+                element: <PrivateRoute>
+                    <Sales />
+                </PrivateRoute>
+            },
+            {
+                path: '/products',
+                element: <PrivateRoute>
+                    <Products />
+                </PrivateRoute>
+            },
+            {
+                path: '/dashboard',
+                element: <PrivateRoute>
+                    <Dashboard />
+                </PrivateRoute>
+            },
         ]
     },
     {

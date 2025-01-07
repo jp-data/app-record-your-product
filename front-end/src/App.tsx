@@ -4,16 +4,20 @@ import './global.css'
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "./lib/react-query"
 import { Toaster } from "sonner"
+import { AuthProvider } from "./pages/_auth/context/auth-context"
 
 
 function App() {
 
   return (
     <main className="font-sans">
-      <Toaster richColors />
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+      <AuthProvider>
+        <Toaster richColors />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </AuthProvider>
+
 
     </main>
   )
