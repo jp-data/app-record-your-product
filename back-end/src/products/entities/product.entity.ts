@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ProductImageEntity } from "./product-image.entity";
+import { UserEntity } from "src/users/entities/user.entity";
 
 @Entity({ name: 'products' })
 export class ProductEntity {
@@ -35,4 +36,10 @@ export class ProductEntity {
         (productImageEntity) => productImageEntity.product
     )
     image: ProductImageEntity[];
+
+    @ManyToOne(
+        () => UserEntity,
+        (userEntity) => userEntity.products,
+    )
+    user: UserEntity
 }

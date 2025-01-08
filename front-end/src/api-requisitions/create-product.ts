@@ -7,6 +7,16 @@ interface productBody {
     price: number
 }
 
+
+
 export async function createProducts({ name, description, category, quantity, price }: productBody) {
-    await api.post('/products', { name, description, category, quantity, price })
+    const token = localStorage.getItem('token')
+    if (!token) {
+        throw new Error("Usuário não autenticado")
+    }
+    await api.post('/products', { name, description, category, quantity, price }, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 }

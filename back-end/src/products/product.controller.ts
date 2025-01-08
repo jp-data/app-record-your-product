@@ -7,6 +7,7 @@ import {
     Post,
     Put,
     Query,
+    Req,
     UseGuards,
     UseInterceptors,
     ValidationPipe
@@ -16,7 +17,9 @@ import { ProductService } from "./product.service";
 import { ProductEntity } from "./entities/product.entity";
 import { UpdateProductDto } from "./dtos/update.product-dto";
 import { CacheInterceptor } from "@nestjs/cache-manager";
-import { AuthGuard } from "src/auth/guard/guard";
+import { AuthGuard, RequestWithUser } from "src/auth/guard/guard";
+import { UserEntity } from "src/users/entities/user.entity";
+import { payloadUser } from "src/auth/auth.service";
 
 @UseGuards(AuthGuard)
 @Controller('products')
@@ -45,9 +48,11 @@ export class ProductController {
 
     @Post()
     async createProduct(
+        @Req() req: RequestWithUser,
         @Body(ValidationPipe) createProductDto: CreateProductDto
     ) {
         const dataProduct = new ProductEntity()
+
 
 
         dataProduct.name = createProductDto.name
@@ -56,6 +61,8 @@ export class ProductController {
         dataProduct.quantity = createProductDto.quantity
         dataProduct.price = createProductDto.price
         dataProduct.image = createProductDto.image
+
+        dataProduct.user = { id: req.user.sub } as UserEntity
 
         const newProduct = this.productService.create(dataProduct)
         return newProduct
