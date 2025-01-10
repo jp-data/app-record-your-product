@@ -5,6 +5,7 @@ import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductListDto } from "./dtos/product-list-dto";
 import { UpdateProductDto } from "./dtos/update.product-dto";
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { UserEntity } from "src/users/entities/user.entity";
 
 
 
@@ -13,6 +14,8 @@ export class ProductService {
     constructor(
         @InjectRepository(ProductEntity)
         private readonly productRepository: Repository<ProductEntity>,
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
     ) { }
 
 
@@ -55,7 +58,7 @@ export class ProductService {
     }
 
 
-    async getSortByProducts(orderBy: string, direction: string) {
+    async getSortByProducts(userId: string, orderBy: string, direction: string) {
         const allowedColumns = ['price', 'quantity']
         if (!allowedColumns.includes(orderBy)) {
             throw new Error('Invalid column for ordering');
@@ -68,6 +71,7 @@ export class ProductService {
 
         const products = await this.productRepository.query(`
         SELECT * FROM products
+        WHERE products."userId" = '${userId}'
         ORDER BY ${orderBy} ${direction}
 
     `)
