@@ -10,7 +10,9 @@ import { redisStore } from 'cache-manager-redis-yet';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 
+
 import * as dotenv from 'dotenv'
+import { UserCacheInterceptor } from './auth/guard/user-cache-interceptor';
 
 dotenv.config()
 const isTestEnv = process.env.NODE_ENV === 'test'
@@ -39,7 +41,7 @@ const isTestEnv = process.env.NODE_ENV === 'test'
   providers: [
     {
       provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
+      useClass: UserCacheInterceptor,
     }
   ],
 })

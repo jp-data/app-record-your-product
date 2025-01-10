@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    Inject,
     Param,
     Post,
     Put,
@@ -16,15 +17,20 @@ import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductService } from "./product.service";
 import { ProductEntity } from "./entities/product.entity";
 import { UpdateProductDto } from "./dtos/update.product-dto";
-import { CacheInterceptor } from "@nestjs/cache-manager";
 import { AuthGuard, RequestWithUser } from "src/auth/guard/guard";
 import { UserEntity } from "src/users/entities/user.entity";
-import { payloadUser } from "src/auth/auth.service";
+import { UserCacheInterceptor } from "src/auth/guard/user-cache-interceptor";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
 
 @UseGuards(AuthGuard)
 @Controller('products')
 export class ProductController {
-    constructor(private readonly productService: ProductService) { }
+    constructor(
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
+        private readonly productService: ProductService,
+
+    ) { }
 
     @Get('/sort')
     async getSortedProducts(
@@ -40,9 +46,13 @@ export class ProductController {
     }
 
     @Get()
-    // @UseInterceptors(CacheInterceptor)
-    async listProducts() {
-        const products = await this.productService.listAll()
+    @UseInterceptors(UserCacheInterceptor)
+    async listProducts(
+        @Req() req: RequestWithUser
+    ) {
+        console.log('User:', req.user)
+        const userId = req.user.sub
+        const products = await this.productService.listAll(userId)
         return products
     }
 
@@ -51,21 +61,22 @@ export class ProductController {
         @Req() req: RequestWithUser,
         @Body(ValidationPipe) createProductDto: CreateProductDto
     ) {
-        const dataProduct = new ProductEntity()
+        const dataProduct = new ProductEntity();
 
+        dataProduct.name = createProductDto.name;
+        dataProduct.description = createProductDto.description;
+        dataProduct.category = createProductDto.category;
+        dataProduct.quantity = createProductDto.quantity;
+        dataProduct.price = createProductDto.price;
+        dataProduct.image = createProductDto.image;
+        dataProduct.user = { id: req.user.sub } as UserEntity;
 
+        const newProduct = await this.productService.create(dataProduct);
 
-        dataProduct.name = createProductDto.name
-        dataProduct.description = createProductDto.description
-        dataProduct.category = createProductDto.category
-        dataProduct.quantity = createProductDto.quantity
-        dataProduct.price = createProductDto.price
-        dataProduct.image = createProductDto.image
+        const cacheKey = `${req.user.sub}-${req.url}`;
+        await this.cacheManager.del(cacheKey);
 
-        dataProduct.user = { id: req.user.sub } as UserEntity
-
-        const newProduct = this.productService.create(dataProduct)
-        return newProduct
+        return newProduct;
     }
 
     @Put('/:id')

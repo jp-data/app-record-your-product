@@ -4,14 +4,17 @@ import { Repository } from "typeorm";
 import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductListDto } from "./dtos/product-list-dto";
 import { UpdateProductDto } from "./dtos/update.product-dto";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+
+
 
 @Injectable()
 export class ProductService {
     constructor(
         @InjectRepository(ProductEntity)
-        private readonly productRepository: Repository<ProductEntity>
+        private readonly productRepository: Repository<ProductEntity>,
     ) { }
+
 
     async create(createProductDto: CreateProductDto) {
         const newProduct = this.productRepository.create(createProductDto)
@@ -28,11 +31,14 @@ export class ProductService {
         return product
     }
 
-    async listAll() {
+    async listAll(userId: string) {
         const productsToList = await this.productRepository.find({
-            // relations: {
-            //     image: true
-            // }
+            where: {
+                user: { id: userId },
+            },
+            relations: {
+                user: true,
+            }
         })
         const productsList = productsToList.map(
             (product) =>
@@ -87,6 +93,4 @@ export class ProductService {
 
         return this.productRepository.remove(productToDelete)
     }
-
-
 }

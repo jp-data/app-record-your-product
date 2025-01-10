@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ProductImageEntity } from "./product-image.entity";
 import { UserEntity } from "src/users/entities/user.entity";
 
@@ -41,5 +41,6 @@ export class ProductEntity {
         () => UserEntity,
         (userEntity) => userEntity.products,
     )
+    @JoinColumn({ name: 'userId' })
     user: UserEntity
 }
