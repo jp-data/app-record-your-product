@@ -90,7 +90,10 @@ export class ProductController {
     }
 
     @Delete('/:id')
-    async deleteProduct(@Param('id') id: number) {
+    async deleteProduct(
+        @Req() req: RequestWithUser,
+        @Param('id') id: number
+    ) {
         await this.productService.delete(id)
     }
 

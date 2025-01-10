@@ -9,5 +9,14 @@ interface productBody {
 }
 
 export async function updateProducts(id: string, data: productBody) {
-    await api.put(`/products/${id}`, data)
+    const token = localStorage.getItem('token')
+
+    if (!token) {
+        throw new Error("Usuário não autenticado")
+    }
+    await api.put(`/products/${id}`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 }

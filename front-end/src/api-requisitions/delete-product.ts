@@ -1,5 +1,14 @@
 import { api } from "../lib/axios";
 
 export async function deleteProduct(id: string) {
-    await api.delete(`/products/${id}`)
+    const token = localStorage.getItem('token')
+
+    if (!token) {
+        throw new Error("Usuário não autenticado")
+    }
+    await api.delete(`/products/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 }
