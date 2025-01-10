@@ -1,5 +1,6 @@
 import { ChartSpline, CircleDollarSign, ClipboardList, DatabaseZap } from "lucide-react";
 import { NavLink } from "./nav-link";
+import { Logout } from "../pages/_auth/logout";
 
 export function Header() {
     return (
@@ -19,6 +20,7 @@ export function Header() {
                         <ChartSpline className="h-4 w-4 mr-1" />
                         Dashboard
                     </NavLink>
+                    <Logout />
                 </nav>
             </div>
         </div>

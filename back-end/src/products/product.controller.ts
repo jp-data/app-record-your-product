@@ -50,7 +50,6 @@ export class ProductController {
     async listProducts(
         @Req() req: RequestWithUser
     ) {
-        console.log('User:', req.user)
         const userId = req.user.sub
         const products = await this.productService.listAll(userId)
         return products
