@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { OrderItemEntity } from "./order-item.entity";
 import { EnumPayment } from "../dto/enums/enum-payment";
 import { UserEntity } from "src/users/entities/user.entity";
@@ -28,7 +28,8 @@ export class OrderEntity {
 
     @ManyToOne(
         () => UserEntity,
-        (userEntity) => userEntity.products,
+        (userEntity) => userEntity.orders,
     )
-    user: UserEntity[]
+    @JoinColumn({ name: 'userId' })
+    user: UserEntity
 }

@@ -5,18 +5,21 @@ import { Repository } from "typeorm";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { ProductEntity } from "../products/entities/product.entity";
 import { OrderItemEntity } from "./entities/order-item.entity";
+import { RequestWithUser } from "src/auth/guard/guard";
+import { UserEntity } from "src/users/entities/user.entity";
 
 @Injectable()
 export class OrdersService {
     constructor(
         @InjectRepository(OrderEntity) private orderRepository: Repository<OrderEntity>,
         @InjectRepository(ProductEntity) private productRepository: Repository<ProductEntity>,
-        @InjectRepository(OrderItemEntity) private itemRepository: Repository<OrderItemEntity>
+        @InjectRepository(OrderItemEntity) private itemRepository: Repository<OrderItemEntity>,
     ) { }
 
-    async create(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
+    async create(createOrderDto: CreateOrderDto, userId: string): Promise<OrderEntity> {
         let subtotalPrice = 0
         const discount = createOrderDto.discount || 0
+
 
         const orderedItems = await Promise.all(
             createOrderDto.items.map(async (itemDto) => {
@@ -42,13 +45,13 @@ export class OrdersService {
             total: totalPrice,
             discount,
             payment: createOrderDto.payment,
+            user: { id: userId } as UserEntity,
             items: orderedItems,
         })
-
         return await this.orderRepository.save(orderWithItems)
     }
 
-    async getSales() {
+    async getSales(userId: string) {
         const totalSales = await this.orderRepository.query(
             `SELECT 
                 ord.created_at AS date,
@@ -63,12 +66,13 @@ export class OrdersService {
             ON ord.id = orders_itens.id_order
             INNER JOIN products AS prd
             ON prd.id = orders_itens.product_id
+            WHERE ord."userId" = '${userId}'
             GROUP BY ord.id, date;`
         )
         return totalSales
     }
 
-    async getSalesForPaymentOrDiscount(paymentChosen: string, hasDiscount: boolean, day: string) {
+    async getSalesForPaymentOrDiscount(paymentChosen: string, hasDiscount: boolean, day: string, userId: string) {
         let query =
             `
             SELECT 
@@ -84,7 +88,7 @@ export class OrdersService {
                 ON ord.id = orders_itens.id_order
             INNER JOIN products AS prd
                 ON prd.id = orders_itens.product_id
-            WHERE 1=1
+            WHERE ord."userId" = '${userId}'
             `
         const queryParams: any[] = []
 
@@ -112,12 +116,12 @@ export class OrdersService {
         return await this.orderRepository.query(query, queryParams)
     }
 
-    async getSalesQuantity(period: string) {
+    async getSalesQuantity(userId: string, period: string) {
         let query = `
             SELECT COUNT(ord.id) AS vendas,
             SUM(ord.total) AS faturamento
             FROM orders AS ord
-            WHERE 1=1
+            WHERE ord."userId" = '${userId}'
         `
         if (period) {
             query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${period} days'`
@@ -127,7 +131,7 @@ export class OrdersService {
     }
 
 
-    async getBestSellingProducts(period: string) {
+    async getBestSellingProducts(userId: string, period: string) {
         let query = `
            SELECT 
                 prd.name AS Produto, 
@@ -143,8 +147,7 @@ export class OrdersService {
                 orders AS ord
             ON 
                 ord_itens.id_order = ord.id 
-            WHERE 
-                1=1
+            WHERE ord."userId" = '${userId}'
             `
         if (period) {
             query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${period} days'`
@@ -155,13 +158,13 @@ export class OrdersService {
         return await this.orderRepository.query(query)
     }
 
-    async getInvoicingEvolution(period: string) {
+    async getInvoicingEvolution(userId: string, period: string) {
         let query = `
             SELECT 
                 DATE(ord.created_at) AS dia,
                 SUM(ord.total) AS faturamento
                 FROM orders AS ord
-                WHERE 1=1
+                WHERE ord."userId" = '${userId}'
         `
         if (period) {
             query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${period} days'`
