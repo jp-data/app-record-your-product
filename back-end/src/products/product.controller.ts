@@ -78,9 +78,11 @@ export class ProductController {
         @Param('id') id: number,
         @Body() updateProductDto: UpdateProductDto,
     ) {
+        const userId = req.user.sub
         const productUpdated = await this.productService.update(
             id,
-            updateProductDto
+            updateProductDto,
+            userId
         )
 
         return {
@@ -94,7 +96,8 @@ export class ProductController {
         @Req() req: RequestWithUser,
         @Param('id') id: number
     ) {
-        await this.productService.delete(id)
+        const userId = req.user.sub
+        await this.productService.delete(id, userId)
     }
 
 }

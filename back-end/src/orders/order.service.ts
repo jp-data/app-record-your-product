@@ -27,10 +27,7 @@ export class OrdersService {
                     where: { id: itemDto.product_id },
                     relations: ['user'],
                 })
-                if (!product) {
-                    throw new NotFoundException(`Product with ID ${itemDto.product_id} not found`)
-                }
-                if (product.user.id != userId) {
+                if (!product || product.user.id != userId) {
                     throw new NotFoundException(`Product with ID ${itemDto.product_id} not found`)
                 }
                 subtotalPrice += product.price * itemDto.quantity

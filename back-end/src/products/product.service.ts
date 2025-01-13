@@ -76,20 +76,26 @@ export class ProductService {
         return products
     }
 
-    async update(id: number, updateProductDto: UpdateProductDto) {
-        const productToUpdate = await this.findOne(id)
+    async update(id: number, updateProductDto: UpdateProductDto, userId: string) {
+        const productToUpdate = await this.productRepository.findOne({
+            where: { id },
+            relations: ['user']
+        })
 
-        if (!productToUpdate) {
+        if (!productToUpdate || productToUpdate.user.id != userId) {
             throw new NotFoundException('Product not found!')
         }
 
         return this.productRepository.update(id, updateProductDto)
     }
 
-    async delete(id: number) {
-        const productToDelete = await this.findOne(id)
+    async delete(id: number, userId: string) {
+        const productToDelete = await this.productRepository.findOne({
+            where: { id },
+            relations: ['user']
+        })
 
-        if (!productToDelete) {
+        if (!productToDelete || productToDelete.user.id != userId) {
             throw new NotFoundException('Product not found!')
         }
 
