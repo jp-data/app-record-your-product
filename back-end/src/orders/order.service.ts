@@ -23,8 +23,10 @@ export class OrdersService {
 
         const orderedItems = await Promise.all(
             createOrderDto.items.map(async (itemDto) => {
-                const product = await this.productRepository.findOneBy({
-                    id: itemDto.product_id
+                const product = await this.productRepository.findOne({
+                    where: {
+                        user: { id: userId }
+                    }
                 })
                 if (!product) {
                     throw new NotFoundException(`Product with ID ${itemDto.product_id} not found`)
