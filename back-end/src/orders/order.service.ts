@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderEntity } from "./entities/order.entity";
 import { Repository } from "typeorm";
-import { CreateOrderDto } from "./dto/create-order.dto";
+import { CreateOrderDto, OrderItemDto } from "./dto/create-order.dto";
 import { ProductEntity } from "../products/entities/product.entity";
 import { OrderItemEntity } from "./entities/order-item.entity";
 import { RequestWithUser } from "src/auth/guard/guard";
@@ -24,11 +24,13 @@ export class OrdersService {
         const orderedItems = await Promise.all(
             createOrderDto.items.map(async (itemDto) => {
                 const product = await this.productRepository.findOne({
-                    where: {
-                        user: { id: userId }
-                    }
+                    where: { id: itemDto.product_id },
+                    relations: ['user'],
                 })
                 if (!product) {
+                    throw new NotFoundException(`Product with ID ${itemDto.product_id} not found`)
+                }
+                if (product.user.id != userId) {
                     throw new NotFoundException(`Product with ID ${itemDto.product_id} not found`)
                 }
                 subtotalPrice += product.price * itemDto.quantity
