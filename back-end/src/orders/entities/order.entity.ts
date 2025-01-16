@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { OrderItemEntity } from "./order-item.entity";
 import { EnumPayment } from "../dto/enums/enum-payment";
-import { UserEntity } from "src/users/entities/user.entity";
+import { UserEntity } from "../../users/entities/user.entity";
 
 @Entity('orders')
 export class OrderEntity {

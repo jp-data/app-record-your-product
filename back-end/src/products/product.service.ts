@@ -4,8 +4,8 @@ import { Repository } from "typeorm";
 import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductListDto } from "./dtos/product-list-dto";
 import { UpdateProductDto } from "./dtos/update.product-dto";
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { UserEntity } from "src/users/entities/user.entity";
+import { Injectable, NotFoundException } from "@nestjs/common";
+
 
 
 

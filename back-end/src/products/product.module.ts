@@ -3,8 +3,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ProductEntity } from "./entities/product.entity";
 import { ProductController } from "./product.controller";
 import { ProductService } from "./product.service";
-import { UserService } from "src/users/user.service";
-import { UserEntity } from "src/users/entities/user.entity";
+import { UserService } from "../users/user.service";
+import { UserEntity } from "../users/entities/user.entity";
 
 
 @Module({

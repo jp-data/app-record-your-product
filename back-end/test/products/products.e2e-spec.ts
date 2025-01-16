@@ -1,15 +1,19 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductEntity } from '../../src/products/entities/product.entity';
 import { AppDataSource } from '../../src/database/ormconfig';
+import * as bcrypt from 'bcrypt';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let productRepository: Repository<ProductEntity>
+  let userRepository: Repository<UserEntity>
+  let authToken: string
+
 
 
   beforeAll(async () => {
@@ -17,7 +21,6 @@ describe('AppController (e2e)', () => {
       imports: [AppModule],
     }).compile()
 
-    console.log("NODE_ENV:", process.env.NODE_ENV)
     app = moduleRef.createNestApplication();
     await app.listen(3001)
     await app.init();
@@ -26,33 +29,52 @@ describe('AppController (e2e)', () => {
     await AppDataSource.synchronize(true)
 
     productRepository = moduleRef.get('ProductEntityRepository')
+    userRepository = moduleRef.get('UserEntityRepository')
+
+    await userRepository.save({
+      name: 'test user',
+      email: 'test@email.com',
+      password: await bcrypt.hash('test123', 10)
+    })
+
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        email: 'test@email.com',
+        password: 'test123'
+      })
+
+    authToken = loginResponse.body.access_token
   })
 
-  beforeEach(async () => {
-    await productRepository.delete({});
-    await AppDataSource.synchronize(true);
-  });
-
   it('should be able to list all registered products', async () => {
-    await productRepository.save([
-      {
+    await request(app.getHttpServer())
+      .post('/products')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({
         name: 'Product 1',
         description: 'Description 1',
         category: 'Category 1',
         quantity: 10,
         price: 100,
-      },
-      {
+      })
+      .expect(201)
+
+    await request(app.getHttpServer())
+      .post('/products')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({
         name: 'Product 2',
         description: 'Description 2',
         category: 'Category 2',
         quantity: 10,
         price: 100,
-      }
-    ])
+      })
+      .expect(201)
 
     const response = await request(app.getHttpServer())
       .get('/products')
+      .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
 
     expect(response.body).toEqual(
@@ -77,7 +99,6 @@ describe('AppController (e2e)', () => {
     )
   })
 
-
   it('should be able to create an new product', async () => {
     const createProductDto = {
       name: 'Teste 2',
@@ -88,6 +109,7 @@ describe('AppController (e2e)', () => {
     }
     const response = await request(app.getHttpServer())
       .post('/products')
+      .set('Authorization', `Bearer ${authToken}`)
       .send(createProductDto)
       .expect(201)
 
@@ -104,13 +126,21 @@ describe('AppController (e2e)', () => {
   })
 
   it('should be able to edit an registered product', async () => {
-    const product = await productRepository.save({
+    const createProductDto = {
       name: 'Teste 0412 for update',
       description: 'Teste 0412 description',
       category: 'Teste 0412 category',
       quantity: 10,
       price: 5
-    })
+    }
+
+    const response = await request(app.getHttpServer())
+      .post('/products')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(createProductDto)
+      .expect(201)
+
+    const productId = response.body.id
 
     const updatedProduct = {
       name: 'Teste 0412 updated',
@@ -121,7 +151,8 @@ describe('AppController (e2e)', () => {
     }
 
     const expectedResponse = await request(app.getHttpServer())
-      .put(`/products/${product.id}`)
+      .put(`/products/${productId}`)
+      .set('Authorization', `Bearer ${authToken}`)
       .send(updatedProduct)
       .expect(200)
 
@@ -134,7 +165,7 @@ describe('AppController (e2e)', () => {
       })
     )
 
-    const newProduct = await productRepository.findOneBy({ id: product.id })
+    const newProduct = await productRepository.findOneBy({ id: productId })
     expect(newProduct).toEqual(
       expect.objectContaining({
         name: 'Teste 0412 updated',
@@ -152,6 +183,7 @@ describe('AppController (e2e)', () => {
     }
     const response = await request(app.getHttpServer())
       .put('/products/999')
+      .set('Authorization', `Bearer ${authToken}`)
       .send(updatedData)
       .expect(404)
 
@@ -163,24 +195,35 @@ describe('AppController (e2e)', () => {
   })
 
   it("should be able to delete an product", async () => {
-    const productToDelete = await productRepository.save({
+    const productToDeleteDto = {
       name: 'Teste produto delecao',
       description: 'Teste produto descricao',
       category: 'Teste produto categoria',
       quantity: 100,
       price: 100
-    })
+    }
+
+    const response = await request(app.getHttpServer())
+      .post('/products')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(productToDeleteDto)
+      .expect(201)
+
+    const productId = response.body.id
+
     await request(app.getHttpServer())
-      .delete(`/products/${productToDelete.id}`)
+      .delete(`/products/${productId}`)
+      .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
 
-    const productDeleted = await productRepository.findOneBy({ id: productToDelete.id })
+    const productDeleted = await productRepository.findOneBy({ id: productId })
     expect(productDeleted).toBeNull()
   })
 
   it("should be able to refuse an deletion if product id doesn't exists", async () => {
     const response = await request(app.getHttpServer())
       .delete('/products/84654654')
+      .set('Authorization', `Bearer ${authToken}`)
       .expect(404)
 
     expect(response.body).toEqual({

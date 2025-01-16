@@ -1,5 +1,5 @@
-import { OrderEntity } from "src/orders/entities/order.entity";
-import { ProductEntity } from "src/products/entities/product.entity";
+import { OrderEntity } from "../../orders/entities/order.entity";
+import { ProductEntity } from "../../products/entities/product.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'users' })

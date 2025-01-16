@@ -15,8 +15,8 @@ import { CreateProductDto } from "./dtos/create-product-dto";
 import { ProductService } from "./product.service";
 import { ProductEntity } from "./entities/product.entity";
 import { UpdateProductDto } from "./dtos/update.product-dto";
-import { AuthGuard, RequestWithUser } from "src/auth/guard/guard";
-import { UserEntity } from "src/users/entities/user.entity";
+import { AuthGuard, RequestWithUser } from "../auth/guard/guard"
+import { UserEntity } from "../users/entities/user.entity";
 
 
 
