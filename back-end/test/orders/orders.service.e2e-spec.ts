@@ -1,897 +1,886 @@
-// import { INestApplication } from "@nestjs/common";
-// import { Test } from "@nestjs/testing";
-// import * as request from 'supertest'
-// import { AppModule } from "../../src/app.module";
-// import { OrderEntity } from "../../src/orders/entities/order.entity";
-// import { Repository } from "typeorm";
-// import { ProductEntity } from "../../src/products/entities/product.entity";
-// import { AppDataSource } from "../../src/database/ormconfig";
-// import { OrderItemEntity } from "../../src/orders/entities/order-item.entity";
-
-// describe('AppController (e2e)', () => {
-//     let app: INestApplication;
-//     let orderRepository: Repository<OrderEntity>
-//     let productRepository: Repository<ProductEntity>
-//     let orderItemRepository: Repository<OrderItemEntity>
-
-//     beforeAll(async () => {
-//         const moduleRef = await Test.createTestingModule({
-//             imports: [AppModule],
-//         }).compile()
-
-//         console.log("NODE_ENV:", process.env.NODE_ENV)
-//         app = moduleRef.createNestApplication();
-//         await app.listen(3001)
-//         await app.init();
-
-//         await AppDataSource.initialize();
-//         await AppDataSource.synchronize(true)
-
-//         orderRepository = moduleRef.get('OrderEntityRepository')
-//         productRepository = moduleRef.get('ProductEntityRepository')
-//         orderItemRepository = moduleRef.get('OrderItemEntityRepository')
-//     })
-
-//     beforeEach(async () => {
-//         await orderRepository.delete({});
-//         await productRepository.delete({});
-//         await orderItemRepository.delete({});
-//         await AppDataSource.synchronize(true);
-//     });
-
-
-
-//     it('should be able to list all registered orders ordered by pix payment', async () => {
-//         await productRepository.save([
-//             {
-//                 id: 1,
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 id: 2,
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-//         const createOrderDto = {
-//             payment: 'pix',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 3 },
-//                 { product_id: 2, quantity: 3 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?paymentChosen=pix')
-//             .expect(200)
-
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 1, Produto teste 2',
-//                     subtotal: 400,
-//                     discount: 0,
-//                     total: 400,
-//                     payment: 'pix',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it('should be able to list all registered orders ordered by debit payment', async () => {
-//         await productRepository.save([
-//             {
-//                 id: 1,
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 id: 2,
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-//         const createOrderDto = {
-//             payment: 'pix',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?paymentChosen=débito')
-//             .expect(200)
-
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 2',
-//                     subtotal: 200,
-//                     discount: 0,
-//                     total: 200,
-//                     payment: 'débito',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it('should be able to list all registered orders ordered by credit payment', async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-//         const createOrderDto = {
-//             payment: 'crédito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//             ]
-//         }
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?paymentChosen=crédito')
-//             .expect(200)
-
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 2',
-//                     subtotal: 200,
-//                     discount: 0,
-//                     total: 200,
-//                     payment: 'crédito',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it('should be able to list all registered orders that discount option was applied', async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'pix',
-//             discount: 10,
-//             items: [
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?hasDiscount=true')
-//             .expect(200)
-
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 2',
-//                     subtotal: 200,
-//                     discount: 10,
-//                     total: 190,
-//                     payment: 'pix',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it('should be able to list all registered orders that discount option was not applied', async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'pix',
-//             discount: 10,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?hasDiscount=false')
-//             .expect(200)
-
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 1',
-//                     subtotal: 200,
-//                     discount: 0,
-//                     total: 200,
-//                     payment: 'débito',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it('should be able to list all registered orders that payment chosen equals to debit and discount has been applied', async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'débito',
-//             discount: 10,
-//             items: [
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?paymentChosen=débito&hasDiscount=true')
-//             .expect(200)
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 2',
-//                     subtotal: 200,
-//                     discount: 10,
-//                     total: 190,
-//                     payment: 'débito',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it("should be able to list all registered orders that payment chosen equals to debit and doesn't have discount", async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-
-//         const createOrderDto = {
-//             payment: 'débito',
-//             discount: 10,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?paymentChosen=débito&hasDiscount=false')
-//             .expect(200)
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 2',
-//                     subtotal: 200,
-//                     discount: 0,
-//                     total: 200,
-//                     payment: 'débito',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it("should be able to list all registered orders that payment chosen equals to credit and discount has been applied", async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'crédito',
-//             discount: 10,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'crédito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?paymentChosen=crédito&hasDiscount=true')
-//             .expect(200)
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 1',
-//                     subtotal: 200,
-//                     discount: 10,
-//                     total: 190,
-//                     payment: 'crédito',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it("should be able to list all registered orders that payment chosen equals to credit and doesn't have discount", async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'crédito',
-//             discount: 10,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'crédito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?paymentChosen=crédito&hasDiscount=false')
-//             .expect(200)
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 2',
-//                     subtotal: 200,
-//                     discount: 0,
-//                     total: 200,
-//                     payment: 'crédito',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it("should be able to list all registered orders that payment chosen equals to pix and discount has been applied", async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'pix',
-//             discount: 10,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'pix',
-//             discount: 0,
-//             items: [
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?paymentChosen=pix&hasDiscount=true')
-//             .expect(200)
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 1',
-//                     subtotal: 200,
-//                     discount: 10,
-//                     total: 190,
-//                     payment: 'pix',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it("should be able to list all registered orders that payment chosen equals to pix and doesn't have discount", async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'pix',
-//             discount: 10,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'pix',
-//             discount: 0,
-//             items: [
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/filter?paymentChosen=pix&hasDiscount=false')
-//             .expect(200)
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     date: expect.any(String),
-//                     products: 'Produto teste 2',
-//                     subtotal: 200,
-//                     discount: 0,
-//                     total: 200,
-//                     payment: 'pix',
-//                     id: expect.any(Number)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it('should be able to return the total number of sales', async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'pix',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 4 }
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 2, quantity: 3 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/salesQuantity')
-//             .expect(200)
-
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     vendas: "2",
-//                     faturamento: 700
-//                 })
-//             ])
-//         )
-//     })
-
-//     it('should be able to return an descending list of best-selling products', async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'pix',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 4 },
-//                 { product_id: 2, quantity: 6 }
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 5 },
-//                 { product_id: 2, quantity: 5 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/bestProducts')
-//             .expect(200)
-
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     produto: "Produto teste 2",
-//                     soma: "11",
-//                     data: expect.any(String)
-//                 }),
-//                 expect.objectContaining({
-//                     produto: "Produto teste 1",
-//                     soma: "9",
-//                     data: expect.any(String)
-//                 })
-//             ])
-//         )
-//     })
-
-//     it('should be able to return the total billing for the day', async () => {
-//         await productRepository.save([
-//             {
-//                 name: 'Produto teste 1',
-//                 description: 'teste 1 desc',
-//                 category: 'teste 1 categ',
-//                 price: 100,
-//                 quantity: 100
-//             },
-//             {
-//                 name: 'Produto teste 2',
-//                 description: 'teste 2 desc',
-//                 category: 'teste 2 categ',
-//                 price: 100,
-//                 quantity: 100
-//             }
-//         ])
-
-//         const createOrderDto = {
-//             payment: 'pix',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         const createOrderDto2 = {
-//             payment: 'débito',
-//             discount: 0,
-//             items: [
-//                 { product_id: 1, quantity: 2 },
-//                 { product_id: 2, quantity: 2 }
-//             ]
-//         }
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto)
-//             .expect(201)
-
-//         await request(app.getHttpServer())
-//             .post('/orders')
-//             .send(createOrderDto2)
-//             .expect(201)
-
-//         const response = await request(app.getHttpServer())
-//             .get('/orders/invoicingEvolution')
-//             .expect(200)
-
-//         expect(response.body).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({
-//                     dia: expect.any(String),
-//                     faturamento: 800
-//                 }),
-
-//             ])
-//         )
-//     })
-// })
+import { INestApplication } from "@nestjs/common";
+import { Test } from "@nestjs/testing";
+import * as request from 'supertest'
+import { AppModule } from "../../src/app.module";
+import { OrderEntity } from "../../src/orders/entities/order.entity";
+import { Repository } from "typeorm";
+import { ProductEntity } from "../../src/products/entities/product.entity";
+import { AppDataSource } from "../../src/database/ormconfig";
+import { OrderItemEntity } from "../../src/orders/entities/order-item.entity";
+import { UserEntity } from "src/users/entities/user.entity";
+import * as bcrypt from 'bcrypt';
+
+describe('AppController (e2e)', () => {
+    let app: INestApplication;
+    let orderRepository: Repository<OrderEntity>
+    let productRepository: Repository<ProductEntity>
+    let orderItemRepository: Repository<OrderItemEntity>
+    let userRepository: Repository<UserEntity>
+    let authToken: string
+
+    beforeAll(async () => {
+        const moduleRef = await Test.createTestingModule({
+            imports: [AppModule],
+        }).compile()
+
+        app = moduleRef.createNestApplication();
+        await app.listen(3001)
+        await app.init();
+
+        await AppDataSource.initialize();
+        await AppDataSource.synchronize(true)
+
+        orderRepository = moduleRef.get('OrderEntityRepository')
+        productRepository = moduleRef.get('ProductEntityRepository')
+        orderItemRepository = moduleRef.get('OrderItemEntityRepository')
+        userRepository = moduleRef.get('UserEntityRepository')
+
+        await userRepository.save({
+            name: 'user name',
+            email: 'test@email.com',
+            password: await bcrypt.hash('test123', 10)
+        })
+
+        const responseLogin = await request(app.getHttpServer())
+            .post('/auth/login')
+            .send({
+                email: 'test@email.com',
+                password: 'test123'
+            })
+
+        authToken = responseLogin.body.access_token
+
+        await request(app.getHttpServer())
+            .post('/products')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(
+                {
+                    id: 1,
+                    name: 'Produto teste 1',
+                    description: 'teste 1 desc',
+                    category: 'teste 1 categ',
+                    price: 100,
+                    quantity: 100
+                },
+            )
+
+        await request(app.getHttpServer())
+            .post('/products')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send({
+                id: 2,
+                name: 'Produto teste 2',
+                description: 'teste 2 desc',
+                category: 'teste 2 categ',
+                price: 100,
+                quantity: 100
+            })
+
+        const createOrderDtoPix =
+        {
+            payment: 'pix',
+            discount: 0,
+            items: [
+                { product_id: 1, quantity: 2 },
+                { product_id: 2, quantity: 2 }
+            ]
+        }
+
+        const createOrderDtoPixWithDiscount =
+        {
+            payment: 'pix',
+            discount: 30,
+            items: [
+                { product_id: 1, quantity: 2 },
+                { product_id: 2, quantity: 2 }
+            ]
+        }
+
+        const createOrderDtoDebit =
+        {
+            payment: 'débito',
+            discount: 0,
+            items: [
+                { product_id: 1, quantity: 3 },
+                { product_id: 2, quantity: 3 }
+            ]
+        }
+
+        const createOrderDtoDebitWithDiscount =
+        {
+            payment: 'débito',
+            discount: 30,
+            items: [
+                { product_id: 1, quantity: 3 },
+                { product_id: 2, quantity: 3 }
+            ]
+        }
+
+
+        const createOrderDtoCredit =
+        {
+            payment: 'crédito',
+            discount: 0,
+            items: [
+                { product_id: 1, quantity: 3 },
+                { product_id: 2, quantity: 3 }
+            ]
+        }
+
+        const createOrderDtoCreditWithDiscount =
+        {
+            payment: 'crédito',
+            discount: 30,
+            items: [
+                { product_id: 1, quantity: 3 },
+                { product_id: 2, quantity: 3 }
+            ]
+        }
+
+
+
+        await request(app.getHttpServer())
+            .post('/orders')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(createOrderDtoPix)
+            .expect(201)
+
+        await request(app.getHttpServer())
+            .post('/orders')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(createOrderDtoPixWithDiscount)
+            .expect(201)
+
+        await request(app.getHttpServer())
+            .post('/orders')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(createOrderDtoDebit)
+            .expect(201)
+
+        await request(app.getHttpServer())
+            .post('/orders')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(createOrderDtoDebitWithDiscount)
+            .expect(201)
+
+        await request(app.getHttpServer())
+            .post('/orders')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(createOrderDtoCredit)
+            .expect(201)
+
+        await request(app.getHttpServer())
+            .post('/orders')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(createOrderDtoCreditWithDiscount)
+            .expect(201)
+    })
+
+    it('should be able to list all registered orders ordered by pix payment', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?paymentChosen=pix')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 400,
+                    discount: 0,
+                    total: 400,
+                    payment: 'pix',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
+
+    it('should be able to list all registered orders ordered by debit payment', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?paymentChosen=débito')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+
+
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 0,
+                    total: 600,
+                    payment: 'débito',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
+
+    it('should be able to list all registered orders ordered by credit payment', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?paymentChosen=crédito')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 0,
+                    total: 600,
+                    payment: 'crédito',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
+
+    it('should be able to list all registered orders that discount option was applied', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?hasDiscount=true')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 30,
+                    total: 570,
+                    payment: 'pix',
+                    id: expect.any(Number)
+                }),
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 30,
+                    total: 570,
+                    payment: 'débito',
+                    id: expect.any(Number)
+                }),
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 30,
+                    total: 570,
+                    payment: 'crédito',
+                    id: expect.any(Number)
+                }),
+
+            ])
+        )
+    })
+
+    // it('should be able to list all registered orders that discount option was not applied', async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+    //     const createOrderDto = {
+    //         payment: 'débito',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'pix',
+    //         discount: 10,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/filter?hasDiscount=false')
+    //         .expect(200)
+
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 date: expect.any(String),
+    //                 products: 'Produto teste 1',
+    //                 subtotal: 200,
+    //                 discount: 0,
+    //                 total: 200,
+    //                 payment: 'débito',
+    //                 id: expect.any(Number)
+    //             })
+    //         ])
+    //     )
+    // })
+
+    // it('should be able to list all registered orders that payment chosen equals to debit and discount has been applied', async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+    //     const createOrderDto = {
+    //         payment: 'débito',
+    //         discount: 10,
+    //         items: [
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'débito',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/filter?paymentChosen=débito&hasDiscount=true')
+    //         .expect(200)
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 date: expect.any(String),
+    //                 products: 'Produto teste 2',
+    //                 subtotal: 200,
+    //                 discount: 10,
+    //                 total: 190,
+    //                 payment: 'débito',
+    //                 id: expect.any(Number)
+    //             })
+    //         ])
+    //     )
+    // })
+
+    // it("should be able to list all registered orders that payment chosen equals to debit and doesn't have discount", async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+
+    //     const createOrderDto = {
+    //         payment: 'débito',
+    //         discount: 10,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'débito',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/filter?paymentChosen=débito&hasDiscount=false')
+    //         .expect(200)
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 date: expect.any(String),
+    //                 products: 'Produto teste 2',
+    //                 subtotal: 200,
+    //                 discount: 0,
+    //                 total: 200,
+    //                 payment: 'débito',
+    //                 id: expect.any(Number)
+    //             })
+    //         ])
+    //     )
+    // })
+
+    // it("should be able to list all registered orders that payment chosen equals to credit and discount has been applied", async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+    //     const createOrderDto = {
+    //         payment: 'crédito',
+    //         discount: 10,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'crédito',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/filter?paymentChosen=crédito&hasDiscount=true')
+    //         .expect(200)
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 date: expect.any(String),
+    //                 products: 'Produto teste 1',
+    //                 subtotal: 200,
+    //                 discount: 10,
+    //                 total: 190,
+    //                 payment: 'crédito',
+    //                 id: expect.any(Number)
+    //             })
+    //         ])
+    //     )
+    // })
+
+    // it("should be able to list all registered orders that payment chosen equals to credit and doesn't have discount", async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+    //     const createOrderDto = {
+    //         payment: 'crédito',
+    //         discount: 10,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'crédito',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/filter?paymentChosen=crédito&hasDiscount=false')
+    //         .expect(200)
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 date: expect.any(String),
+    //                 products: 'Produto teste 2',
+    //                 subtotal: 200,
+    //                 discount: 0,
+    //                 total: 200,
+    //                 payment: 'crédito',
+    //                 id: expect.any(Number)
+    //             })
+    //         ])
+    //     )
+    // })
+
+    // it("should be able to list all registered orders that payment chosen equals to pix and discount has been applied", async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+    //     const createOrderDto = {
+    //         payment: 'pix',
+    //         discount: 10,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'pix',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/filter?paymentChosen=pix&hasDiscount=true')
+    //         .expect(200)
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 date: expect.any(String),
+    //                 products: 'Produto teste 1',
+    //                 subtotal: 200,
+    //                 discount: 10,
+    //                 total: 190,
+    //                 payment: 'pix',
+    //                 id: expect.any(Number)
+    //             })
+    //         ])
+    //     )
+    // })
+
+    // it("should be able to list all registered orders that payment chosen equals to pix and doesn't have discount", async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+    //     const createOrderDto = {
+    //         payment: 'pix',
+    //         discount: 10,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'pix',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/filter?paymentChosen=pix&hasDiscount=false')
+    //         .expect(200)
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 date: expect.any(String),
+    //                 products: 'Produto teste 2',
+    //                 subtotal: 200,
+    //                 discount: 0,
+    //                 total: 200,
+    //                 payment: 'pix',
+    //                 id: expect.any(Number)
+    //             })
+    //         ])
+    //     )
+    // })
+
+    // it('should be able to return the total number of sales', async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+    //     const createOrderDto = {
+    //         payment: 'pix',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 1, quantity: 4 }
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'débito',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 2, quantity: 3 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/salesQuantity')
+    //         .expect(200)
+
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 vendas: "2",
+    //                 faturamento: 700
+    //             })
+    //         ])
+    //     )
+    // })
+
+    // it('should be able to return an descending list of best-selling products', async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+    //     const createOrderDto = {
+    //         payment: 'pix',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 1, quantity: 4 },
+    //             { product_id: 2, quantity: 6 }
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'débito',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 1, quantity: 5 },
+    //             { product_id: 2, quantity: 5 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/bestProducts')
+    //         .expect(200)
+
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 produto: "Produto teste 2",
+    //                 soma: "11",
+    //                 data: expect.any(String)
+    //             }),
+    //             expect.objectContaining({
+    //                 produto: "Produto teste 1",
+    //                 soma: "9",
+    //                 data: expect.any(String)
+    //             })
+    //         ])
+    //     )
+    // })
+
+    // it('should be able to return the total billing for the day', async () => {
+    //     await productRepository.save([
+    //         {
+    //             name: 'Produto teste 1',
+    //             description: 'teste 1 desc',
+    //             category: 'teste 1 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         },
+    //         {
+    //             name: 'Produto teste 2',
+    //             description: 'teste 2 desc',
+    //             category: 'teste 2 categ',
+    //             price: 100,
+    //             quantity: 100
+    //         }
+    //     ])
+
+    //     const createOrderDto = {
+    //         payment: 'pix',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     const createOrderDto2 = {
+    //         payment: 'débito',
+    //         discount: 0,
+    //         items: [
+    //             { product_id: 1, quantity: 2 },
+    //             { product_id: 2, quantity: 2 }
+    //         ]
+    //     }
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto)
+    //         .expect(201)
+
+    //     await request(app.getHttpServer())
+    //         .post('/orders')
+    //         .send(createOrderDto2)
+    //         .expect(201)
+
+    //     const response = await request(app.getHttpServer())
+    //         .get('/orders/invoicingEvolution')
+    //         .expect(200)
+
+    //     expect(response.body).toEqual(
+    //         expect.arrayContaining([
+    //             expect.objectContaining({
+    //                 dia: expect.any(String),
+    //                 faturamento: 800
+    //             }),
+
+    //         ])
+    //     )
+    // })
+})
