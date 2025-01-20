@@ -53,12 +53,6 @@ describe('AppController (e2e)', () => {
             })
 
         authToken = responseLogin.body.access_token
-        // await orderRepository.delete({})
-        // await productRepository.delete({})
-        // await orderItemRepository.delete({})
-        // console.log('before each', authToken)
-
-        // await AppDataSource.synchronize(true)
     });
 
     it('should be able to create an order', async () => {

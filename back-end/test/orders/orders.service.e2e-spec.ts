@@ -81,8 +81,8 @@ describe('AppController (e2e)', () => {
             payment: 'pix',
             discount: 0,
             items: [
-                { product_id: 1, quantity: 2 },
-                { product_id: 2, quantity: 2 }
+                { product_id: 1, quantity: 3 },
+                { product_id: 2, quantity: 3 }
             ]
         }
 
@@ -91,8 +91,8 @@ describe('AppController (e2e)', () => {
             payment: 'pix',
             discount: 30,
             items: [
-                { product_id: 1, quantity: 2 },
-                { product_id: 2, quantity: 2 }
+                { product_id: 1, quantity: 3 },
+                { product_id: 2, quantity: 3 }
             ]
         }
 
@@ -136,8 +136,6 @@ describe('AppController (e2e)', () => {
                 { product_id: 2, quantity: 3 }
             ]
         }
-
-
 
         await request(app.getHttpServer())
             .post('/orders')
@@ -187,9 +185,9 @@ describe('AppController (e2e)', () => {
                 expect.objectContaining({
                     date: expect.any(String),
                     products: 'Produto teste 1, Produto teste 2',
-                    subtotal: 400,
+                    subtotal: 600,
                     discount: 0,
-                    total: 400,
+                    total: 600,
                     payment: 'pix',
                     id: expect.any(Number)
                 })
@@ -233,6 +231,15 @@ describe('AppController (e2e)', () => {
                     subtotal: 600,
                     discount: 0,
                     total: 600,
+                    payment: 'crédito',
+                    id: expect.any(Number)
+                }),
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 30,
+                    total: 570,
                     payment: 'crédito',
                     id: expect.any(Number)
                 })
@@ -280,607 +287,217 @@ describe('AppController (e2e)', () => {
         )
     })
 
-    // it('should be able to list all registered orders that discount option was not applied', async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
+    it('should be able to list all registered orders that discount option was not applied', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?hasDiscount=false')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
 
-    //     const createOrderDto = {
-    //         payment: 'débito',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'pix',
-    //         discount: 10,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 0,
+                    total: 600,
+                    payment: 'pix',
+                    id: expect.any(Number)
+                }),
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 0,
+                    total: 600,
+                    payment: 'débito',
+                    id: expect.any(Number)
+                }),
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 0,
+                    total: 600,
+                    payment: 'crédito',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
 
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
+    it('should be able to list all registered orders that payment chosen equals to debit and discount has been applied', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?paymentChosen=débito&hasDiscount=true')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 30,
+                    total: 570,
+                    payment: 'débito',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
 
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/filter?hasDiscount=false')
-    //         .expect(200)
+    it("should be able to list all registered orders that payment chosen equals to debit and doesn't have discount", async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?paymentChosen=débito&hasDiscount=false')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 0,
+                    total: 600,
+                    payment: 'débito',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
 
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 date: expect.any(String),
-    //                 products: 'Produto teste 1',
-    //                 subtotal: 200,
-    //                 discount: 0,
-    //                 total: 200,
-    //                 payment: 'débito',
-    //                 id: expect.any(Number)
-    //             })
-    //         ])
-    //     )
-    // })
+    it("should be able to list all registered orders that payment chosen equals to credit and discount has been applied", async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?paymentChosen=crédito&hasDiscount=true')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 30,
+                    total: 570,
+                    payment: 'crédito',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
 
-    // it('should be able to list all registered orders that payment chosen equals to debit and discount has been applied', async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
+    it("should be able to list all registered orders that payment chosen equals to credit and doesn't have discount", async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?paymentChosen=crédito&hasDiscount=false')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 0,
+                    total: 600,
+                    payment: 'crédito',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
 
-    //     const createOrderDto = {
-    //         payment: 'débito',
-    //         discount: 10,
-    //         items: [
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'débito',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
+    it("should be able to list all registered orders that payment chosen equals to pix and discount has been applied", async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?paymentChosen=pix&hasDiscount=true')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 30,
+                    total: 570,
+                    payment: 'pix',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
 
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
+    it("should be able to list all registered orders that payment chosen equals to pix and doesn't have discount", async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/filter?paymentChosen=pix&hasDiscount=false')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    date: expect.any(String),
+                    products: 'Produto teste 1, Produto teste 2',
+                    subtotal: 600,
+                    discount: 0,
+                    total: 600,
+                    payment: 'pix',
+                    id: expect.any(Number)
+                })
+            ])
+        )
+    })
 
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/filter?paymentChosen=débito&hasDiscount=true')
-    //         .expect(200)
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 date: expect.any(String),
-    //                 products: 'Produto teste 2',
-    //                 subtotal: 200,
-    //                 discount: 10,
-    //                 total: 190,
-    //                 payment: 'débito',
-    //                 id: expect.any(Number)
-    //             })
-    //         ])
-    //     )
-    // })
+    it('should be able to return the total number of sales', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/salesQuantity')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
 
-    // it("should be able to list all registered orders that payment chosen equals to debit and doesn't have discount", async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    vendas: "6",
+                    faturamento: 3510
+                })
+            ])
+        )
+    })
 
+    it('should be able to return an descending list of best-selling products', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/bestProducts')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
 
-    //     const createOrderDto = {
-    //         payment: 'débito',
-    //         discount: 10,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'débito',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    produto: "Produto teste 1",
+                    soma: "18",
+                    data: expect.any(String)
+                }),
+                expect.objectContaining({
+                    produto: "Produto teste 2",
+                    soma: "18",
+                    data: expect.any(String)
+                })
+            ])
+        )
+    })
 
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
+    it('should be able to return the total billing for the day', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/orders/invoicingEvolution')
+            .set('Authorization', `Bearer ${authToken}`)
+            .expect(200)
 
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/filter?paymentChosen=débito&hasDiscount=false')
-    //         .expect(200)
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 date: expect.any(String),
-    //                 products: 'Produto teste 2',
-    //                 subtotal: 200,
-    //                 discount: 0,
-    //                 total: 200,
-    //                 payment: 'débito',
-    //                 id: expect.any(Number)
-    //             })
-    //         ])
-    //     )
-    // })
+        expect(response.body).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    dia: expect.any(String),
+                    faturamento: 3510
+                }),
 
-    // it("should be able to list all registered orders that payment chosen equals to credit and discount has been applied", async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
-
-    //     const createOrderDto = {
-    //         payment: 'crédito',
-    //         discount: 10,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'crédito',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
-
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
-
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/filter?paymentChosen=crédito&hasDiscount=true')
-    //         .expect(200)
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 date: expect.any(String),
-    //                 products: 'Produto teste 1',
-    //                 subtotal: 200,
-    //                 discount: 10,
-    //                 total: 190,
-    //                 payment: 'crédito',
-    //                 id: expect.any(Number)
-    //             })
-    //         ])
-    //     )
-    // })
-
-    // it("should be able to list all registered orders that payment chosen equals to credit and doesn't have discount", async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
-
-    //     const createOrderDto = {
-    //         payment: 'crédito',
-    //         discount: 10,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'crédito',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
-
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
-
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/filter?paymentChosen=crédito&hasDiscount=false')
-    //         .expect(200)
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 date: expect.any(String),
-    //                 products: 'Produto teste 2',
-    //                 subtotal: 200,
-    //                 discount: 0,
-    //                 total: 200,
-    //                 payment: 'crédito',
-    //                 id: expect.any(Number)
-    //             })
-    //         ])
-    //     )
-    // })
-
-    // it("should be able to list all registered orders that payment chosen equals to pix and discount has been applied", async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
-
-    //     const createOrderDto = {
-    //         payment: 'pix',
-    //         discount: 10,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'pix',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
-
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
-
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/filter?paymentChosen=pix&hasDiscount=true')
-    //         .expect(200)
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 date: expect.any(String),
-    //                 products: 'Produto teste 1',
-    //                 subtotal: 200,
-    //                 discount: 10,
-    //                 total: 190,
-    //                 payment: 'pix',
-    //                 id: expect.any(Number)
-    //             })
-    //         ])
-    //     )
-    // })
-
-    // it("should be able to list all registered orders that payment chosen equals to pix and doesn't have discount", async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
-
-    //     const createOrderDto = {
-    //         payment: 'pix',
-    //         discount: 10,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'pix',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
-
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
-
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/filter?paymentChosen=pix&hasDiscount=false')
-    //         .expect(200)
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 date: expect.any(String),
-    //                 products: 'Produto teste 2',
-    //                 subtotal: 200,
-    //                 discount: 0,
-    //                 total: 200,
-    //                 payment: 'pix',
-    //                 id: expect.any(Number)
-    //             })
-    //         ])
-    //     )
-    // })
-
-    // it('should be able to return the total number of sales', async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
-
-    //     const createOrderDto = {
-    //         payment: 'pix',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 1, quantity: 4 }
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'débito',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 2, quantity: 3 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
-
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
-
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/salesQuantity')
-    //         .expect(200)
-
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 vendas: "2",
-    //                 faturamento: 700
-    //             })
-    //         ])
-    //     )
-    // })
-
-    // it('should be able to return an descending list of best-selling products', async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
-
-    //     const createOrderDto = {
-    //         payment: 'pix',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 1, quantity: 4 },
-    //             { product_id: 2, quantity: 6 }
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'débito',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 1, quantity: 5 },
-    //             { product_id: 2, quantity: 5 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
-
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
-
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/bestProducts')
-    //         .expect(200)
-
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 produto: "Produto teste 2",
-    //                 soma: "11",
-    //                 data: expect.any(String)
-    //             }),
-    //             expect.objectContaining({
-    //                 produto: "Produto teste 1",
-    //                 soma: "9",
-    //                 data: expect.any(String)
-    //             })
-    //         ])
-    //     )
-    // })
-
-    // it('should be able to return the total billing for the day', async () => {
-    //     await productRepository.save([
-    //         {
-    //             name: 'Produto teste 1',
-    //             description: 'teste 1 desc',
-    //             category: 'teste 1 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         },
-    //         {
-    //             name: 'Produto teste 2',
-    //             description: 'teste 2 desc',
-    //             category: 'teste 2 categ',
-    //             price: 100,
-    //             quantity: 100
-    //         }
-    //     ])
-
-    //     const createOrderDto = {
-    //         payment: 'pix',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     const createOrderDto2 = {
-    //         payment: 'débito',
-    //         discount: 0,
-    //         items: [
-    //             { product_id: 1, quantity: 2 },
-    //             { product_id: 2, quantity: 2 }
-    //         ]
-    //     }
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto)
-    //         .expect(201)
-
-    //     await request(app.getHttpServer())
-    //         .post('/orders')
-    //         .send(createOrderDto2)
-    //         .expect(201)
-
-    //     const response = await request(app.getHttpServer())
-    //         .get('/orders/invoicingEvolution')
-    //         .expect(200)
-
-    //     expect(response.body).toEqual(
-    //         expect.arrayContaining([
-    //             expect.objectContaining({
-    //                 dia: expect.any(String),
-    //                 faturamento: 800
-    //             }),
-
-    //         ])
-    //     )
-    // })
+            ])
+        )
+    })
 })
