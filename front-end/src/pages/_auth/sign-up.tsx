@@ -17,7 +17,7 @@ type SignUpForm = z.infer<typeof signUpForm>
 export function SignUp() {
     const navigate = useNavigate()
 
-    const { register, handleSubmit, formState: { isSubmitting } } = useForm<SignUpForm>()
+    const { register, handleSubmit, formState: { isSubmitting, errors } } = useForm<SignUpForm>()
 
     const { mutateAsync: registerUser } = useMutation({
         mutationFn: createUser
@@ -58,15 +58,24 @@ export function SignUp() {
                     <form className="space-y-4" onSubmit={handleSubmit(handleSignUp)}>
                         <div className="flex flex-col">
                             <label htmlFor='Nome' className="text-sm font-semibold">Seu nome</label>
-                            <input id='name' type='name' className="border rounded p-2" {...register('name')} />
+                            <input id='name' type='name' className="border rounded p-2" {...register('name', {
+                                required: "Campo obrigatório",
+                            })} />
+                            {errors.name && <span className="text-red-500 font-semibold text-sm">{errors.name.message}</span>}
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor='email' className="text-sm font-semibold">Seu email</label>
-                            <input id='email' type='email' className="border rounded p-2" {...register('email')} />
+                            <input id='email' type='email' className="border rounded p-2" {...register('email', {
+                                required: 'Campo obrigatório'
+                            })} />
+                            {errors.email && <span className="text-red-500 font-semibold text-sm">{errors.email.message}</span>}
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor='password' className="text-sm font-semibold">Senha</label>
-                            <input id='password' type='password' className="border rounded p-2" {...register('password')} />
+                            <input id='password' type='password' className="border rounded p-2" {...register('password', {
+                                required: 'Campo obrigatório'
+                            })} />
+                            {errors.password && <span className="text-red-500 font-semibold text-sm">{errors.password.message}</span>}
                         </div>
                         <button disabled={isSubmitting} className="w-full border text-white rounded p-2 bg-rose-600" type="submit">
                             Finalizar cadastro
