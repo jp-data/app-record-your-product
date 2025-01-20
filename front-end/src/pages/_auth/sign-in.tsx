@@ -23,7 +23,7 @@ export function SignIn() {
 
 
     const [searchParams] = useSearchParams()
-    const { register, handleSubmit } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: { email: searchParams.get('email') ?? '', password: '' }
     })
 
@@ -58,11 +58,17 @@ export function SignIn() {
                     <form className="space-y-4" onSubmit={handleSubmit(handleSignIn)}>
                         <div className="flex flex-col">
                             <label htmlFor='email' className="text-sm font-semibold">Seu email</label>
-                            <input id='email' type='email' className="border rounded p-2" {...register('email')} />
+                            <input id='email' type='email' className="border rounded p-2" {...register('email', {
+                                required: 'Campo obrigatório'
+                            })} />
+                            {errors.email && <span className="text-red-500 font-semibold text-sm">{errors.email.message}</span>}
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor='email' className="text-sm font-semibold">Sua senha</label>
-                            <input id='password' type='password' className="border rounded p-2" {...register('password')} />
+                            <input id='password' type='password' className="border rounded p-2" {...register('password', {
+                                required: 'Campo obrigatório'
+                            })} />
+                            {errors.password && <span className="text-red-500 font-semibold text-sm">{errors.password.message}</span>}
                         </div>
                         <button className="w-full border text-white rounded p-2 bg-rose-600 " type="submit">
                             Acessar painel
