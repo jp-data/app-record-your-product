@@ -1,6 +1,7 @@
 import { Table, TableProps } from "antd";
 import { Flex } from '@radix-ui/themes';
 import { Spin } from 'antd'
+import dayjs from 'dayjs'
 
 
 
@@ -72,7 +73,11 @@ export function TableSales({ result, isLoadingFilteredSales }: DataProps) {
                     <>
                         <Table<DataType>
                             columns={columns}
-                            dataSource={result?.map(item => ({ ...item, key: item.id }))}
+                            dataSource={result?.map(item => ({
+                                ...item,
+                                key: item.id,
+                                date: dayjs(item.date).format('DD/MM/YYYY')
+                            }))}
                             className="font-semibold"
                         />
                     </>
