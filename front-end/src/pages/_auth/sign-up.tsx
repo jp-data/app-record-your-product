@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { z } from 'zod'
 import { createUser } from "../../api-requisitions/create-user";
 import { toast } from 'sonner'
+import axios from 'axios'
 
 
 const signUpForm = z.object({
@@ -37,8 +38,18 @@ export function SignUp() {
                 }
             })
         }
-        catch {
-            toast.error('Erro de formulário')
+        catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const errorMessage = error.response.data.message
+                const errorType = error.response.data.error
+                if (errorType === 'EmailAlreadyExistsException') {
+                    toast.error('Email já cadastrado!')
+                } else {
+                    toast.error(errorMessage || 'Erro de formulário');
+                }
+            } else {
+                toast.error('Erro desconhecido')
+            }
         }
     }
 
@@ -66,14 +77,15 @@ export function SignUp() {
                         <div className="flex flex-col">
                             <label htmlFor='email' className="text-sm font-semibold">Seu email</label>
                             <input id='email' type='email' className="border rounded p-2" {...register('email', {
-                                required: 'Campo obrigatório'
+                                required: 'Campo obrigatório',
                             })} />
                             {errors.email && <span className="text-red-500 font-semibold text-sm">{errors.email.message}</span>}
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor='password' className="text-sm font-semibold">Senha</label>
                             <input id='password' type='password' className="border rounded p-2" {...register('password', {
-                                required: 'Campo obrigatório'
+                                required: 'Campo obrigatório',
+                                minLength: { value: 6, message: 'Mínimo: 6 caracteres' }
                             })} />
                             {errors.password && <span className="text-red-500 font-semibold text-sm">{errors.password.message}</span>}
                         </div>

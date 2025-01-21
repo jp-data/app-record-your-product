@@ -1,5 +1,5 @@
 import { UpdateUserDto } from './dtos/update-user-dto';
-import { Injectable, Param } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Param } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./entities/user.entity";
 import { Repository } from "typeorm";
@@ -23,7 +23,10 @@ export class UserService {
         })
 
         if (userExists) {
-            throw new Error('This email already exists!')
+            throw new HttpException(
+                { message: 'Email já cadastrado!', error: 'EmailAlreadyExistsException' },
+                HttpStatus.CONFLICT
+            )
         }
 
         const hash = await hashPassword(createUserDto.password)
