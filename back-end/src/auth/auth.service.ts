@@ -1,7 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../users/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 export interface payloadUser {
   sub: string
@@ -12,15 +14,18 @@ export interface payloadUser {
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) { }
 
   async login(email: string, password: string) {
     const user = await this.userService.findUser(email)
     const isAuthenticatedUser = await bcrypt.compare(password, user.password)
 
-    if (!isAuthenticatedUser) {
-      throw new UnauthorizedException('Invalid credentials')
+    if (!isAuthenticatedUser || !user) {
+      throw new HttpException(
+        { message: 'Invalid credentials', error: 'InvalidCredentials' },
+        HttpStatus.CONFLICT
+      )
     }
 
     const payload: payloadUser = {

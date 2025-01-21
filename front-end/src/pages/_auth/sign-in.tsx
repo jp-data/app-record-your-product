@@ -4,6 +4,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from 'zod'
 import { loginUser } from "../../api-requisitions/login";
 import { useAuth } from "./context/auth-context";
+import axios from 'axios'
+import { toast } from "sonner";
 
 const signInForm = z.object({
     email: z.string().email(),
@@ -35,8 +37,19 @@ export function SignIn() {
             })
             login(response.access_token)
             navigate('/products')
-        } catch (err) {
-            console.log(err)
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const errorMessage = error.response.data.message
+                const errorType = error.response.data.error
+
+                if (errorType === 'InvalidCredentials') {
+                    toast.error('Dados inválidos')
+                } else {
+                    toast.error(errorMessage || 'Erro de formulário')
+                }
+            } else {
+                toast.error('Erro desconhecido')
+            }
         }
     }
 

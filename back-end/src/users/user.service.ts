@@ -1,5 +1,5 @@
 import { UpdateUserDto } from './dtos/update-user-dto';
-import { HttpException, HttpStatus, Injectable, Param } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./entities/user.entity";
 import { Repository } from "typeorm";
@@ -76,7 +76,10 @@ export class UserService {
     async findUser(email: string) {
         const userExists = await this.userRepository.findOneBy({ email })
         if (!userExists) {
-            throw new Error('User not found!')
+            throw new HttpException(
+                { message: 'Invalid credentials', error: 'InvalidCredentials' },
+                HttpStatus.CONFLICT
+            )
         }
         return userExists
     }
