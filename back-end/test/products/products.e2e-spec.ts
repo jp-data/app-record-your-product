@@ -14,8 +14,6 @@ describe('AppController (e2e)', () => {
   let userRepository: Repository<UserEntity>
   let authToken: string
 
-
-
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],

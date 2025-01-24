@@ -18,12 +18,12 @@ const isTestEnv = process.env.NODE_ENV === 'test'
     ProductModule,
     UserModule,
     OrdersModule,
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV || 'development'}.env`
     }),
     TypeOrmModule.forRoot(AppDataSource.options),
-    AuthModule
   ],
   controllers: [],
 })
