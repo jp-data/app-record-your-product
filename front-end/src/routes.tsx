@@ -12,25 +12,23 @@ import { PrivateRoute } from './pages/_auth/context/private-route'
 export const router = createBrowserRouter([
     {
         path: '/',
-        element: <AppLayout />,
+        element: (
+            <PrivateRoute>
+                <AppLayout />
+            </PrivateRoute>
+        ),
         children: [
             {
                 path: '/sales',
-                element: <PrivateRoute>
-                    <Sales />
-                </PrivateRoute>
+                element: <Sales />
             },
             {
                 path: '/products',
-                element: <PrivateRoute>
-                    <Products />
-                </PrivateRoute>
+                element: <Products />
             },
             {
                 path: '/dashboard',
-                element: <PrivateRoute>
-                    <Dashboard />
-                </PrivateRoute>
+                element: <Dashboard />
             },
         ]
     },
