@@ -2,25 +2,14 @@ import { Table, TableProps } from "antd";
 import { Flex } from '@radix-ui/themes';
 import { Spin } from 'antd'
 import dayjs from 'dayjs'
-
-
-
-interface DataType {
-    id: number;
-    date: string
-    products: string;
-    total: number;
-    discount: number;
-    subtotal: number;
-    payment: string;
-}
+import { DataType } from ".";
 
 interface DataProps {
-    result: DataType[]
+    orders: DataType[]
     isLoadingFilteredSales: boolean
 }
 
-export function TableSales({ result, isLoadingFilteredSales }: DataProps) {
+export function TableSales({ orders, isLoadingFilteredSales }: DataProps) {
     const columns: TableProps<DataType>['columns'] = [
         {
             title: 'Código(id_product)',
@@ -59,7 +48,6 @@ export function TableSales({ result, isLoadingFilteredSales }: DataProps) {
         },
     ];
 
-
     return (
         <>
             {isLoadingFilteredSales ? (
@@ -73,7 +61,7 @@ export function TableSales({ result, isLoadingFilteredSales }: DataProps) {
                     <>
                         <Table<DataType>
                             columns={columns}
-                            dataSource={result?.map(item => ({
+                            dataSource={orders?.map(item => ({
                                 ...item,
                                 key: item.id,
                                 date: dayjs(item.date).format('DD/MM/YYYY')
@@ -85,5 +73,4 @@ export function TableSales({ result, isLoadingFilteredSales }: DataProps) {
             }
         </>
     )
-
 }

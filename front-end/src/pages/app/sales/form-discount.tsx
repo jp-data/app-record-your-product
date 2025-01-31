@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { DialogContent, DialogHeader } from "../../../components/ui/dialog";
 import { Dialog } from "@radix-ui/react-dialog";
 
-export function FormDiscount({ isDialogOpen, setIsDialogOpen, total, setDiscount }) {
+interface FormDiscountFilterProps {
+    isDialogOpen: boolean
+    setIsDialogOpen: Dispatch<SetStateAction<boolean>>
+    total: number
+    setDiscount: Dispatch<SetStateAction<number>>
+}
+
+export function FormDiscount({ isDialogOpen, setIsDialogOpen, total, setDiscount }: FormDiscountFilterProps) {
     const [discountInput, setDiscountInput] = useState('')
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +79,6 @@ export function FormDiscount({ isDialogOpen, setIsDialogOpen, total, setDiscount
                             Aplicar
                         </button>
                     </div>
-
                 </div>
             </form>
         </DialogContent>

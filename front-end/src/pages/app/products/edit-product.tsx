@@ -1,5 +1,5 @@
 import { DialogTitle, DialogDescription, Dialog } from "@radix-ui/react-dialog";
-import { DataType } from "./table-products";
+import { TableProductsDataType } from "./table-products";
 import { DialogContent, DialogHeader, DialogFooter } from "../../../components/ui/dialog";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../../lib/react-query";
@@ -8,18 +8,18 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
 interface EditProductsProps {
-    product: DataType | null;
-    setEditProduct: (product: DataType | null) => void
+    product: TableProductsDataType | null;
+    setEditProduct: (product: TableProductsDataType | null) => void
 }
 
 export function EditProduct({ product, setEditProduct }: EditProductsProps) {
     const [priceInput, setPriceInput] = useState("");
-    const { register, handleSubmit, setValue } = useForm<Omit<DataType, 'id'>>();
+    const { register, handleSubmit, setValue } = useForm<Omit<TableProductsDataType, 'id'> & { price: string }>();
 
     const { mutateAsync: editProduct } = useMutation({
-        mutationFn: ({ id, ...data }: { id: string } & Omit<DataType, 'id'>) => updateProducts(id, data),
+        mutationFn: ({ id, ...data }: { id: string } & Omit<TableProductsDataType, 'id'>) => updateProducts(id, data),
         onSuccess: () => {
-            queryClient.invalidateQueries(['products']);
+            queryClient.invalidateQueries({ queryKey: ['products'] });
         }
     });
 
@@ -42,7 +42,7 @@ export function EditProduct({ product, setEditProduct }: EditProductsProps) {
         setPriceInput(formattedValue);
     };
 
-    async function handleSaveEdit(data: Omit<DataType, 'id'> & { price: string }) {
+    async function handleSaveEdit(data: Omit<TableProductsDataType, 'id'> & { price: string }) {
         if (product) {
             try {
                 await editProduct({ id: product.id, ...data, price: parseFloat(priceInput.replace(/\D/g, "")) / 100 });

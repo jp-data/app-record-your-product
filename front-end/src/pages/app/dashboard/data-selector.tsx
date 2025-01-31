@@ -1,9 +1,15 @@
-export function DataSelector({ setPeriod, period }) {
-    async function handleChosenFilterDay(e) {
+import { Dispatch, SetStateAction } from "react";
+
+interface DataSelectorProps {
+    period: string
+    setPeriod: Dispatch<SetStateAction<string>>
+}
+
+export function DataSelector({ setPeriod, period }: DataSelectorProps) {
+    async function handleChosenFilterDay(e: React.ChangeEvent<HTMLSelectElement>) {
         const value = e.target.value
         setPeriod(value)
     }
-
 
     return (
         <div className="font-medium">

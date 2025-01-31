@@ -3,9 +3,18 @@ import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../../../components/ui/dropdown-menu";
 import { Dialog } from "../../../components/ui/dialog";
 import { Flex, Radio } from "@radix-ui/themes";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
-export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setHasDiscount, setIsLoadingFilteredSales }) {
-    async function handleChosenFilterPayment(e) {
+interface SalesFilterProps {
+    paymentChosen: string
+    hasDiscount: string
+    setHasDiscount: Dispatch<SetStateAction<string>>
+    setPaymentChosen: Dispatch<SetStateAction<string>>
+    setIsLoadingFilteredSales: Dispatch<SetStateAction<boolean>>
+}
+
+export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setHasDiscount, setIsLoadingFilteredSales }: SalesFilterProps) {
+    async function handleChosenFilterPayment(e: ChangeEvent<HTMLInputElement>) {
         const value = e.target.value
         if (value) {
             setIsLoadingFilteredSales(true)
@@ -14,10 +23,9 @@ export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setH
                 setIsLoadingFilteredSales(false)
             }, 500)
         }
-
     }
 
-    async function handleChosenFilterDiscount(e) {
+    async function handleChosenFilterDiscount(e: ChangeEvent<HTMLInputElement>) {
         const value = e.target.value
         if (value) {
             setIsLoadingFilteredSales(true)

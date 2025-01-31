@@ -1,7 +1,7 @@
 import { Space, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { EditProduct } from './edit-product';
 import { useMutation } from '@tanstack/react-query';
 import { deleteProduct } from '../../../api-requisitions/delete-product';
@@ -9,7 +9,7 @@ import { queryClient } from '../../../lib/react-query';
 import { Flex } from '@radix-ui/themes';
 import { Spin } from 'antd'
 
-export interface DataType {
+export interface TableProductsDataType {
     id: string
     name: string;
     description: string;
@@ -18,20 +18,19 @@ export interface DataType {
     price: number;
 }
 
-interface dataProps {
-    data: DataType[]
-    result: DataType[] | undefined
+interface TableProductsProps {
+    data: TableProductsDataType[]
+    result: TableProductsDataType[] | undefined
     isLoadingFilteredProducts: boolean
+    setProducts: Dispatch<SetStateAction<TableProductsDataType[]>>
 }
 
-export function TableProducts({ data, result, isLoadingFilteredProducts }: dataProps) {
-    const [editProduct, setEditProduct] = useState<DataType | null>(null)
-    const [products, setProducts] = useState<DataType[]>(data);
-
+export function TableProducts({ data, result, setProducts, isLoadingFilteredProducts }: TableProductsProps) {
+    const [editProduct, setEditProduct] = useState<TableProductsDataType | null>(null)
     const { mutateAsync: removeProduct } = useMutation({
         mutationFn: deleteProduct,
         onSuccess: () => {
-            queryClient.invalidateQueries(['products'])
+            queryClient.invalidateQueries({ queryKey: ['products'] })
         }
     })
 
@@ -51,18 +50,18 @@ export function TableProducts({ data, result, isLoadingFilteredProducts }: dataP
         if (result) {
             setProducts(result)
         }
-    }, [result])
+    }, [result, setProducts])
 
 
-    const handleEdit = (product: DataType) => {
+    const handleEdit = (product: TableProductsDataType) => {
         setEditProduct(product)
     }
 
-    const columns: TableProps<DataType>['columns'] = [
+    const columns: TableProps<TableProductsDataType>['columns'] = [
         {
             title: '',
             key: 'actionEdit',
-            render: (_, row: DataType) => (
+            render: (_, row: TableProductsDataType) => (
                 <Space size="middle" className="flex items-center justify-center">
                     <button onClick={() => handleEdit(row)}>
                         Editar
@@ -116,7 +115,7 @@ export function TableProducts({ data, result, isLoadingFilteredProducts }: dataP
             )
                 : (
                     <>
-                        <Table<DataType>
+                        <Table<TableProductsDataType>
                             columns={columns}
                             className="mt-10 mr-20 mb-5 ml-20 font-semibold"
                             dataSource={data?.map(item => ({ ...item, key: item.id }))}

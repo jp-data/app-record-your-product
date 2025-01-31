@@ -1,6 +1,15 @@
 import { api } from "../lib/axios"
 
-export async function getSalesByPaymentChosenOrDiscount({ paymentChosen, hasDiscount, day }) {
+export async function getSalesByPaymentChosenOrDiscount(
+    {
+        paymentChosen,
+        hasDiscount,
+        day
+    }:
+        {
+            paymentChosen: string, hasDiscount: string, day: string
+        }
+) {
     const token = localStorage.getItem('token')
 
     if (!token) {

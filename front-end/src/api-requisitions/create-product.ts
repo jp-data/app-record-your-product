@@ -1,15 +1,7 @@
 import { api } from '../lib/axios'
-interface productBody {
-    name: string,
-    description: string,
-    category: string,
-    quantity: number,
-    price: number
-}
+import { TableProductsDataType } from '../pages/app/products/table-products'
 
-
-
-export async function createProducts({ name, description, category, quantity, price }: productBody) {
+export async function createProducts({ name, description, category, quantity, price }: TableProductsDataType) {
     const token = localStorage.getItem('token')
     if (!token) {
         throw new Error("Usuário não autenticado")

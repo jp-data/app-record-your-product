@@ -3,22 +3,14 @@ import { Table, TableProps } from "antd";
 import { getProducts } from "../../../api-requisitions/get-products";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { TableProductsDataType } from "../products/table-products";
 
-interface DataType {
-    id: string;
-    name: string;
-    category: string;
-    price: number
+export interface TableProductsForSaleProps {
+    onAddToCart: (product: TableProductsDataType) => void
 }
 
-interface addToCartFunction {
-    onAddToCart: (product: DataType) => void
-}
-
-
-export function TableProductsForSale({ onAddToCart }: addToCartFunction) {
-    const [products, setProducts] = useState<DataType[]>([])
-
+export function TableProductsForSale({ onAddToCart }: TableProductsForSaleProps) {
+    const [products, setProducts] = useState<TableProductsDataType[]>([])
 
     const { data: result } = useQuery({
         queryKey: ['products'],
@@ -31,7 +23,7 @@ export function TableProductsForSale({ onAddToCart }: addToCartFunction) {
         }
     }, [result])
 
-    const columns: TableProps<DataType>['columns'] = [
+    const columns: TableProps<TableProductsDataType>['columns'] = [
         {
             title: 'Item',
             dataIndex: 'name',
@@ -60,11 +52,10 @@ export function TableProductsForSale({ onAddToCart }: addToCartFunction) {
                 </button>
             )
         }
-
     ];
 
     return (
-        <Table<DataType>
+        <Table<TableProductsDataType>
             columns={columns}
             dataSource={products?.map(item => ({
                 ...item,

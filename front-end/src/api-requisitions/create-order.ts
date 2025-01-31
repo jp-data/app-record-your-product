@@ -1,8 +1,6 @@
 import { api } from '../lib/axios'
 import { RegisterOrderForm } from '../pages/app/sales/cart-new-sale'
 
-
-
 export async function createOrders(orderData: RegisterOrderForm) {
     const token = localStorage.getItem('token')
 

@@ -2,15 +2,15 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { createUser } from "../../api-requisitions/create-user";
 import { toast } from 'sonner'
 import axios from 'axios'
 
-
 const signUpForm = z.object({
-    name: z.string(),
-    email: z.string().email(),
-    password: z.string().min(6)
+    name: z.string().min(1, "Campo obrigatório"),
+    email: z.string().email("Email Inválido"),
+    password: z.string().min(6, "Mínimo 6 caracteres")
 })
 
 type SignUpForm = z.infer<typeof signUpForm>
@@ -18,7 +18,9 @@ type SignUpForm = z.infer<typeof signUpForm>
 export function SignUp() {
     const navigate = useNavigate()
 
-    const { register, handleSubmit, formState: { isSubmitting, errors } } = useForm<SignUpForm>()
+    const { register, handleSubmit, formState: { isSubmitting, errors } } = useForm<SignUpForm>({
+        resolver: zodResolver(signUpForm)
+    })
 
     const { mutateAsync: registerUser } = useMutation({
         mutationFn: createUser

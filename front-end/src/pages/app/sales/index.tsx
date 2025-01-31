@@ -3,18 +3,26 @@ import { NewSaleButton } from "./new-sale-button";
 import { TableSales } from "./table-sales";
 import { useQuery } from "@tanstack/react-query";
 import { getTotalSales } from "../../../api-requisitions/get-total-sales";
-import { DataType } from "../products/table-products";
 import { SalesFilter } from "./sales-filter";
 import { DatePicker } from "./date-picker";
 import { getSalesByPaymentChosenOrDiscount } from "../../../api-requisitions/get-sales-by-payment";
 
+export interface DataType {
+    id: number;
+    date: string
+    products: string;
+    total: number;
+    discount: number;
+    subtotal: number;
+    payment: string;
+}
 
 export function Sales() {
     const [orders, setOrders] = useState<DataType[]>([])
-    const [paymentChosen, setPaymentChosen] = useState('')
-    const [hasDiscount, setHasDiscount] = useState('')
-    const [day, setDay] = useState('0')
-    const [isLoadingFilteredSales, setIsLoadingFilteredSales] = useState(false)
+    const [paymentChosen, setPaymentChosen] = useState<string>('')
+    const [hasDiscount, setHasDiscount] = useState<string>('')
+    const [day, setDay] = useState<string>('0')
+    const [isLoadingFilteredSales, setIsLoadingFilteredSales] = useState<boolean>(false)
 
     const { data: result } = useQuery({
         queryKey: ['orders', { paymentChosen: paymentChosen, hasDiscount: hasDiscount, day: day }],
@@ -47,17 +55,14 @@ export function Sales() {
                         setIsLoadingFilteredSales={setIsLoadingFilteredSales}
                     />
                     <DatePicker
-                        day={day}
                         setDay={setDay}
                         setIsLoadingFilteredSales={setIsLoadingFilteredSales}
                     />
                 </div>
-                {/* Filtros */}
-                {/* {Selecionar período} */}
             </div>
             <div className="w-full">
                 <TableSales
-                    result={result}
+                    orders={orders}
                     isLoadingFilteredSales={isLoadingFilteredSales}
                 />
             </div>

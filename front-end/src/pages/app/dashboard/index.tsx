@@ -4,18 +4,39 @@ import { PopularCategoriesGraph } from "./popular-categories";
 import { ResultGraph } from "./result-graph";
 import { RevenueCard } from "./revenue-card";
 import { SalesCountCard } from "./sales-count-card";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { getSalesData } from "../../../api-requisitions/get-sales-data";
 import { getBestProductsSelling } from "../../../api-requisitions/get-best-selling-products";
 import { Spin } from "antd";
 import { Flex } from "@radix-ui/themes";
 import { getInvoicingEvolution } from "../../../api-requisitions/get-invoicing-evolution";
 
+export interface SalesData {
+    vendas: string
+    faturamento: number | undefined
+}
+
+export interface BestSellingData {
+    produto: string
+    soma: string
+    data: string
+}
+
+export interface InvoicingEvolutionData {
+    data: string
+    faturamento: number
+}
+
+interface QueryResult<T> {
+    data: T | undefined
+    isError: boolean
+    isLoading: boolean
+}
+
 
 
 export function Dashboard() {
-    const [period, setPeriod] = useState('3')
-    const [totalSales, setTotalSales] = useState([])
+    const [period, setPeriod] = useState<string>('3')
     const [isLoadingData, setIsLoadingData] = useState(false)
 
     const results = useQueries({
@@ -35,13 +56,16 @@ export function Dashboard() {
         ]
     });
 
-    const [salesResult, bestSellingResult, invoicingEvolutionResult] = results;
+    const [salesResult, bestSellingResult, invoicingEvolutionResult] = results as [
+        QueryResult<SalesData[]>,
+        QueryResult<BestSellingData[]>,
+        QueryResult<InvoicingEvolutionData[]>
+    ]
 
     useEffect(() => {
         if (salesResult.data) {
             setIsLoadingData(true)
             setTimeout(() => {
-                setTotalSales(salesResult.data)
                 setIsLoadingData(false)
             }, 1500)
 

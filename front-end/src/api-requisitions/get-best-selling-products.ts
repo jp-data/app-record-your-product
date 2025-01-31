@@ -1,6 +1,6 @@
 import { api } from '../lib/axios'
 
-export async function getBestProductsSelling({ period }) {
+export async function getBestProductsSelling({ period }: { period: string }) {
     const token = localStorage.getItem('token')
 
     if (!token) {

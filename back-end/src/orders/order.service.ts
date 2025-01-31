@@ -107,7 +107,7 @@ export class OrdersService {
 
         if (day === '1') {
             query += ` AND ord.created_at >= CURRENT_DATE - INTERVAL '${day} days'
-                        AND ord.created_at < CURRENT_DATE - INTERVAL 'now'`
+                        AND ord.created_at < CURRENT_DATE`
         }
 
         query += `

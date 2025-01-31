@@ -1,6 +1,6 @@
 import { api } from '../lib/axios'
 
-export async function getInvoicingEvolution({ period }) {
+export async function getInvoicingEvolution({ period }: { period: string }) {
     const token = localStorage.getItem('token')
     if (!token) {
         throw new Error("Usuário não autenticado")

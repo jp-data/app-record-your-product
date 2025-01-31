@@ -1,5 +1,12 @@
-export function DatePicker({ day, setDay, setIsLoadingFilteredSales }) {
-    async function handleChosenFilterDay(e) {
+import { ChangeEvent, Dispatch, SetStateAction } from "react"
+
+interface DateFiltersProps {
+    setDay: Dispatch<SetStateAction<string>>
+    setIsLoadingFilteredSales: Dispatch<SetStateAction<boolean>>
+}
+
+export function DatePicker({ setDay, setIsLoadingFilteredSales }: DateFiltersProps) {
+    async function handleChosenFilterDay(e: ChangeEvent<HTMLSelectElement>) {
         const value = e.target.value
         if (value) {
             setIsLoadingFilteredSales(true)
@@ -8,7 +15,6 @@ export function DatePicker({ day, setDay, setIsLoadingFilteredSales }) {
                 setIsLoadingFilteredSales(false)
             }, 500)
         }
-
     }
 
     return (
@@ -37,7 +43,5 @@ export function DatePicker({ day, setDay, setIsLoadingFilteredSales }) {
                 </option>
             </select>
         </div>
-
-
     )
 }

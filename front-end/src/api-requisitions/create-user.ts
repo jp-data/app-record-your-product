@@ -1,5 +1,4 @@
 import { api } from "../lib/axios";
-
 interface userBody {
     name: string,
     email: string,

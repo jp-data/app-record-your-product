@@ -1,12 +1,17 @@
 import { Card } from "antd";
 import { Bar, BarChart, LabelList, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import colors from "tailwindcss/colors";
+import { BestSellingData } from ".";
 
-export function PopularCategoriesGraph({ result }) {
+interface PopularCategoriesCardProps {
+    result: BestSellingData[] | undefined
+}
+
+export function PopularCategoriesGraph({ result }: PopularCategoriesCardProps) {
     const formattedData = result?.map((item) => ({
         products: item.produto,
-        result: item.soma,
-        date: item.DATA
+        result: parseFloat(item.soma),
+        date: item.data
     })) || []
 
     const maxResult = Math.max(...formattedData.map((item) => item.result), 0)
@@ -21,7 +26,6 @@ export function PopularCategoriesGraph({ result }) {
                         tickLine={false}
                         dy={15}
                     />
-
                     <YAxis
                         stroke="#888"
                         axisLine={true}

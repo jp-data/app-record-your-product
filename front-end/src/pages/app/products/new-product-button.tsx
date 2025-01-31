@@ -4,7 +4,7 @@ import { Dialog, DialogTrigger } from "../../../components/ui/dialog";
 import { useState } from "react";
 
 export function NewProductButton() {
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

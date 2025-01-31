@@ -1,12 +1,13 @@
 import { ShoppingCart, Trash2 } from "lucide-react";
 import { v4 as uuidv4 } from 'uuid';
-import { Flex, Radio } from 'antd';
+import { Flex, Radio, RadioChangeEvent } from 'antd';
 import { useMutation } from "@tanstack/react-query";
 import { createOrders } from "../../../api-requisitions/create-order";
 import { queryClient } from "../../../lib/react-query";
 import * as zod from 'zod'
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { FormDiscount } from "./form-discount";
+import { TableProductsDataType } from "../products/table-products";
 
 
 const itensOrderSchema = zod.object({
@@ -22,24 +23,17 @@ const newOrderSchema = zod.object({
 
 export type RegisterOrderForm = zod.infer<typeof newOrderSchema>
 
-interface CartProduct {
-    id: string;
-    name: string;
-    price: number;
-    quantity: number;
-}
-
 interface CartNewSaleProps {
-    cartProducts: CartProduct[];
-    setCartProducts: React.Dispatch<React.SetStateAction<CartProduct[]>>;
+    cartProducts: TableProductsDataType[];
+    setCartProducts: Dispatch<SetStateAction<TableProductsDataType[]>>;
     onClose: () => void;
 }
 
 export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewSaleProps) {
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
     const [paymentChosen, setPaymentChosen] = useState('')
-    const [discount, setDiscount] = useState(0)
-    const total = cartProducts.reduce((sum, product) => sum + product.price * product.quantity, 0)
+    const [discount, setDiscount] = useState<number>(0)
+    const total: number = cartProducts.reduce((sum, product) => sum + product.price * product.quantity, 0)
     const subtotal = total - discount;
 
     const options = [
@@ -51,7 +45,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
     const { mutateAsync: registerOrder } = useMutation({
         mutationFn: createOrders,
         onSuccess: () => {
-            queryClient.invalidateQueries(['orders'])
+            queryClient.invalidateQueries({ queryKey: ['orders'] })
         }
     })
 
@@ -96,7 +90,6 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
     }
 
     function handleDecrement(productId: string) {
-        // Decrementa a quantidade, mas não deixa cair abaixo de 1
         setCartProducts((prevCart) =>
             prevCart.map((product) =>
                 product.id === productId && product.quantity > 1
@@ -106,7 +99,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
         );
     }
 
-    function handlePaymentInputChange(e) {
+    function handlePaymentInputChange(e: RadioChangeEvent) {
         const { value } = e.target
         setPaymentChosen(value)
     }

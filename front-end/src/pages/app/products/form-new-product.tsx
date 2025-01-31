@@ -2,49 +2,46 @@ import { DialogContent, DialogFooter, DialogHeader } from "../../../components/u
 import { DialogTitle, DialogDescription, Dialog } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import * as zod from 'zod'
 import { createProducts } from "../../../api-requisitions/create-product";
 import { queryClient } from "../../../lib/react-query";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
+interface newProductSchema {
+    id: string
+    name: string
+    description: string
+    category: string
+    quantity: number
+    price: number
+}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const newProductSchema = zod.object({
-    name: zod.string(),
-    description: zod.string(),
-    category: zod.string(),
-    quantity: zod.number(),
-    price: zod.number()
-})
+interface DialogsProps {
+    isDialogOpen: boolean
+    setIsDialogOpen: Dispatch<SetStateAction<boolean>>
+}
 
-export type RegisterProductForm = zod.infer<typeof newProductSchema>
-
-
-export function FormNewProduct({ isDialogOpen, setIsDialogOpen }) {
+export function FormNewProduct({ isDialogOpen, setIsDialogOpen }: DialogsProps) {
     const [priceInput, setPriceInput] = useState("")
-    const { register, handleSubmit, reset } = useForm<RegisterProductForm>()
+    const { register, handleSubmit, reset } = useForm<newProductSchema>()
 
     const { mutateAsync: registerProduct } = useMutation({
         mutationFn: createProducts,
         onSuccess: () => {
-            queryClient.invalidateQueries(['products'])
+            queryClient.invalidateQueries({ queryKey: ['products'] })
         }
     })
 
-    async function handleCreateProduct(data: RegisterProductForm) {
+    async function handleCreateProduct(data: newProductSchema) {
         const formattedPrice = parseFloat(priceInput.replace(/\D/g, "")) / 100
         try {
             await registerProduct({
-                name: data.name,
-                description: data.description,
-                category: data.category,
-                quantity: Number(data.quantity),
+                ...data,
                 price: formattedPrice
             })
             setIsDialogOpen(false)
         }
         catch (error) {
-            console.log(error)
+            console.error(error)
         }
         reset()
         return { data }
@@ -84,7 +81,6 @@ export function FormNewProduct({ isDialogOpen, setIsDialogOpen }) {
                             required
                         />
                     </div>
-
                     <div className="grid grid-cols-2 items-center gap-1">
                         <label htmlFor="description" className="font-semibold text-base mb-0 w-3/5">Descrição :</label>
                         <input
@@ -95,7 +91,6 @@ export function FormNewProduct({ isDialogOpen, setIsDialogOpen }) {
                             required
                         />
                     </div>
-
                     <div className="grid grid-cols-2 items-center gap-1">
                         <label htmlFor="category" className="font-semibold text-base mb-0 w-3/5">Categoria :</label>
                         <input
@@ -106,20 +101,16 @@ export function FormNewProduct({ isDialogOpen, setIsDialogOpen }) {
                             required
                         />
                     </div>
-
-
                     <div className="grid grid-cols-2 items-center gap-1">
                         <label htmlFor="quantity" className="font-semibold text-base mb-0 w-3/5">Quantidade :</label>
                         <input
                             type="number"
                             id="quantity"
                             className="border rounded-md w-full pl-4"
-                            {...register('quantity')}
+                            {...register('quantity', { valueAsNumber: true })}
                             required
                         />
                     </div>
-
-
                     <div className="grid grid-cols-2 items-center gap-1">
                         <label htmlFor="price" className="font-semibold text-base mb-0 w-3/5">Preço :</label>
                         <input
@@ -132,7 +123,6 @@ export function FormNewProduct({ isDialogOpen, setIsDialogOpen }) {
                         />
                     </div>
                 </div>
-
                 <DialogFooter>
                     <button className="border rounded-lg bg-gray-300 w-2/4 font-semibold" type="submit">Cadastrar</button>
                 </DialogFooter>

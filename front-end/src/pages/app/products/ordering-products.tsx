@@ -1,6 +1,24 @@
-export function OrderingProducts({ setSortBy, setDirection, sortBy, direction, setisLoadingFilteredProducts }) {
-    async function handleChangeSortBy(e) {
-        const value = e.target.value
+import { ChangeEvent, Dispatch, SetStateAction } from "react"
+
+interface OrderingProductsParametersProps {
+    sortBy: string
+    setSortBy: Dispatch<SetStateAction<string>>
+    direction: string
+    setDirection: Dispatch<SetStateAction<string>>
+    setisLoadingFilteredProducts: Dispatch<SetStateAction<boolean>>
+}
+
+type SortOptionKey = 'quant_asc' | 'quant_desc' | 'price_asc' | 'price_desc' | 'selecione'
+
+export function OrderingProducts({
+    setSortBy,
+    setDirection,
+    sortBy,
+    direction,
+    setisLoadingFilteredProducts
+}: OrderingProductsParametersProps) {
+    async function handleChangeSortBy(e: ChangeEvent<HTMLSelectElement>) {
+        const value = e.target.value as SortOptionKey
         const sortOptions = {
             quant_asc: { sortBy: 'quantity', direction: 'ASC' },
             quant_desc: { sortBy: 'quantity', direction: 'DESC' },

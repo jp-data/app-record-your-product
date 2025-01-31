@@ -1,11 +1,16 @@
 import { Card } from "antd";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, LabelList, CartesianGrid } from 'recharts';
 import colors from 'tailwindcss/colors';
+import { InvoicingEvolutionData } from ".";
 
-export function ResultGraph({ result }) {
+interface ResultGraphDataProps {
+    result: InvoicingEvolutionData[] | undefined
+}
+
+export function ResultGraph({ result }: ResultGraphDataProps) {
     const formattedData = result?.map((item) => ({
         invoicing: item.faturamento,
-        date: item.dia
+        date: item.data
     })) || []
 
     return (
@@ -25,7 +30,6 @@ export function ResultGraph({ result }) {
                         }}
                         padding={{ left: 20, right: 10 }}
                     />
-
                     <YAxis
                         stroke="#888"
                         axisLine={true}
@@ -38,7 +42,7 @@ export function ResultGraph({ result }) {
                             })
                         }
                         dx={-10}
-                        domain={[0, (dataMax) => dataMax * 1.1]}
+                        domain={[0, (dataMax: number) => dataMax * 1.1]}
                     />
                     <Line
                         type="linear"

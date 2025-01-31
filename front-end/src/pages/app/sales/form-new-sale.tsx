@@ -2,14 +2,12 @@ import { useState } from "react";
 import { DialogContent, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
 import { CartNewSale } from "./cart-new-sale";
 import { TableProductsForSale } from "./table-products-for-sale";
-import { DataType } from "../products/table-products";
-
+import { TableProductsDataType } from "../products/table-products";
 
 export function FormNewSale({ onClose }: { onClose: () => void }) {
-    const [cartProducts, setCartProducts] = useState<DataType[]>([])
+    const [cartProducts, setCartProducts] = useState<TableProductsDataType[]>([])
 
-
-    function handleAddProductToCart(product: DataType) {
+    function handleAddProductToCart(product: TableProductsDataType) {
         setCartProducts((prevCart) => {
             const existingProduct = prevCart.find((p) => p.id === product.id)
             if (existingProduct) {

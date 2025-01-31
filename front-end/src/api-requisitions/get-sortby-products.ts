@@ -1,8 +1,16 @@
 import { api } from '../lib/axios'
 
-export async function getSortProducts({ orderBy, direction }) {
+export async function getSortProducts(
+    {
+        orderBy,
+        direction
+    }:
+        {
+            orderBy: string,
+            direction: string
+        }
+) {
     const token = localStorage.getItem('token')
-
     if (!token) {
         throw new Error("Usuário não autenticado")
     }
@@ -11,6 +19,5 @@ export async function getSortProducts({ orderBy, direction }) {
             Authorization: `Bearer ${token}`
         }
     })
-
     return response.data
 }

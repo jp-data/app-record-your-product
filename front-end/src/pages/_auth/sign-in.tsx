@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { loginUser } from "../../api-requisitions/login";
 import { useAuth } from "./context/auth-context";
 import axios from 'axios'
@@ -26,6 +27,7 @@ export function SignIn() {
 
     const [searchParams] = useSearchParams()
     const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(signInForm),
         defaultValues: { email: searchParams.get('email') ?? '', password: '' }
     })
 
