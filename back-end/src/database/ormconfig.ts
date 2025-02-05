@@ -12,8 +12,6 @@ if (!process.env.DB_HOST || !process.env.DB_PORT || !process.env.DB_USERNAME || 
     throw new Error(`As variáveis de ambiente para o ambiente ${environment} não estão configuradas corretamente.`);
 }
 
-// console.log("Using environment:", process.env.NODE_ENV)
-
 const config: DataSourceOptions = {
     type: 'postgres',
     host: process.env.DB_HOST,
