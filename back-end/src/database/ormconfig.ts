@@ -2,6 +2,7 @@ import { DataSource, DataSourceOptions } from "typeorm";
 import * as dotenv from 'dotenv'
 import * as path from 'path'
 
+console.log(process.env.NODE_ENV)
 const environment = process.env.NODE_ENV || 'development'
 const envFile = path.resolve(__dirname, `../../src/database/${environment}.env`);
 dotenv.config({ path: envFile })
