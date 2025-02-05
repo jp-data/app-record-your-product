@@ -2,8 +2,6 @@ import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@n
 import { UserService } from '../users/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { Repository } from 'typeorm';
-import { UserEntity } from 'src/users/entities/user.entity';
 
 export interface payloadUser {
   sub: string

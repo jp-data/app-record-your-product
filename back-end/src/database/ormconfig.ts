@@ -27,6 +27,7 @@ const config: DataSourceOptions = {
     synchronize: environment === 'production' ? false : true,
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+    migrationsRun: environment === 'production',
     logging: environment === 'development'
 }
 
