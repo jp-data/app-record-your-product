@@ -11,14 +11,16 @@ export class UserEntity {
     @Column({
         name: 'name',
         length: 100,
-        nullable: false
+        nullable: false,
+        type: 'string'
     })
     name: string
 
     @Column({
         name: 'email',
         length: 70,
-        nullable: false
+        nullable: false,
+        type: 'string'
     })
     email: string
 
