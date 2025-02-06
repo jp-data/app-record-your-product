@@ -1,5 +1,14 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { ProductImageEntity } from "./product-image.entity";
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+}
+    from "typeorm";
 import { UserEntity } from "../../users/entities/user.entity";
 
 @Entity({ name: 'products' })
@@ -30,12 +39,6 @@ export class ProductEntity {
 
     @DeleteDateColumn({ name: 'deleted_at' })
     deletedAt: string
-
-    @OneToMany(
-        () => ProductImageEntity,
-        (productImageEntity) => productImageEntity.product
-    )
-    image: ProductImageEntity[];
 
     @ManyToOne(
         () => UserEntity,

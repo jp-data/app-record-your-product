@@ -64,7 +64,6 @@ export class ProductController {
         dataProduct.category = createProductDto.category;
         dataProduct.quantity = createProductDto.quantity;
         dataProduct.price = createProductDto.price;
-        dataProduct.image = createProductDto.image;
         dataProduct.user = { id: req.user.sub } as UserEntity;
 
         const newProduct = await this.productService.create(dataProduct);
