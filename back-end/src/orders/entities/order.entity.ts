@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { OrderItemEntity } from "./order-item.entity";
 import { EnumPayment } from "../dto/enums/enum-payment";

@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { Exclude } from "class-transformer";
 import { OrderEntity } from "../../orders/entities/order.entity";
 import { ProductEntity } from "../../products/entities/product.entity";
