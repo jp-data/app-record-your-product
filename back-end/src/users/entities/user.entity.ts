@@ -28,7 +28,8 @@ export class UserEntity {
     @Column({
         name: 'password',
         length: 250,
-        nullable: false
+        nullable: false,
+        type: 'string'
     })
     password: string
 

@@ -16,16 +16,16 @@ export class ProductEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @Column({ name: 'name', nullable: false, length: 100 })
+    @Column({ name: 'name', nullable: false, length: 100, type: 'string' })
     name: string
 
-    @Column({ name: 'description', nullable: false })
+    @Column({ name: 'description', nullable: false, type: 'string' })
     description: string
 
-    @Column({ name: 'category', nullable: false })
+    @Column({ name: 'category', nullable: false, type: 'string' })
     category: string
 
-    @Column({ name: 'quantity', nullable: false })
+    @Column({ name: 'quantity', nullable: false, type: 'integer' })
     quantity: number
 
     @Column({ name: 'price', nullable: false, type: 'float' })
