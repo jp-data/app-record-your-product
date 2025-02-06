@@ -13,7 +13,7 @@ export class UserEntity {
         name: 'name',
         length: 100,
         nullable: false,
-        type: 'string'
+        type: 'varchar'
     })
     name: string
 
@@ -21,6 +21,7 @@ export class UserEntity {
         name: 'email',
         length: 70,
         nullable: false,
+        type: 'varchar'
     })
     email: string
 
@@ -29,6 +30,7 @@ export class UserEntity {
         name: 'password',
         length: 250,
         nullable: false,
+        type: 'varchar'
     })
     password: string
 
