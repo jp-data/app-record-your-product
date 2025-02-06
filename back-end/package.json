@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:test": "cross-env NODE_ENV=test jest",
     "migrate": "npx typeorm migration:run -d dist/database/ormconfig.js",
-    "start:prod": "npm run migrate && npx nest build && node dist/main",
+    "start:prod": "npm run migrate && node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
