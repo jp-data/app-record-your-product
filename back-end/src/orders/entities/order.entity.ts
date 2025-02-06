@@ -8,7 +8,7 @@ export class OrderEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @CreateDateColumn({ name: 'created_at', type: 'string' })
+    @CreateDateColumn({ name: 'created_at' })
     createdAt: string
 
     @Column({ name: 'subtotal', type: 'float' })

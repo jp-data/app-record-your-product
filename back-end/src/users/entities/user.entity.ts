@@ -12,7 +12,6 @@ export class UserEntity {
         name: 'name',
         length: 100,
         nullable: false,
-        type: 'string'
     })
     name: string
 
@@ -20,7 +19,6 @@ export class UserEntity {
         name: 'email',
         length: 70,
         nullable: false,
-        type: 'string'
     })
     email: string
 
@@ -29,7 +27,6 @@ export class UserEntity {
         name: 'password',
         length: 250,
         nullable: false,
-        type: 'string'
     })
     password: string
 
