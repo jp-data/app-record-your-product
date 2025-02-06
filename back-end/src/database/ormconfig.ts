@@ -4,7 +4,7 @@ import * as path from 'path'
 
 
 const environment = process.env.NODE_ENV || 'development'
-const envFile = path.resolve(__dirname, `../../src/database/${environment}.env`);
+const envFile = path.resolve(__dirname, `../../${environment}.env`);
 dotenv.config({ path: envFile })
 
 
