@@ -21,7 +21,7 @@ export class UserController {
         userEntity.email = createUserDto.email
         userEntity.password = createUserDto.password
 
-        const newUser = this.userService.createUser(userEntity)
+        const newUser = await this.userService.createUser(userEntity)
         return newUser
     }
 
