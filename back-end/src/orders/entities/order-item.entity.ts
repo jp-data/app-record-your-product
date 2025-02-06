@@ -15,6 +15,6 @@ export class OrderItemEntity {
     @JoinColumn({ name: 'id_order' })
     order: OrderEntity;
 
-    @Column()
+    @Column({ name: 'quantity', nullable: false })
     quantity: number;
 }
