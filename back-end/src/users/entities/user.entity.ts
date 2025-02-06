@@ -13,6 +13,7 @@ export class UserEntity {
         name: 'name',
         length: 100,
         nullable: false,
+        type: 'string'
     })
     name: string
 
