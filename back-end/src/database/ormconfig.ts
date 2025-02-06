@@ -20,8 +20,10 @@ const config: DataSourceOptions = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     synchronize: environment === 'production' ? false : true,
-    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-    migrations: [__dirname + '/../migration/**/*{.ts,.js}'],
+    entities: process.env.NODE_ENV === 'production' ? [__dirname + '/../entities/*.js']
+        :
+        [__dirname + '/../**/*.entity{.ts,.js}'],
+    migrations: [__dirname + '/../migrations/*{.ts,.js}'],
     migrationsRun: environment === 'production',
     logging: environment === 'development'
 }
