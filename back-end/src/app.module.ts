@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { Module } from '@nestjs/common';
 import { ProductModule } from './products/product.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,12 +8,10 @@ import { ConfigModule } from '@nestjs/config';
 import { OrdersModule } from './orders/order.module';
 import { AuthModule } from './auth/auth.module';
 
-
 import * as dotenv from 'dotenv'
 
-
 dotenv.config()
-const isTestEnv = process.env.NODE_ENV === 'test'
+
 @Module({
   imports: [
     ProductModule,
