@@ -8,21 +8,17 @@ import { UpdateUserDto } from "./dtos/update-user-dto";
 
 @Controller('/users')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService) {
+        console.log('UserService:', userService)
+    }
 
     @UseInterceptors(ClassSerializerInterceptor)
     @Post()
     async createUser(
         @Body(ValidationPipe) createUserDto: CreateUserDto
     ) {
-        const userEntity = new UserEntity()
-        userEntity.id = randomUUID()
-        userEntity.name = createUserDto.name
-        userEntity.email = createUserDto.email
-        userEntity.password = createUserDto.password
+        return await this.userService.createUser(createUserDto)
 
-        const newUser = await this.userService.createUser(userEntity)
-        return newUser
     }
 
     @Get()

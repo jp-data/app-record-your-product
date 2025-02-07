@@ -4,7 +4,6 @@ import { UserEntity } from "./entities/user.entity";
 import { UserService } from "./user.service";
 import { UserController } from "./user.controller";
 import { AuthModule } from "../auth/auth.module";
-import { AuthService } from "../auth/auth.service";
 
 
 
@@ -14,7 +13,7 @@ import { AuthService } from "../auth/auth.service";
         TypeOrmModule.forFeature([UserEntity]),
     ],
     controllers: [UserController],
-    providers: [UserService, AuthService],
+    providers: [UserService],
     exports: [UserService]
 })
 
