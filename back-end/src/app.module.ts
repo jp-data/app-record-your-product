@@ -9,6 +9,7 @@ import { OrdersModule } from './orders/order.module';
 import { AuthModule } from './auth/auth.module';
 
 import * as dotenv from 'dotenv'
+import { SharedModule } from './auth/utils/shared.module';
 
 dotenv.config()
 
@@ -18,6 +19,7 @@ dotenv.config()
     UserModule,
     OrdersModule,
     AuthModule,
+    SharedModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV || 'development'}.env`
