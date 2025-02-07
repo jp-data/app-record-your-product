@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ProductEntity } from "./entities/product.entity";

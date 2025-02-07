@@ -1,8 +1,6 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, UseInterceptors, ValidationPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { UserEntity } from "./entities/user.entity";
 import { CreateUserDto } from "./dtos/create-user-dto";
-import { randomUUID } from "crypto";
 import { UpdateUserDto } from "./dtos/update-user-dto";
 
 
