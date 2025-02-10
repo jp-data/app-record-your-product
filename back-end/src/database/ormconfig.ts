@@ -12,6 +12,8 @@ if (!process.env.DB_HOST || !process.env.DB_PORT || !process.env.DB_USERNAME || 
     throw new Error(`As variáveis de ambiente para o ambiente ${environment} não estão configuradas corretamente.`);
 }
 
+const isProduction = environment === 'production'
+
 const config: DataSourceOptions = {
     type: 'postgres',
     host: process.env.DB_HOST,
@@ -19,12 +21,12 @@ const config: DataSourceOptions = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    synchronize: environment === 'production' ? false : true,
-    entities: process.env.NODE_ENV === 'production' ? [__dirname + '/**/*.entity{.js}']
+    synchronize: !isProduction,
+    entities: isProduction ? [path.join(__dirname, '../../**/entities/*.js')]
         :
-        [__dirname + '/**/*.entity{.ts,.js}'],
-    migrations: [__dirname + '/../migrations/*{.ts,.js}'],
-    migrationsRun: environment === 'production',
+        [path.join(__dirname, '../**/entities/*.entity.{ts,js}')],
+    migrations: [path.join(__dirname, '../migrations/*{.ts,.js}')],
+    migrationsRun: isProduction,
     logging: environment === 'development'
 }
 
