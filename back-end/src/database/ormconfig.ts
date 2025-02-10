@@ -28,7 +28,7 @@ const config: DataSourceOptions = {
     migrations: [path.join(__dirname, '../migrations/*{.ts,.js}')],
     migrationsRun: isProduction,
     logging: environment === 'development',
-    ssl: { rejectUnauthorized: false }
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
 }
 
 export const AppDataSource = new DataSource(config)
