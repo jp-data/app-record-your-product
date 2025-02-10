@@ -8,7 +8,7 @@ import { UpdateUserDto } from "./dtos/update-user-dto";
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
-    @UseInterceptors(ClassSerializerInterceptor)
+
     @Post()
     async createUser(
         @Body(ValidationPipe) createUserDto: CreateUserDto
@@ -17,6 +17,7 @@ export class UserController {
         return await this.userService.createUser(createUserDto)
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get()
     async getUsers() {
         return this.userService.listUsers()
