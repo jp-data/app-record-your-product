@@ -23,6 +23,7 @@
     "typeorm:migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run -d ./src/database/ormconfig.ts"
   },
   "dependencies": {
+    "@nestjs/cli": "^10.4.9",
     "@liaoliaots/nestjs-redis": "^10.0.0",
     "@nestjs/cache-manager": "^2.3.0",
     "@nestjs/common": "^10.4.15",
@@ -53,7 +54,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@nestjs/cli": "^10.4.9",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
     "@types/cache-manager": "^4.0.6",
