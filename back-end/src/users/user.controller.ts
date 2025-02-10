@@ -6,17 +6,15 @@ import { UpdateUserDto } from "./dtos/update-user-dto";
 
 @Controller('/users')
 export class UserController {
-    constructor(private readonly userService: UserService) {
-        console.log('UserService:', userService)
-    }
+    constructor(private readonly userService: UserService) { }
 
     @UseInterceptors(ClassSerializerInterceptor)
     @Post()
     async createUser(
         @Body(ValidationPipe) createUserDto: CreateUserDto
     ) {
+        console.log('this.userService:', this.userService)
         return await this.userService.createUser(createUserDto)
-
     }
 
     @Get()
