@@ -27,7 +27,8 @@ const config: DataSourceOptions = {
         [path.join(__dirname, '../**/entities/*.entity.{ts,js}')],
     migrations: [path.join(__dirname, '../migrations/*{.ts,.js}')],
     migrationsRun: isProduction,
-    logging: environment === 'development'
+    logging: environment === 'development',
+    ssl: { rejectUnauthorized: false }
 }
 
 export const AppDataSource = new DataSource(config)
