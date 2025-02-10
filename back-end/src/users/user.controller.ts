@@ -13,7 +13,6 @@ export class UserController {
     async createUser(
         @Body(ValidationPipe) createUserDto: CreateUserDto
     ) {
-        console.log('this.userService:', this.userService)
         return await this.userService.createUser(createUserDto)
     }
 
