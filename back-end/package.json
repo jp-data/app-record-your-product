@@ -20,7 +20,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json --watch",
-    "typeorm:migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run -d ./src/database/ormconfig.ts"
+    "typeorm:migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -d dist/database/ormconfig.js ./dist/migrations"
   },
   "dependencies": {
     "@liaoliaots/nestjs-redis": "^10.0.0",
