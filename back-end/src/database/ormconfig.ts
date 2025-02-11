@@ -1,10 +1,7 @@
 import { DataSource, DataSourceOptions } from "typeorm";
 import * as dotenv from 'dotenv'
 import * as path from 'path'
-import { UserEntity } from "src/users/entities/user.entity";
-import { ProductEntity } from "src/products/entities/product.entity";
-import { OrderEntity } from "src/orders/entities/order.entity";
-import { OrderItemEntity } from "src/orders/entities/order-item.entity";
+
 
 
 const environment = process.env.NODE_ENV || 'development'
@@ -26,7 +23,8 @@ const config: DataSourceOptions = {
     password: process.env.DB_PASSWORD || undefined,
     database: process.env.DB_NAME,
     synchronize: false,
-    entities: [UserEntity, ProductEntity, OrderEntity, OrderItemEntity],
+    entities: isProduction ? [path.join(__dirname, '../**/entities/*.js')] :
+        [path.join(__dirname, '../**/entities/*.entity.{ts,js}')],
     migrations: [
         path.join(__dirname, '../../dist/database/migrations/*.js')
     ],
