@@ -19,7 +19,7 @@ const config: DataSourceOptions = {
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) || 5432,
     username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
+    password: process.env.DB_PASSWORD || undefined,
     database: process.env.DB_NAME,
     synchronize: !isProduction,
     entities: isProduction ? [path.join(__dirname, '../../**/entities/*.js')]
