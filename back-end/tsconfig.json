@@ -20,7 +20,8 @@
     "noFallthroughCasesInSwitch": false
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/database/migrations"
   ],
   "exclude": [
     "node_modules"
