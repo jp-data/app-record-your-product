@@ -23,8 +23,9 @@ const config: DataSourceOptions = {
     password: process.env.DB_PASSWORD || undefined,
     database: process.env.DB_NAME,
     synchronize: false,
-    entities: isProduction ? [path.join(__dirname, '../**/entities/*.js')] :
-        [path.join(__dirname, '../**/entities/*.entity.{ts,js}')],
+    entities: isProduction
+        ? [path.join(__dirname, '../**/*.entity.js')]
+        : [path.join(__dirname, '../**/*.entity.{ts,js}')],
     migrations: [
         path.join(__dirname, '../../dist/database/migrations/*.js')
     ],
