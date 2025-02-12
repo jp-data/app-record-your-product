@@ -8,13 +8,12 @@ async function bootstrap() {
     logger: ['log', 'error', 'warn', 'debug', 'verbose']
   });
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: 'https://app-record-your-produc-git-7403d8-joao-paulos-projects-3c6f2216.vercel.app/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   })
 
   await app.listen(process.env.PORT ?? 3000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
 
 }
 bootstrap();
