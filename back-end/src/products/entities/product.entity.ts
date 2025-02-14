@@ -41,6 +41,9 @@ export class ProductEntity {
     @DeleteDateColumn({ name: 'deleted_at' })
     deletedAt: string
 
+    @Column({ type: 'uuid', nullable: false })
+    userId: string
+
     @ManyToOne(
         () => UserEntity,
         (userEntity) => userEntity.products,
