@@ -31,24 +31,31 @@ export class OrdersService {
                 }
                 subtotalPrice += product.price * itemDto.quantity
 
-                const allProducts = this.itemRepository.create({
+                return this.itemRepository.create({
                     product,
                     quantity: itemDto.quantity
                 })
-                return this.itemRepository.save(allProducts)
             })
         )
+
         const totalPrice = subtotalPrice - discount
 
-        const orderWithItems = this.orderRepository.create({
+        const order = this.orderRepository.create({
             subtotal: subtotalPrice,
             total: totalPrice,
             discount,
             payment: createOrderDto.payment,
             user: { id: userId } as UserEntity,
-            items: orderedItems,
         })
-        return await this.orderRepository.save(orderWithItems)
+
+        const savedOrder = await this.orderRepository.save(order)
+
+        for (const item of orderedItems) {
+            item.order = savedOrder
+            await this.itemRepository.save(item)
+        }
+
+        return savedOrder
     }
 
     async getSales(userId: string) {
