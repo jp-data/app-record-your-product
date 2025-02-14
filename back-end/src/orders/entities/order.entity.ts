@@ -10,7 +10,7 @@ export class OrderEntity {
     id: number
 
     @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
-    createdAt: string
+    createdAt: Date
 
     @Column({ name: 'subtotal', type: 'float' })
     subtotal: number
