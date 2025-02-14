@@ -27,6 +27,9 @@ export class OrderEntity {
     @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.order, { cascade: true, onDelete: 'CASCADE' })
     items: OrderItemEntity[];
 
+    @Column({ type: 'uuid', nullable: false })
+    userId: string
+
     @ManyToOne(
         () => UserEntity,
         (userEntity) => userEntity.orders,
