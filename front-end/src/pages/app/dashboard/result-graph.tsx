@@ -10,7 +10,7 @@ interface ResultGraphDataProps {
 export function ResultGraph({ result }: ResultGraphDataProps) {
     const formattedData = result?.map((item) => ({
         invoicing: item.faturamento,
-        date: item.data
+        date: new Date(item.dia).toLocaleDateString('pt-BR')
     })) || []
 
     return (
@@ -22,12 +22,7 @@ export function ResultGraph({ result }: ResultGraphDataProps) {
                         axisLine={false}
                         tickLine={false}
                         dy={16}
-                        tickFormatter={(date) => {
-                            const parsedDate = new Date(date)
-                            const day = parsedDate.getDate().toString().padStart(2, '0')
-                            const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
-                            return `${day}/${month}`
-                        }}
+                        tickFormatter={(date) => date}
                         padding={{ left: 20, right: 10 }}
                     />
                     <YAxis

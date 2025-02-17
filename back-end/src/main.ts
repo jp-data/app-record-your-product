@@ -7,8 +7,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose']
   });
+
+  const allowedUrls = process.env.NODE_ENV === 'production' ?
+    ['https://app-record-your-product.vercel.app']
+    : ['http://localhost:5173']
+
+
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('Allowed Origins:', allowedUrls);
+
   app.enableCors({
-    origin: 'https://app-record-your-product.vercel.app',
+    origin: allowedUrls,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   })

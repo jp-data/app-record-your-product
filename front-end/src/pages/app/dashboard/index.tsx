@@ -23,7 +23,7 @@ export interface BestSellingData {
 }
 
 export interface InvoicingEvolutionData {
-    data: string
+    dia: string
     faturamento: number
 }
 
