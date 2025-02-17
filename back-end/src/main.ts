@@ -12,10 +12,6 @@ async function bootstrap() {
     ['https://app-record-your-product.vercel.app']
     : ['http://localhost:5173']
 
-
-  console.log('NODE_ENV:', process.env.NODE_ENV);
-  console.log('Allowed Origins:', allowedUrls);
-
   app.enableCors({
     origin: allowedUrls,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
