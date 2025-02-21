@@ -20,22 +20,23 @@
   - 📊 Evolução do faturamento ao longo do tempo  
   - 🔝 Produtos mais vendidos  
 
-## 💻Tecnologias utilizadas:
-### - **Frontend**:
-    - React
-    - React hook form
-    - React router dom
-    - Tailwindcss para estilização
-    - Zod para validação de dados 
-    - Gráficos com a biblioteca recharts
-    - Consumo das api's com Axios
+## 💻 **Tecnologias Utilizadas**:
 
-### - Backend:
-    - Typescript
-    - Nestjs
-    - Banco postgres utilizando uma imagem via Docker para os ambientes de desenvolvimento e de testes
-    - Utilização do JwtService do Nestjs para autenticação de usuários.
-    - Aplicação de testes e2e do próprio Nestjs.
+### 🚀 **Frontend**:
+- React  
+- React Hook Form  
+- React Router DOM  
+- TailwindCSS (estilização)  
+- Zod (validação de dados)  
+- Recharts (gráficos)  
+- Axios (consumo de APIs)  
+
+### ⚙️ **Backend**:
+- TypeScript  
+- NestJS  
+- PostgreSQL (via Docker para dev e testes)  
+- JwtService (autenticação de usuários)  
+- Testes E2E com NestJS  
 
 
 ## Deploy: https://app-record-your-product-joao-paulos-projects-3c6f2216.vercel.app
