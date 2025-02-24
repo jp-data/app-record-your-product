@@ -16,7 +16,7 @@ export interface TableProductsDataType {
     category: string;
     quantity: number;
     price: number;
-    quantityAvailable: number
+    quantityAvailable?: number
 }
 
 interface TableProductsProps {

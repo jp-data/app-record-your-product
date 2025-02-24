@@ -65,7 +65,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
             await registerOrder(validatedOrder)
 
             for (const product of cartProducts) {
-                const newQuantity = product.quantityAvailable - product.quantity;
+                const newQuantity = product.quantityAvailable ? product.quantityAvailable - product.quantity : product.quantity;
                 await updateProducts(product.id, { quantity: newQuantity });
             }
 
