@@ -26,7 +26,7 @@ export class ProductEntity {
     @Column({ name: 'category', nullable: false, type: 'varchar' })
     category: string
 
-    @Column({ name: 'quantity', nullable: false, type: 'integer' })
+    @Column({ name: 'quantity', nullable: true, type: 'integer' })
     quantity: number
 
     @Column({ name: 'price', nullable: false, type: 'float' })
