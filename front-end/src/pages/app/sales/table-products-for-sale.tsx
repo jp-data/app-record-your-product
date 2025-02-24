@@ -17,6 +17,8 @@ export function TableProductsForSale({ onAddToCart }: TableProductsForSaleProps)
         queryFn: () => getProducts()
     })
 
+
+
     useEffect(() => {
         if (result) {
             setProducts(result)
@@ -46,7 +48,7 @@ export function TableProductsForSale({ onAddToCart }: TableProductsForSaleProps)
             key: 'actionAdd',
             render: (_, row) => (
                 <button
-                    onClick={() => onAddToCart(row)}
+                    onClick={() => onAddToCart({ ...row, quantityAvailable: row.quantity, quantity: 1 })}
                     className="underline text-blue-500 hover:text-blue-700">
                     Adicionar
                 </button>

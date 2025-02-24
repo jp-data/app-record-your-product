@@ -16,6 +16,7 @@ export interface TableProductsDataType {
     category: string;
     quantity: number;
     price: number;
+    quantityAvailable: number
 }
 
 interface TableProductsProps {
@@ -88,6 +89,7 @@ export function TableProducts({ data, result, setProducts, isLoadingFilteredProd
             title: 'Quantidade',
             dataIndex: 'quantity',
             key: 'quantity',
+            render: (quantity, record) => record.category === 'Serviço' ? "--" : quantity
         },
         {
             title: 'Preço',

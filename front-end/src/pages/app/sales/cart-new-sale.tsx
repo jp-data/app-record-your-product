@@ -8,6 +8,7 @@ import * as zod from 'zod'
 import { Dispatch, SetStateAction, useState } from "react";
 import { FormDiscount } from "./form-discount";
 import { TableProductsDataType } from "../products/table-products";
+import { updateProducts } from "../../../api-requisitions/update-products";
 
 
 const itensOrderSchema = zod.object({
@@ -62,10 +63,18 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
 
             const validatedOrder = newOrderSchema.parse(orderData)
             await registerOrder(validatedOrder)
+
+            for (const product of cartProducts) {
+                const newQuantity = product.quantityAvailable - product.quantity;
+                await updateProducts(product.id, { quantity: newQuantity });
+            }
+
             setCartProducts([])
             setPaymentChosen('')
             setDiscount(0)
             onClose()
+
+            queryClient.invalidateQueries({ queryKey: ['products'] })
         }
         catch (error) {
             console.error('Erro inesperado: ', error)

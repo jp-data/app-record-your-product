@@ -1,11 +1,11 @@
 import { api } from '../lib/axios'
 
 interface productBody {
-    name: string,
-    description: string,
-    category: string,
-    quantity: number,
-    price: number
+    name?: string,
+    description?: string,
+    category?: string,
+    quantity?: number,
+    price?: number
 }
 
 export async function updateProducts(id: string, data: productBody) {
