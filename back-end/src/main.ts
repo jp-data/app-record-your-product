@@ -10,8 +10,10 @@ async function bootstrap() {
 
   const allowedUrls = process.env.NODE_ENV === 'production' ?
     ['https://app-record-your-product-joao-paulos-projects-3c6f2216.vercel.app']
-    : ['http://localhost:5173']
+    :
+    ['http://localhost:5173']
 
+  console.log(process.env.NODE_ENV)
   app.enableCors({
     origin: allowedUrls,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

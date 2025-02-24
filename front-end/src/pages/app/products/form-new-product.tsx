@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { createProducts } from "../../../api-requisitions/create-product";
 import { queryClient } from "../../../lib/react-query";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-
 interface newProductSchema {
     id: string
     name: string
@@ -22,7 +21,7 @@ interface DialogsProps {
 
 export function FormNewProduct({ isDialogOpen, setIsDialogOpen }: DialogsProps) {
     const [priceInput, setPriceInput] = useState("")
-    const { register, handleSubmit, reset } = useForm<newProductSchema>()
+    const { register, handleSubmit, reset, watch } = useForm<newProductSchema>()
 
     const { mutateAsync: registerProduct } = useMutation({
         mutationFn: createProducts,
@@ -30,6 +29,8 @@ export function FormNewProduct({ isDialogOpen, setIsDialogOpen }: DialogsProps) 
             queryClient.invalidateQueries({ queryKey: ['products'] })
         }
     })
+
+    const selectedCategory = watch('category')
 
     async function handleCreateProduct(data: newProductSchema) {
         const formattedPrice = parseFloat(priceInput.replace(/\D/g, "")) / 100
@@ -93,13 +94,17 @@ export function FormNewProduct({ isDialogOpen, setIsDialogOpen }: DialogsProps) 
                     </div>
                     <div className="grid grid-cols-2 items-center gap-1">
                         <label htmlFor="category" className="font-semibold text-base mb-0 w-3/5">Categoria :</label>
-                        <input
-                            type="text"
+                        <select
+
                             id="category"
                             className="border rounded-md w-full pl-4"
                             {...register('category')}
                             required
-                        />
+                        >
+                            <option value="">Selecione</option>
+                            <option value="Produto">Produto</option>
+                            <option value="Serviço">Serviço(estoque indefinido)</option>
+                        </select>
                     </div>
                     <div className="grid grid-cols-2 items-center gap-1">
                         <label htmlFor="quantity" className="font-semibold text-base mb-0 w-3/5">Quantidade :</label>
@@ -109,6 +114,7 @@ export function FormNewProduct({ isDialogOpen, setIsDialogOpen }: DialogsProps) 
                             className="border rounded-md w-full pl-4"
                             {...register('quantity', { valueAsNumber: true })}
                             required
+                            disabled={selectedCategory === 'Serviço'}
                         />
                     </div>
                     <div className="grid grid-cols-2 items-center gap-1">
