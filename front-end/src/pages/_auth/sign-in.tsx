@@ -57,41 +57,40 @@ export function SignIn() {
 
     return (
         <>
-            <div className="p-8">
-                <button className="absolute right-8 top-8">
+            <div className="w-full max-w-sm space-y-6">
+                <button className="absolute right-8 top-8 text-lg hover:underline">
                     <Link to='/sign-up'>
                         Novo cadastro
                     </Link>
                 </button>
-                <div className="flex w-[350px] flex-col justify-center gap-6">
-                    <div className="flex flex-col gap-2 text-center">
-                        <h1 className="text-2xl font-semibold tracking-tight">Acessar painel</h1>
-                        <p className="text-sm text-muted-foreground">
-                            Acompanhe suas vendas pelo painel do parceiro!
-                        </p>
-                    </div>
-                    <form className="space-y-4" onSubmit={handleSubmit(handleSignIn)}>
-                        <div className="flex flex-col">
-                            <label htmlFor='email' className="text-sm font-semibold">Seu email</label>
-                            <input id='email' type='email' className="border rounded p-2" {...register('email', {
-                                required: 'Campo obrigatório'
-                            })} />
-                            {errors.email && <span className="text-red-500 font-semibold text-sm">{errors.email.message}</span>}
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor='email' className="text-sm font-semibold">Sua senha</label>
-                            <input id='password' type='password' className="border rounded p-2" {...register('password', {
-                                required: 'Campo obrigatório'
-                            })} />
-                            {errors.password && <span className="text-red-500 font-semibold text-sm">{errors.password.message}</span>}
-                        </div>
-                        <button className="w-full border text-white rounded p-2 bg-rose-600 " type="submit">
-                            Acessar painel
-                        </button>
-                    </form>
-                </div>
-            </div>
 
+                <div className="text-center">
+                    <h1 className="text-2xl font-semibold tracking-tight">Acessar painel</h1>
+                    <p className="text-sm text-muted-foreground">
+                        Acompanhe suas vendas pelo painel do parceiro!
+                    </p>
+                </div>
+                <form className="space-y-4" onSubmit={handleSubmit(handleSignIn)}>
+                    <div className="flex flex-col">
+                        <label htmlFor='email' className="text-sm font-semibold">Seu email</label>
+                        <input id='email' type='email' className="border rounded p-2" {...register('email', {
+                            required: 'Campo obrigatório'
+                        })} />
+                        {errors.email && <span className="text-red-500 font-semibold text-sm">{errors.email.message}</span>}
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor='email' className="text-sm font-semibold">Sua senha</label>
+                        <input id='password' type='password' className="border rounded p-2" {...register('password', {
+                            required: 'Campo obrigatório'
+                        })} />
+                        {errors.password && <span className="text-red-500 font-semibold text-sm">{errors.password.message}</span>}
+                    </div>
+                    <button className="w-full border text-white rounded p-2 bg-rose-600 hover:bg-rose-700 transition" type="submit">
+                        Acessar painel
+                    </button>
+                </form>
+
+            </div>
         </>
     )
 }
