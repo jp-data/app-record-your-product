@@ -117,11 +117,14 @@ export function TableProducts({ data, result, setProducts, isLoadingFilteredProd
             )
                 : (
                     <>
-                        <Table<TableProductsDataType>
-                            columns={columns}
-                            className="mt-10 mr-20 mb-5 ml-20 font-semibold"
-                            dataSource={data?.map(item => ({ ...item, key: item.id }))}
-                        />
+                        <div className='overflow-auto'>
+                            <Table<TableProductsDataType>
+                                columns={columns}
+                                className="mt-10 mr-20 mb-5 ml-20 font-semibold"
+                                dataSource={data?.map(item => ({ ...item, key: item.id }))}
+                            />
+                        </div>
+
                         <EditProduct
                             product={editProduct}
                             setEditProduct={setEditProduct}

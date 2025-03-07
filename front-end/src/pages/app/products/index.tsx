@@ -43,18 +43,25 @@ export function Products() {
     return (
         <div className="flex flex-col gap-4 p-8 items-start">
             <h1 className="text-3xl font-bold tracking-tight">Produtos</h1>
-            <div className="flex items-center justify-between w-full max-w-3xl">
-                <NewProductButton />
-                <SearchProduct onSearch={handleSearch} />
-                <OrderingProducts
-                    setSortBy={setSortBy}
-                    setDirection={setDirection}
-                    sortBy={sortBy}
-                    direction={direction}
-                    setisLoadingFilteredProducts={setisLoadingFilteredProducts}
-                />
+
+            <div className="flex flex-wrap md:flex-nowrap items-center justify-between w-full max-w-3xl gap-2">
+
+                <div className="flex w-full md:w-auto gap-3">
+                    <NewProductButton />
+                    <SearchProduct onSearch={handleSearch} />
+                </div>
+
+                <div className="w-full md:w-auto">
+                    <OrderingProducts
+                        setSortBy={setSortBy}
+                        setDirection={setDirection}
+                        sortBy={sortBy}
+                        direction={direction}
+                        setisLoadingFilteredProducts={setisLoadingFilteredProducts}
+                    />
+                </div>
             </div>
-            <div className="w-full">
+            <div className="w-full overflow-auto max-h-[500px] border rounded-lg shadow">
                 <TableProducts
                     result={result}
                     data={searchProducts}
@@ -63,6 +70,5 @@ export function Products() {
                 />
             </div>
         </div>
-
-    )
+    );
 }

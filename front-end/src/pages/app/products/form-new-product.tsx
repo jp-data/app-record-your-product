@@ -64,7 +64,7 @@ export function FormNewProduct({ isDialogOpen, setIsDialogOpen }: DialogsProps) 
     }, [isDialogOpen])
 
     return <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent size="small">
+        <DialogContent>
             <DialogHeader>
                 <DialogTitle className="text-2xl font-semibold">Novo produto</DialogTitle>
                 <DialogDescription>Descrição</DialogDescription>
