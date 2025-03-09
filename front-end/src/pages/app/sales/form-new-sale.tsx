@@ -20,17 +20,16 @@ export function FormNewSale({ onClose }: { onClose: () => void }) {
             return [...prevCart, { ...product, quantity: 1 }]
         })
     }
-
-    return <DialogContent size="large" className="flex flex-col h-[100vh] w-[100%] overflow-hidden">
+    return <DialogContent size="large" className="flex flex-col md:h-4/5 md:w-2/3 h-[100vh] w-[100%] overflow-hidden">
         <DialogHeader className="flex-shrink-0">
             <DialogTitle className="text-2xl font-semibold">Produtos</DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col md:flex-row gap-4 w-full h-[80vh]">
-            <div className="w-full md:w-2/4 h-1/2 overflow-hidden">
+        <div className="flex flex-col md:flex-row md:py-4 md:h-4/5 gap-4 w-full h-[80vh]">
+            <div className="w-full md:w-2/4 h-1/2 md:h-[80vh] overflow-hidden">
                 <TableProductsForSale onAddToCart={handleAddProductToCart} />
             </div>
-            <div className="w-full md:w-1/3 md:ml-auto h-1/2 overflow-y-auto border rounded-lg shadow">
+            <div className="w-full md:w-1/3 md:h-[60vh] md:ml-auto h-1/2 overflow-y-auto border rounded-lg shadow">
                 <CartNewSale
                     cartProducts={cartProducts}
                     setCartProducts={setCartProducts}
@@ -39,4 +38,5 @@ export function FormNewSale({ onClose }: { onClose: () => void }) {
             </div>
         </div>
     </DialogContent>
+
 }
