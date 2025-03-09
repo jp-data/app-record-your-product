@@ -61,7 +61,7 @@ export function Products() {
                     />
                 </div>
             </div>
-            <div className="w-full overflow-auto max-h-[500px] border rounded-lg shadow">
+            <div className="w-full max-h-[500px] border rounded-lg shadow">
                 <TableProducts
                     result={result}
                     data={searchProducts}

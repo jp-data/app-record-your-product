@@ -116,7 +116,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
     return (
         <>
             <div className="h-full flex flex-col w-full rounded-l-xl bg-white">
-                <div className="h-min row-span-1 ml-2 mt-2">
+                <div className="h-min row-span-1 ml-2 mt-2 hidden md:block">
                     <ShoppingCart />
                 </div>
                 <div className="h-full mt-6 ml-4 mr-4 max-h-98 overflow-y-auto scrollbar-hide">
@@ -172,7 +172,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                 </div>
 
                 <div className="flex h-2/6 flex-col mr-4 items-end justify-center">
-                    <div className="flex justify-end items-end w-2/3 h-1/3">
+                    <div className="flex justify-end items-end w-2/3 h-2/3">
                         {discount > 0 ? (
                             <div className="flex flex-col">
                                 <p className="font-semibold text-base">Subtotal: {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(total)}</p>
@@ -180,7 +180,7 @@ export function CartNewSale({ cartProducts, setCartProducts, onClose }: CartNewS
                             </div>
                         ) : (
                             <button
-                                className="h-8 text-lg w-1/2 bg-slate-200 hover:bg-slate-400 rounded-full font-semibold disabled:text-gray-500 disabled:cursor-not-allowed"
+                                className="h-8 text-lg w-full md:w-1/2 bg-slate-200 hover:bg-slate-400 rounded-full font-semibold disabled:text-gray-500 disabled:cursor-not-allowed"
                                 onClick={() => setIsDialogOpen(true)}
                                 disabled={cartProducts.length === 0}
                             >

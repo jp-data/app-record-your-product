@@ -59,15 +59,26 @@ export function TableSales({ orders, isLoadingFilteredSales }: DataProps) {
             )
                 : (
                     <>
-                        <Table<DataType>
-                            columns={columns}
+                    <div className="overflow-auto">
+                    <Table<DataType>
+                            columns={columns.map(column => ({
+                                ...column,
+                                onHeaderCell: () => ({
+                                    style: {
+                                        whiteSpace: 'nowrap'
+                                    }
+                                }),
+                                width: column.width || 150
+                            }))}
                             dataSource={orders?.map(item => ({
                                 ...item,
                                 key: item.id,
                                 date: dayjs(item.date).format('DD/MM/YYYY')
                             }))}
                             className="font-semibold"
+                            scroll={{  y: 500 }}
                         />
+                    </div> 
                     </>
                 )
             }

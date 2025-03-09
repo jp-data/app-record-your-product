@@ -41,19 +41,19 @@ export function SalesFilter({ paymentChosen, hasDiscount, setPaymentChosen, setH
             <Dialog>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <div className="w-2/3 font-medium">
-                            <button className={`flex w-full text-right mt-1 rounded-lg
+                        <div className="w-full font-medium">
+                            <button className={`flex items-center justify-between w-full text-right mt-1 rounded-lg p-2
                                 ${paymentChosen != '' || hasDiscount != '' ? 'bg-cyan-100'
                                     : ''
                                 }    
                                 `}
                             >
                                 <p className="ml-2">Filtros</p>
-                                <ChevronDown />
+                                <ChevronDown className="w-4 h-4" />
                             </button>
                         </div>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="absolute bg-white shadow-lg w-52">
+                    <DropdownMenuContent className="bg-white shadow-lg w-52 md:w-64 lg:w-72">
                         <DropdownMenuLabel>
                             <span>Pagamento</span>
                         </DropdownMenuLabel>

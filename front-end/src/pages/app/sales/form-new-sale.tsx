@@ -21,16 +21,16 @@ export function FormNewSale({ onClose }: { onClose: () => void }) {
         })
     }
 
-    return <DialogContent size="large" className="flex flex-col h-4/5">
+    return <DialogContent size="large" className="flex flex-col h-[100vh] w-[100%] overflow-hidden">
         <DialogHeader className="flex-shrink-0">
             <DialogTitle className="text-2xl font-semibold">Produtos</DialogTitle>
         </DialogHeader>
 
-        <div className="flex-grow py-4 flex gap-4 w-full h-4/5">
-            <div className="w-2/4 overflow-y-auto">
+        <div className="flex flex-col md:flex-row gap-4 w-full h-[80vh]">
+            <div className="w-full md:w-2/4 h-1/2 overflow-hidden">
                 <TableProductsForSale onAddToCart={handleAddProductToCart} />
             </div>
-            <div className="w-1/3 ml-auto">
+            <div className="w-full md:w-1/3 md:ml-auto h-1/2 overflow-y-auto border rounded-lg shadow">
                 <CartNewSale
                     cartProducts={cartProducts}
                     setCartProducts={setCartProducts}

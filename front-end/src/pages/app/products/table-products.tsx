@@ -9,6 +9,7 @@ import { queryClient } from '../../../lib/react-query';
 import { Flex } from '@radix-ui/themes';
 import { Spin } from 'antd'
 
+
 export interface TableProductsDataType {
     id: string
     name: string;
@@ -119,8 +120,15 @@ export function TableProducts({ data, result, setProducts, isLoadingFilteredProd
                     <>
                         <div className='overflow-auto'>
                             <Table<TableProductsDataType>
-                                columns={columns}
-                                className="mt-10 mr-20 mb-5 ml-20 font-semibold"
+                                columns={columns.map(column => ({
+                                    ...column,
+                                    onHeaderCell: () => ({
+                                        style: { whiteSpace: 'nowrap' }
+                                    }),
+                                    width: column.width || 100
+                                }))}
+                                className="font-semibold"
+                                scroll={{ y: 500 }}
                                 dataSource={data?.map(item => ({ ...item, key: item.id }))}
                             />
                         </div>

@@ -35,6 +35,7 @@ export function TableProductsForSale({ onAddToCart }: TableProductsForSaleProps)
             title: 'Categoria',
             dataIndex: 'category',
             key: 'category',
+            className: "lg:table-cell hidden lg:block"
         },
         {
             title: 'Preço',
@@ -58,13 +59,21 @@ export function TableProductsForSale({ onAddToCart }: TableProductsForSaleProps)
 
     return (
         <Table<TableProductsDataType>
-            columns={columns}
+        columns={columns.map(column => ({
+            ...column,
+            onHeaderCell: () => ({
+                style: {
+                    whiteSpace: 'nowrap'
+                }
+            }),
+            width: column.width || 110
+        }))}
             dataSource={products?.map(item => ({
                 ...item,
                 key: uuidv4(),
             }))}
             pagination={false}
-            scroll={{ y: 500 }}
+            scroll={{ y: 300 }}
             className="font-semibold"
         />
     )
