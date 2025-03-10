@@ -13,7 +13,7 @@ export function DataSelector({ setPeriod, period }: DataSelectorProps) {
 
     return (
         <div className="font-medium">
-            <select value={period} onChange={handleChosenFilterDay} className="bg-gray-100 border w-4/5 text-base rounded-md mt-2">
+            <select value={period} onChange={handleChosenFilterDay} className="bg-gray-100 border w-[100%] text-base rounded-md mt-2">
                 <option value="3">
                     Últimos 3 dias
                 </option>

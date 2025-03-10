@@ -76,6 +76,7 @@ export function Dashboard() {
     return (
         <div className="flex flex-col gap-4 p-8 items-start">
             <h1 className="text-3xl font-bold tracking-tight">Estatísticas</h1>
+            <DataSelector setPeriod={setPeriod} period={period} />
             {isLoadingData ? (
                 <div className='flex w-full items-center justify-center h-[400px]'>
                     <Flex align="center" gap="4">
@@ -84,16 +85,16 @@ export function Dashboard() {
                 </div>
             ) : (
                 <>
-                    <div className="grid grid-cols-3 gap-4 w-1/2">
+                    <div className="md:grid md:grid-cols-3 md:gap-4 md:w-1/2 w-[70%]">
                         <RevenueCard
                             result={salesResult.data}
                         />
                         <SalesCountCard
                             result={salesResult.data}
                         />
-                        <DataSelector setPeriod={setPeriod} period={period} />
+                        
                     </div>
-                    <div className="grid grid-cols-9 gap-4 w-full">
+                    <div className="flex flex-col md:grid md:grid-cols-9 gap-5 w-full">
                         <ResultGraph result={invoicingEvolutionResult.data} />
                         <PopularCategoriesGraph result={bestSellingResult.data} />
                     </div>

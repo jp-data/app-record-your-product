@@ -14,7 +14,7 @@ export function ResultGraph({ result }: ResultGraphDataProps) {
     })) || []
 
     return (
-        <Card title="Faturamento - evolução" className="col-span-6">
+        <Card title="Faturamento - evolução" className="col-span-6 border-violet-500">
             <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={formattedData} style={{ fontSize: 12 }} margin={{ top: 15, right: 20, bottom: 5, left: 20 }}>
                     <XAxis

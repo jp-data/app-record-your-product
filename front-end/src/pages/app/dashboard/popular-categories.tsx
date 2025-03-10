@@ -17,7 +17,7 @@ export function PopularCategoriesGraph({ result }: PopularCategoriesCardProps) {
     const maxResult = Math.max(...formattedData.map((item) => item.result), 0)
 
     return (
-        <Card title="Produtos / + vendidos" className="col-span-3 w-full">
+        <Card title="Produtos / + vendidos" className="col-span-3 w-full border-violet-500">
             <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={formattedData} margin={{ top: 20, bottom: 5 }}>
                     <XAxis

@@ -12,7 +12,7 @@ export function RevenueCard({ result }: RevenueCardDataProps) {
         currency: "BRL",
     }).format(total);
     return (
-        <Card className="border-violet-500 cursor-pointer">
+        <Card className="border-violet-500 cursor-pointer  mb-5 md:mb-0">
             <h1 className="text-lg font-bold text-slate-500 w-full">Faturamento</h1>
             <p className="font-bold text-xl">{formattedTotal}</p>
         </Card>
